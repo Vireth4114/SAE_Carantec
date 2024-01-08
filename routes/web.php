@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcnMemberController;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -45,4 +45,20 @@ class AcnMember extends Model
     {
         return $this->belongsToMany(AcnPrerogative::class, "ACN_RANKED", "NUM_LICENCE", "NUM_PREROG");
     }
+
+    /**
+     * Get Groups of the user.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_LICENCE", "NUM_GROUPS");
+    }
+
+    /**
+     * Get Dives of the user.
+     */
+    public function dives()
+    {
+        return $this->belongsToMany(AcnDives::class, "ACN_REGISTERED", "NUM_LICENCE", "NUM_DIVE");
+    }
 }
