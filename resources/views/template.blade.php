@@ -41,7 +41,7 @@
                             {{ __('Déconnexion') }}
                         </x-dropdown-link>
                     </form>
-                @else
+                @elseif(!Route::is('login'))
                     <a href="{{ route('login') }}">Connexion</a>
                 @endif
             </div>
