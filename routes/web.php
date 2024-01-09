@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcnMemberController;
+use App\Http\Controllers\AcnDiveCreationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/propose', function () {
+    return AcnDiveCreationController::getAll();
 });
