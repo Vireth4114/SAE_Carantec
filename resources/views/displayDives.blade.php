@@ -1,4 +1,7 @@
 @extends("template")
+@php
+    use Carbon\Carbon;
+@endphp
 
 @section("content")
     @foreach($months as $month)
@@ -6,7 +9,8 @@
 
         @foreach($dives[$month->mois_mot] as $dive)
             @php
-                $date = date_Format(DateTime::createFromFormat('Y-m-d',$dive->DIV_DATE), 'l j F Y');
+                //$newDate = new Carbon($dive->DIV_DATE);
+                $date = Carbon::parse($dive->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y');
                 $heureStart = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_START_TIME), 'G');
                 $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_END_TIME), 'G');
             @endphp
