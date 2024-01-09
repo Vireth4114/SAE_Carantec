@@ -19,6 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/propose', function () {
+Route::get('/suggest', function () {
     return AcnDiveCreationController::getAll();
 });
+
+Route::post('formSuggest', [AcnDiveCreationController::class, 'create']);

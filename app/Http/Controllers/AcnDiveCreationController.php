@@ -10,6 +10,7 @@ use App\Models\web\AcnFunction;
 use App\Models\web\AcnPrerogative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AcnDivesController;
 
 class AcnDiveCreationController extends Controller
 {
@@ -29,21 +30,44 @@ class AcnDiveCreationController extends Controller
             -> get();
 
         $pilots = DB::table('ACN_MEMBER')
-            ->select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
-            ->distinct()
-            ->join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_FUNCTION')
-            ->where ('NUM_FUNCTION','=','3')
+            -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
+            -> distinct()
+            -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
+            -> where ('NUM_FUNCTION','=','3')
             -> where('MEM_STATUS','=','1')
-            ->get();
+            -> get();
 
         $securitys = DB::table('ACN_MEMBER')
-        ->select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
-        ->distinct()
-        ->join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_FUNCTION')
-        ->where ('NUM_FUNCTION','=','2')
+        -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
+        -> distinct()
+        -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
+        -> where ('NUM_FUNCTION','=','2')
         -> where('MEM_STATUS','=','1')
-        ->get();
+        -> get();
 
-        return view ('propose_slot', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
+        return view ('suggest_slot', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
+    }
+
+    static public function create(Request $request) {
+        $max = AcnDivesController::getNumMax();
+        $max = $max[0];
+        $max = (array) $max;
+        $max = $max['maxi'];
+
+
+        DB::table('ACN_DIVES')->insert([
+            'DIV_NUM_DIVE' => $max,
+            'DIV_DATE' => DB::raw("str_to_date('".$request -> date."','%Y-%m-%d')"),
+            'DIV_NUM_PERIOD' => $request -> period,
+            'DIV_NUM_SITE' => $request -> site,
+            'DIV_NUM_BOAT' => $request -> boat,
+            'DIV_NUM_PREROG' => $request -> lvl_required,
+            'DIV_NUM_MEMBER_LEAD' => $request -> lead,
+            'DIV_NUM_MEMBER_PILOTING' => $request -> pilot,
+            'DIV_NUM_MEMBER_SECURED'=> $request -> security,
+            'DIV_MIN_REGISTERED' => $request -> min_divers,
+            'DIV_MAX_REGISTERED'=> $request -> max_divers,
+        ]);
+
     }
 }
