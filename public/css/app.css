@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    direction: row;
+    align-items: center;
+    gap: 10vw;
+    padding: 20px;
+    background-color: black;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+#logo {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+#headerLinks {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    direction: row;
+    gap: 5vw;
+    font-size: 2em;
+    color: white;
+}
+
+.center-title{
+    text-align: center;
+    margin-top: 50px;
+}
+
