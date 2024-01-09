@@ -21,4 +21,23 @@ class AcnBoatController extends Controller
         $capacity = (array) $capacity[0];
         return $capacity['BOA_CAPACITY'];
     }
+
+    static public function getMaxCapacity() {
+        $capacity = DB::table('ACN_BOAT')
+            -> selectRaw('max(BOA_CAPACITY) as max')
+            -> get();
+        
+        $capacity = (array) $capacity[0];
+        return $capacity['max'];
+    }
+
+    static public function getBoatName($BoatNum) {
+        $capacity = DB::table('ACN_BOAT')
+            -> select('BOA_NAME')
+            -> where('BOA_NUM_BOAT', '=', $BoatNum)
+            -> get();
+        
+        $capacity = (array) $capacity[0];
+        return $capacity['BOA_NAME'];
+    }
 }
