@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\web\AcnDives;
-use App\Models\web\AcnSite;
-
 use Illuminate\Support\Facades\DB;
 
 class AcnDivesController extends Controller
@@ -29,5 +25,4 @@ class AcnDivesController extends Controller
 
         return view("displayDives",["dives" => $dives, "months" => $months]);
     }
-
 }

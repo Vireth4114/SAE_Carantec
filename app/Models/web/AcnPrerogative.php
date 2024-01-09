@@ -35,6 +35,6 @@ class AcnPrerogative extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(AcnMember::class, "ACN_RANKED", "NUM_PREROG", "NUM_LICENCE");
+        return $this->belongsToMany(AcnMember::class, "ACN_RANKED", "NUM_PREROG", "NUM_MEMBER");
     }
 }

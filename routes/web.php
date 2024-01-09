@@ -23,3 +23,13 @@ Route::get('/', function () {
 Route::get('/dives', function () {
     return AcnDivesController::getDivesValues();
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
+})->middleware(['auth'])->name('dashboard');
+
+Route::get('/secretary', function () {
+    return view('secretary', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
+})->middleware(['auth'])->middleware('isSecretary');
+
+require __DIR__.'/auth.php';

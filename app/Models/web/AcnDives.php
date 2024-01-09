@@ -101,7 +101,7 @@ class AcnDives extends Model
      */
     public function divers()
     {
-        return $this->belongsToMany(AcnMember::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_LICENCE");
+        return $this->belongsToMany(AcnMember::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_MEMBER");
     }
 
     /**
