@@ -26,8 +26,21 @@ class AcnDivesController extends Controller
     }
 
     static public function getNumMax() {
-        return DB::table('ACN_DIVES')
+        $max = DB::table('ACN_DIVES')
             -> selectRaw('max(DIV_NUM_DIVE)+1 as maxi')
             -> get();
+
+        $max = (array) $max[0];
+        return $max['maxi'];
     }
+
+    
+    static public function existDive($date, $numPeriod) {
+        return DB::table('ACN_DIVES')
+            -> select(DB::raw(1))
+            -> where('DIV_NUM_PERIOD', $numPeriod)
+            -> where('DIV_DATE', '=', date($date))
+            -> exists();
+    }
+
 }
