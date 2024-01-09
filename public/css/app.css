@@ -5,7 +5,7 @@
 
 header {
     display: flex;
-    direction: row;
+    flex-direction: row;
     align-items: center;
     gap: 10vw;
     padding: 20px;
@@ -23,10 +23,9 @@ a {
 }
 
 #headerLinks {
-    position: absolute;
     right: 40px;
     display: flex;
-    direction: row;
+    flex-direction: row;
     gap: 5vw;
     font-size: 2em;
     color: white;
