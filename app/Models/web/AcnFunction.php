@@ -35,6 +35,6 @@ class AcnFunction extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(AcnMember::class, "ACN_WORKING", "NUM_FUNCTION", "NUM_LICENCE");
+        return $this->belongsToMany(AcnMember::class, "ACN_WORKING", "NUM_FUNCTION", "NUM_MEMBER");
     }
 }

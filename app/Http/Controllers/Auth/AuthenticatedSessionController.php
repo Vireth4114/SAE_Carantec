@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\web\AcnMember;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
@@ -32,6 +34,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        $isSecretary = AcnMember::isUserSecretary(auth()->user()->MEM_NUM_MEMBER);
+
+        if ($isSecretary) {
+            return redirect("/secretary");
+        }
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

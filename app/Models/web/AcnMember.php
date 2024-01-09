@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AcnMember extends Authenticatable
@@ -38,7 +39,7 @@ class AcnMember extends Authenticatable
      */
     public function functions()
     {
-        return $this->belongsToMany(AcnFunction::class, "ACN_WORKING", "NUM_LICENCE", "NUM_FUNCTION");
+        return $this->belongsToMany(AcnFunction::class, "ACN_WORKING", "NUM_MEMBER", "NUM_FUNCTION");
     }
 
     /**
@@ -46,7 +47,7 @@ class AcnMember extends Authenticatable
      */
     public function prerogatives()
     {
-        return $this->belongsToMany(AcnPrerogative::class, "ACN_RANKED", "NUM_LICENCE", "NUM_PREROG");
+        return $this->belongsToMany(AcnPrerogative::class, "ACN_RANKED", "NUM_MEMBER", "NUM_PREROG");
     }
 
     /**
@@ -54,7 +55,7 @@ class AcnMember extends Authenticatable
      */
     public function groups()
     {
-        return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_LICENCE", "NUM_GROUPS");
+        return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_MEMBER", "NUM_GROUPS");
     }
 
     /**
@@ -62,12 +63,21 @@ class AcnMember extends Authenticatable
      */
     public function dives()
     {
-        return $this->belongsToMany(AcnDives::class, "ACN_REGISTERED", "NUM_LICENCE", "NUM_DIVE");
+        return $this->belongsToMany(AcnDives::class, "ACN_REGISTERED", "NUM_MEMBER", "NUM_DIVE");
     }
 
     public function getAuthPassword()
     {
         return $this->MEM_PASSWORD;
 
+    }
+
+    static public function isUserSecretary($num_member) {
+        $isSecretary = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
+        ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
+        ->where("ACN_FUNCTION.FUN_LABEL", "=", "Secrétaire")
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->select("*")->exists();
+        return $isSecretary;
     }
 }

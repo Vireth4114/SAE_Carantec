@@ -43,6 +43,6 @@ class AcnGroups extends Model
      */
     public function divers()
     {
-        return $this->belongsToMany(AcnMember::class, "ACN_REGISTERED", "NUM_GROUPS", "NUM_LICENCE");
+        return $this->belongsToMany(AcnMember::class, "ACN_REGISTERED", "NUM_GROUPS", "NUM_MEMBER");
     }
 }
