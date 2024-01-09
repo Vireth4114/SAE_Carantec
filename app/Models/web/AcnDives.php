@@ -111,4 +111,5 @@ class AcnDives extends Model
     {
         return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_GROUPS");
     }
+
 }

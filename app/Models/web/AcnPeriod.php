@@ -16,6 +16,16 @@ class AcnPeriod extends Model
      */
     protected $table = 'ACN_PERIOD';
 
+   /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'PER_START_TIME' => 'datetime',
+        'PER_END_TIME' => 'datetime',
+    ];
+
     /**
      * The primary key associated with the table.
      *

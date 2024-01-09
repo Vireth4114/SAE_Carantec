@@ -1,12 +1,20 @@
-<?php
-    foreach($dives as $dive) {
-        $date = $dive->DIV_DATE;
+@foreach($months as $month)
+    <h2>{{ $month->mois_mot }}</h2>
 
-        echo "<input type='checkbox'>";
-        echo date_format($date, 'l j F Y');
-        echo " de ".$dive->period->PER_LABEL."<br>";
-        echo "  Site prevu : ".$dive->site->SIT_NAME;
-        echo "  (".$dive->site->SIT_DESCRIPTION.")";
-        echo "<br>";
-    }
-?>
+    @foreach($dives[$month->mois_mot] as $dive)
+        @php
+            $date = date_Format(DateTime::createFromFormat('Y-m-d',$dive->DIV_DATE), 'l j F Y');
+            $heureStart = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_START_TIME), 'G');
+            $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_END_TIME), 'G');
+        @endphp
+        <form>
+        <p>
+            <input  type='checkbox'>
+            {{ $date }}
+            de {{ $heureStart }}h à {{ $heureFin }} h
+            Site prevu : {{ $dive->SIT_NAME }}
+            ( {{ $dive->SIT_DESCRIPTION }} )
+        </p>
+        </form>
+    @endforeach
+@endforeach
