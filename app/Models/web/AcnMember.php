@@ -80,4 +80,22 @@ class AcnMember extends Authenticatable
         ->select("*")->exists();
         return $isSecretary;
     }
+
+    static public function isUserManager($num_member) {
+        $isUserManager = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
+        ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
+        ->where("ACN_FUNCTION.FUN_LABEL", "=", "Responsable")
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->select("*")->exists();
+        return $isUserManager;
+    }
+
+    static public function isUserDirector($num_member) {
+        $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
+        ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
+        ->where("ACN_FUNCTION.FUN_LABEL", "=", "Directeur")
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->select("*")->exists();
+        return $isUserDirector;
+    }
 }
