@@ -5,7 +5,6 @@ namespace App\Models\web;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class AcnMember extends Authenticatable
 {
@@ -91,9 +90,9 @@ class AcnMember extends Authenticatable
     }
 
     static public function isUserDirector($num_member) {
-        $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
-        ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
-        ->where("ACN_FUNCTION.FUN_LABEL", "=", "Directeur")
+        $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_RANKED", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_RANKED.NUM_MEMBER")
+        ->join("ACN_PREROGATIVE", "ACN_PREROGATIVE.PRE_NUM_PREROG", "=", "ACN_RANKED.NUM_PREROG")
+        ->where("ACN_PREROGATIVE.PRE_PRIORITY", ">", "12")
         ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
         ->select("*")->exists();
         return $isUserDirector;

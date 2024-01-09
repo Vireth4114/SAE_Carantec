@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AcnBoatController;
-use App\Http\Controllers\AcnMemberController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
 use Illuminate\Support\Facades\Route;
@@ -18,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view("accueil");
-})->name("accueil");
+    return view("welcome");
+})->name("welcome");
 
 Route::get('/dives', function () {
     return AcnDivesController::getDivesValues();
-})->name("dives");
+})->middleware(['auth'])->name("dives");
 
 Route::get('/dashboard', function () {
     return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
@@ -35,7 +33,7 @@ Route::get('/secretary', function () {
 
 Route::get('/suggest', function () {
     return AcnDiveCreationController::getAll();
-})->name("suggest");
+})->middleware(['auth'])->middleware('isDirector')->name("suggest");
 
 Route::post('formSuggest', [AcnDiveCreationController::class, 'create']);
 

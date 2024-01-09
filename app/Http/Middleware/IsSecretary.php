@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Models\web\AcnMember;
 use Closure;
-use Illuminate\Support\Facades\DB;
 
-class IfSecretary
+class IsSecretary
 {
     /**
      * Handle an incoming request.
