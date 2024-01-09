@@ -117,26 +117,25 @@ class AcnDiveCreationController extends Controller
             $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
         }
         
-
-
-        echo $err."<br>";
-        echo $strErr;
-
         $max = AcnDivesController::getNumMax();
 
-        
-        DB::table('ACN_DIVES')->insert([
-            'DIV_DATE' => DB::raw("str_to_date('".$request -> date."','%Y-%m-%d')"),
-            'DIV_NUM_PERIOD' => $request -> period,
-            'DIV_NUM_SITE' => $request -> site,
-            'DIV_NUM_BOAT' => $request -> boat,
-            'DIV_NUM_PREROG' => $request -> lvl_required,
-            'DIV_NUM_MEMBER_LEAD' => $request -> lead,
-            'DIV_NUM_MEMBER_PILOTING' => $request -> pilot,
-            'DIV_NUM_MEMBER_SECURED'=> $request -> security,
-            'DIV_MIN_REGISTERED' => $request -> min_divers,
-            'DIV_MAX_REGISTERED'=> $request -> max_divers,
-        ]);
+        if ($err) {
+            echo $strErr;
+        }
+        else {
+            DB::table('ACN_DIVES')->insert([
+                'DIV_DATE' => DB::raw("str_to_date('".$request -> date."','%Y-%m-%d')"),
+                'DIV_NUM_PERIOD' => $request -> period,
+                'DIV_NUM_SITE' => $request -> site,
+                'DIV_NUM_BOAT' => $request -> boat,
+                'DIV_NUM_PREROG' => $request -> lvl_required,
+                'DIV_NUM_MEMBER_LEAD' => $request -> lead,
+                'DIV_NUM_MEMBER_PILOTING' => $request -> pilot,
+                'DIV_NUM_MEMBER_SECURED'=> $request -> security,
+                'DIV_MIN_REGISTERED' => $request -> min_divers,
+                'DIV_MAX_REGISTERED'=> $request -> max_divers,
+            ]);
+        }
         
     }
 }
