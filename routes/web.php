@@ -20,7 +20,7 @@ Route::get('/', function () {
 })->name("welcome");
 
 Route::get('/dives', function () {
-    return AcnDivesController::getDivesValues();
+    return AcnDivesController::getAllDivesValues();
 })->middleware(['auth'])->name("dives");
 
 Route::get('/dashboard', function () {
@@ -33,7 +33,7 @@ Route::get('/secretary', function () {
 
 Route::get('/suggest', function () {
     return AcnDiveCreationController::getAll();
-})->middleware(['auth'])->middleware('isDirector')->name("suggest");
+})->middleware(['auth'])->middleware('isManager')->name("suggest");
 
 Route::post('formSuggest', [AcnDiveCreationController::class, 'create']);
 
