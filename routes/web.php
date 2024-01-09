@@ -17,3 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
+})->middleware(['auth'])->name('dashboard');
+
+Route::get('/vite', function () {
+    return AcnMemberController::passMembers();
+});
+
+require __DIR__.'/auth.php';

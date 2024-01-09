@@ -3,9 +3,10 @@
 namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
-class AcnMember extends Model
+class AcnMember extends Authenticatable
 {
     use HasFactory;
 
@@ -21,7 +22,7 @@ class AcnMember extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'MEM_NUM_LICENCE';
+    protected $primaryKey = 'MEM_NUM_MEMBER';
 
     /**
      * Indicates if the model should be timestamped.
@@ -29,6 +30,8 @@ class AcnMember extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $fillable = ["MEM_NUM_LICENCE", "MEM_PASSWORD"];
 
     /**
      * The functions that belong to the member.
@@ -60,5 +63,11 @@ class AcnMember extends Model
     public function dives()
     {
         return $this->belongsToMany(AcnDives::class, "ACN_REGISTERED", "NUM_LICENCE", "NUM_DIVE");
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->MEM_PASSWORD;
+
     }
 }
