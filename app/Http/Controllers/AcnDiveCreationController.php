@@ -11,6 +11,8 @@ use App\Models\web\AcnPrerogative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AcnDivesController;
+use App\Http\Controllers\AcnBoatController;
+use Carbon\Carbon;
 
 class AcnDiveCreationController extends Controller
 {
@@ -49,12 +51,50 @@ class AcnDiveCreationController extends Controller
     }
 
     static public function create(Request $request) {
+
+        
+        $err = false;
+        $strErr = "";
+
+        $exist = AcnDivesController::existDive($request -> date, $request -> period);
+        
+        if ($exist) {
+            $err = true;
+            $periodName = AcnPeriodController::getPeriodName($request -> period);
+            $strErr .= "- Une plongée existe déjà le ".Carbon::parse($request -> date)->locale('fr_FR')->translatedFormat('l j F Y')." à ce moment "."(".$periodName.")<br>";
+            echo $strErr;
+        }
+
+        if (!is_null($request->boat)) {
+            $capacity = AcnBoatController::getBoatCapacity($request->boat);
+            if ($capacity < ($request -> max_divers) ) {
+                $err = true;
+            }
+        }
+        else {
+            //TO DO : Retrieve the max capacity of the 
+            //if ($request -> max_divers == 0) $request -> max_divers = $capacity;
+        }
+        if ($request -> min_divers > $request -> max_divers) $err = true;
+
+        if (!is_null($request -> lead) && !is_null($request -> pilot) && ($request -> lead == $request -> pilot) ) {
+            echo "egal"; 
+            $err = true;          
+        }
+        if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
+            $err = true;             
+        }
+        if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
+            $err = true;   
+        }
+        
+
+
+        echo $err;
+
         $max = AcnDivesController::getNumMax();
-        $max = $max[0];
-        $max = (array) $max;
-        $max = $max['maxi'];
 
-
+        /*
         DB::table('ACN_DIVES')->insert([
             'DIV_NUM_DIVE' => $max,
             'DIV_DATE' => DB::raw("str_to_date('".$request -> date."','%Y-%m-%d')"),
@@ -68,6 +108,6 @@ class AcnDiveCreationController extends Controller
             'DIV_MIN_REGISTERED' => $request -> min_divers,
             'DIV_MAX_REGISTERED'=> $request -> max_divers,
         ]);
-
+        */
     }
 }
