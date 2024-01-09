@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AcnBoatController;
+use App\Http\Controllers\AcnMemberController;
+use App\Http\Controllers\AcnDivesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +20,6 @@ Route::get('/', function () {
     return view("accueil");
 });
 
-Route::get('/accueil', function () {
-    return view('accueil');
+Route::get('/dives', function () {
+    return AcnDivesController::getDivesValues();
 });

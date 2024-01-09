@@ -31,6 +31,15 @@ class AcnDives extends Model
      */
     public $timestamps = false;
 
+        /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'DIV_DATE' => 'datetime',
+    ];
+
     /**
      * Get the boat that is used for the diving.
      */
@@ -102,4 +111,5 @@ class AcnDives extends Model
     {
         return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_GROUPS");
     }
+
 }
