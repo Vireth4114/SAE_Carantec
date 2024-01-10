@@ -35,3 +35,20 @@ a {
     text-align: center;
     margin-top: 50px;
 }
+
+#firstTable {
+    border-collapse: collapse;
+    width: 500px;
+    margin: 10px;
+}
+
+#firstTable td, #secondTable td {
+    border: solid black 1px;
+    padding: 3px;
+}
+
+#secondTable {
+    border-collapse: collapse;
+    width: 1000px;
+    margin: 10px;
+}

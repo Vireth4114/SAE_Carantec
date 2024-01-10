@@ -40,7 +40,7 @@ class AcnSafetyDataSheetController extends Controller {
         ->get();
 
         $period = DB::table('ACN_PERIOD')
-        ->select('PER_LABEL')
+        ->select('PER_START_TIME', 'PER_END_TIME')
         ->where('PER_NUM_PERIOD', '=', $dives[0]->DIV_NUM_PERIOD)
         ->get();
 
