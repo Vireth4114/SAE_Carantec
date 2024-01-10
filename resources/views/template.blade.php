@@ -22,7 +22,7 @@
                         $isUserDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
                     @endphp
                     @if($isUserSecretary || $isUserManager)
-                        <a href="">Adhérent</a>
+                        <a href="">Adhérents</a>
                     @endif
                     @if($isUserManager)
                             <a href="">Archives</a>
