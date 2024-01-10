@@ -62,7 +62,7 @@ class AcnBoatController extends Controller
             $errors["number"] = "La capacité doit être supérieure ou égale à 4.";
         }
         if (count($errors) != 0) return back()->withErrors($errors);
-        $boat->BOA_NAME = $request->boa_name;
+        $boat->BOA_NAME = strtoupper($request->boa_name);
         $boat->BOA_CAPACITY = $request->boa_capacity;
         $boat->save();
         return redirect(route("managerPanel"));
