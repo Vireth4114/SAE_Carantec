@@ -5,6 +5,7 @@
 @php
     $id=0;
     use Carbon\Carbon;
+    $user = auth()->user();
 @endphp
     @if(!empty(session('errors')))
         @foreach (session('errors')->all() as $error)
@@ -12,7 +13,7 @@
         @endforeach
     @endif
     @foreach($months as $month)
-        <h2>{{ $month->mois_mot }}</h2>
+        <h2>{{ ucfirst(Carbon::parse($month->mois_nb."/01/2000")->locale('fr_FR')->translatedFormat('F')) }}</h2>
 
         @foreach($dives[$month->mois_mot] as $dive)
             @php
@@ -23,7 +24,7 @@
                 $buttonText = "S'inscrire"
             @endphp
             <form
-            @if (auth()->user()->dives->contains("DIV_NUM_DIVE", $dive->DIV_NUM_DIVE))
+            @if ($user->dives->contains("DIV_NUM_DIVE", $dive->DIV_NUM_DIVE))
                 action="{{ route('membersDivesUnregister') }}"
                 @php
                     $buttonText = "Se désinscrire"
@@ -49,7 +50,11 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
                 </p>
-                <input type="submit" value="{{ $buttonText }}">
+                <input type="submit" value="{{ $buttonText }}"
+                @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
+                    disabled
+                @endif
+                >
             </form>
         @endforeach
     @endforeach
