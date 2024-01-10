@@ -146,7 +146,18 @@ class AcnDiveModifyController extends Controller
             $strErr .= "-L'effectif maximum ne peut qu'être augmenté<br>";
         }
 
-        $divers_lvl = AcnDives::find($request -> numDive)->divers();
+        $divers_lvl = AcnDives::find($request -> numDive)->divers;
+        $minAllDivers = AcnPrerogative::all()->max('PRE_PRIORITY');
+        foreach($divers_lvl as $diver) {
+            $maxLocalDiver = $diver->prerogatives->max("PRE_PRIORITY");
+            if ($maxLocalDiver < $minAllDivers) {
+                $minAllDivers = $maxLocalDiver;
+            }
+        }
+        if($minAllDivers < AcnPrerogative::find($request -> lvl_required)->PRE_PRIORITY) {
+            $err = true;
+            $strErr .= "-Le niveau saisi est trop élevé <br>";
+        }
 
         $max = AcnDivesController::getNumMax();
 
