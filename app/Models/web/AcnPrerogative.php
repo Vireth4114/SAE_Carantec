@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AcnPrerogative extends Model
 {
@@ -36,5 +37,13 @@ class AcnPrerogative extends Model
     public function members()
     {
         return $this->belongsToMany(AcnMember::class, "ACN_RANKED", "NUM_PREROG", "NUM_MEMBER");
+    }
+
+    public static function getPrerogative($num_pre){
+        $prerogative = DB::table('ACN_PREROGATIVE')
+        ->select('PRE_LEVEL')
+        ->where('PRE_NUM_PREROG' ,'=', $num_pre)
+        -> get();
+        return $prerogative;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AcnBoat extends Model
 {
@@ -29,4 +30,12 @@ class AcnBoat extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public static function getBoat($num_boat){
+        $boat = DB::table('ACN_BOAT')
+        -> select('BOA_NAME')
+        -> where('BOA_NUM_BOAT','=',$num_boat)
+        ->get();
+        return $boat;
+    }
 }

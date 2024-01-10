@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AcnSite extends Model
 {
@@ -29,4 +30,12 @@ class AcnSite extends Model
      * @var bool
      */
     public $timestamps = false;
+
+
+    public static function getSite($num_site){
+        $site = DB::table('ACN_SITE')
+        -> select('SIT_NAME')
+        -> where('SIT_NUM_SITE','=',$num_site) ->get();
+        return $site;
+    }
 }

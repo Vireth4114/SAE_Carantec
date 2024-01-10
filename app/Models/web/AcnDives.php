@@ -5,6 +5,9 @@ namespace App\Models\web;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class AcnDives extends Model
 {
@@ -110,6 +113,79 @@ class AcnDives extends Model
     public function groups()
     {
         return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_GROUPS");
+    }
+
+    public static function getDive($num_dive){
+
+        $dive = DB::table('acn_dives')->select('acn_dives.*')->where('div_num_dive','=',$num_dive)->get();
+        //array_push($dive, $dive_info[0]);
+        /*
+        $period = DB::table('ACN_PERIOD')
+        -> select('PER_LABEL')
+        -> where('PER_NUM_PERIOD','=',$dive_info[0]-> DIV_NUM_PERIOD) ->get();
+        array_push($dive,  $period[0]);
+
+        $site = DB::table('acn_site')
+        ->select('sit_name')
+        ->where('sit_num_site','=',$dive_info[0]->DIV_NUM_SITE)->get();
+
+        if(!$site->isEmpty()){
+            array_push($dive,  $site[0]);
+        }else{
+            $site = collect("sit_name","");
+            array_push($dive, $site[0]);
+        }
+
+
+
+        $boat = DB::table('acn_boat')
+        ->select('BOA_NAME')
+        ->where('BOA_NUM_BOAT','=',$dive_info[0]->DIV_NUM_BOAT)->get();
+        if(!$boat->isEmpty()){
+            array_push($dive,  $boat[0]);
+        }else{
+            array_push($dive,  "");
+        }
+
+        $securedMem = DB::table('acn_member')
+        ->select('MEM_NAME','MEM_SURNAME')
+        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_SECURED)->get();
+        if(!$securedMem->isEmpty()){
+            array_push($dive,  $securedMem[0]);
+        }else{
+            array_push($dive,  "");
+        }
+
+        $leadMem = DB::table('acn_member')
+        ->select('MEM_NAME','MEM_SURNAME')
+        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_LEAD)->get();
+        if(!$leadMem->isEmpty()){
+            array_push($dive,  $leadMem[0]);
+        }else{
+            array_push($dive,  "");
+        }
+
+        $piloteMem = DB::table('acn_member')
+        ->select('MEM_NAME','MEM_SURNAME')
+        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_PILOTING)->get();
+        if(!$piloteMem->isEmpty()){
+            array_push($dive,  $piloteMem[0]);
+        }else{
+            array_push($dive,  "");
+        }
+
+
+        $prero = DB::table('acn_prerogative')
+        ->select('PRE_LABEL')
+        ->where('PRE_NUM_PREROG','=',$dive_info[0]->DIV_NUM_PREROG)->get();
+        if(!$prero->isEmpty()){
+            array_push($dive,  $prero[0]);
+        }else{
+            array_push($dive,  "");
+        }
+        dd($dive);
+        */
+        return $dive;
     }
 
 }

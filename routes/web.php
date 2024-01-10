@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcnDiveModifyController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,12 @@ Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
+Route::get('/diveModify', function () {
+    return AcnDiveModifyController::getAll();
+})->name("diveModifyForm");
+
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
+
+Route::post('diveModifyForm', [AcnDiveModifyController::class, 'modify'])->name('diveModifyForm');
 
 require __DIR__.'/auth.php';

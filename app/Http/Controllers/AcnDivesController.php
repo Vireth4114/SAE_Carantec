@@ -34,7 +34,7 @@ class AcnDivesController extends Controller
         return $max['maxi'];
     }
 
-    
+
     static public function existDive($date, $numPeriod) {
         return DB::table('ACN_DIVES')
             -> select(DB::raw(1))

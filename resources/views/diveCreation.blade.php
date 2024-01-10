@@ -1,3 +1,6 @@
+@extends('template')
+@section('content')
+
         <title>Création d'un créneau</title>
     </head>
     <body>
@@ -73,3 +76,4 @@
         </form>
     </body>
 </html>
+@endsection

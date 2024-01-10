@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AcnPeriod extends Model
 {
@@ -39,4 +40,12 @@ class AcnPeriod extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public static function getPeriod($num_per){
+        $period = DB::table('ACN_PERIOD')
+        -> select('PER_LABEL')
+        -> where('PER_NUM_PERIOD','=',$num_per) ->get();
+        return $period;
+    }
+
 }

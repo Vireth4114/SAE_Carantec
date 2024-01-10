@@ -97,4 +97,44 @@ class AcnMember extends Authenticatable
         ->select("*")->exists();
         return $isUserDirector;
     }
+
+    static public function getAllLeader(){
+       return DB::table('ACN_MEMBER')
+            -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
+            -> distinct()
+            -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
+            -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+            -> where('PRE_PRIORITY', '>', '12')
+            -> where('MEM_STATUS','=','1')
+            -> get();
+    }
+
+    static public function getAllPilots(){
+        return DB::table('ACN_MEMBER')
+        -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
+        -> distinct()
+        -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
+        -> where ('NUM_FUNCTION','=','3')
+        -> where('MEM_STATUS','=','1')
+        -> get();
+    }
+
+    static public function getMember($num_member){
+        return DB::table('ACN_MEMBER')
+             -> select('MEM_NAME', 'MEM_SURNAME')
+             -> where('MEM_NUM_MEMBER', '=' , $num_member)
+             -> get();
+
+    }
+
+    static public function getAllSecurity() {
+        return DB::table('ACN_MEMBER')
+        -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
+        -> distinct()
+        -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
+        -> where ('NUM_FUNCTION','=','2')
+        -> where('MEM_STATUS','=','1')
+        -> get();
+    }
+
 }
