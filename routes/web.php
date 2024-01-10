@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
+use App\Http\Controllers\AcnDirectorController;
+use App\Http\Controllers\AcnMemberController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +36,11 @@ Route::get('/secretary', function () {
 Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
+
+Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
+    return AcnDirectorController::addDiveMember($diveId);
+})->name("addMember");
+
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
