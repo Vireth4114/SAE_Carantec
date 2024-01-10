@@ -51,6 +51,21 @@ class AcnDives extends Model
             -> where('DIV_NUM_DIVE', $diveId)
             -> get();
     }
+    
+    public static function create($DIV_DATE, $DIV_NUM_PERIOD, $DIV_NUM_SITE, $DIV_NUM_BOAT, $DIV_NUM_PREROG, $DIV_NUM_MEMBER_LEAD, $DIV_NUM_MEMBER_PILOTING, $DIV_NUM_MEMBER_SECURED, $DIV_MIN_REGISTERED, $DIV_MAX_REGISTERED) {
+        DB::table('ACN_DIVES')->insert([
+            'DIV_DATE' => DB::raw("str_to_date('".$DIV_DATE."','%Y-%m-%d')"),
+            'DIV_NUM_PERIOD' => $DIV_NUM_PERIOD,
+            'DIV_NUM_SITE' => $DIV_NUM_SITE,
+            'DIV_NUM_BOAT' => $DIV_NUM_BOAT,
+            'DIV_NUM_PREROG' => $DIV_NUM_PREROG,
+            'DIV_NUM_MEMBER_LEAD' => $DIV_NUM_MEMBER_LEAD,
+            'DIV_NUM_MEMBER_PILOTING' => $DIV_NUM_MEMBER_PILOTING,
+            'DIV_NUM_MEMBER_SECURED'=> $DIV_NUM_MEMBER_SECURED,
+            'DIV_MIN_REGISTERED' => $DIV_MIN_REGISTERED,
+            'DIV_MAX_REGISTERED'=> $DIV_MAX_REGISTERED,
+        ]);
+    }
 
     /**
      * The table associated with the model.

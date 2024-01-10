@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\web\AcnBoat;
+use App\Models\web\AcnDives;
 use App\Models\web\AcnSite;
 use App\Models\web\AcnPeriod;
 use App\Models\web\AcnMember;
@@ -21,7 +22,7 @@ class AcnDiveCreationController extends Controller
         $sites = AcnSite::all();
         $periods = AcnPeriod::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
-        
+
         $leads = AcnMember::getAllLeader();
 
         $pilots = AcnMember::getAllPilots();
@@ -103,18 +104,8 @@ class AcnDiveCreationController extends Controller
             echo $strErr;
         }
         else {
-            DB::table('ACN_DIVES')->insert([
-                'DIV_DATE' => DB::raw("str_to_date('".$request -> date."','%Y-%m-%d')"),
-                'DIV_NUM_PERIOD' => $request -> period,
-                'DIV_NUM_SITE' => $request -> site,
-                'DIV_NUM_BOAT' => $request -> boat,
-                'DIV_NUM_PREROG' => $request -> lvl_required,
-                'DIV_NUM_MEMBER_LEAD' => $request -> lead,
-                'DIV_NUM_MEMBER_PILOTING' => $request -> pilot,
-                'DIV_NUM_MEMBER_SECURED'=> $request -> security,
-                'DIV_MIN_REGISTERED' => $request -> min_divers,
-                'DIV_MAX_REGISTERED'=> $request -> max_divers,
-            ]);
+            AcnDives::create($request -> date, $request -> period, $request -> site, $request -> boat, $request -> lvl_required, 
+            $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);           
         }
 
     }
