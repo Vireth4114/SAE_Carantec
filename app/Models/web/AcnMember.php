@@ -137,4 +137,13 @@ class AcnMember extends Authenticatable
         -> get();
     }
 
+    static public function getMemberMaxPriority($numMember) {
+        return DB::table('ACN_MEMBER')
+            -> select('PRE_PRIORITY')
+            -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
+            -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+            -> where('MEM_NUM_MEMBER', $numMember)
+            -> max('PRE_PRIORITY');
+    }
+
 }

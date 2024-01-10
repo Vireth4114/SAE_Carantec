@@ -21,10 +21,35 @@ class AcnDives extends Model
             array_push($memNums, $member['MEM_NUM_MEMBER']);
         }
 
-        return DB::table('ACN_MEMBER')
-        -> where ('MEM_NUM_MEMBER', '>', 0)
-        -> whereNotIn('MEM_NUM_MEMBER', $memNums)
-        -> get();
+        $divePriority = AcnDives::getPrerogPriority($diveId);
+
+
+        $members = DB::table('ACN_MEMBER')
+            -> where ('MEM_NUM_MEMBER', '>', 0)
+            -> whereNotIn('MEM_NUM_MEMBER', $memNums)
+            -> get();
+
+        $eligibleMembers=array();
+        foreach($members as $member) {
+            if ($divePriority[0] -> PRE_PRIORITY > 4) {
+                if (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) {
+                    array_push($eligibleMembers, $member);
+                }
+            } else {
+                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 ) {
+                    array_push($eligibleMembers, $member);
+                }
+            }
+        }
+        return $eligibleMembers;
+    }
+
+    static public function getPrerogPriority($diveId) {
+        return DB::table('ACN_DIVES')
+            -> select ('PRE_PRIORITY')
+            -> join('ACN_PREROGATIVE', 'ACN_DIVES.DIV_NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+            -> where('DIV_NUM_DIVE', $diveId)
+            -> get();
     }
 
     /**
