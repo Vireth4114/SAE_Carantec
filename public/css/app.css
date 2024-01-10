@@ -39,3 +39,7 @@ header {
 #logoAddMember {
     width: 1%;
 }
+
+.userError {
+    color:red;
+}

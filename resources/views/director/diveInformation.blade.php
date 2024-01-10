@@ -12,7 +12,7 @@
 <p>Sécurité de surface : {{$security}}</p>
 <p>Pilote : {{$pilot}}</p>
 
-<h3>Membres inscrits :</h3>
+<h3>Membres inscrits ({{$nbMembers}}/{{$max_divers}}) :</h3>
 <table>
     <thead>
         <tr>
@@ -41,7 +41,7 @@
 @endforeach
     </tbody>
 </table>
-<p>Ajouter un adhérent : </p>
+<p>Ajouter un adhérent ou vous inscrire : </p>
 <a href="{{ route('addMember', $dive['DIV_NUM_DIVE'] ) }}"><img id="logoAddMember" src="{{URL::asset('images/plus.png')}}" alt="Logo plus"></a>
 
 @endsection
