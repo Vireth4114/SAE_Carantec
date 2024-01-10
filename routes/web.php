@@ -108,6 +108,7 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
     AcnSiteController::delete($siteId);
     return back();
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
+
 Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
     return AcnDirectorController::addDiveMember($diveId);
 })->name("addMember");
@@ -116,6 +117,11 @@ Route::post('/panel/director/addMemberToDiveForm', function (Request $request) {
     AcnRegisteredController::create($request->numMember, $request->numDive);
     return redirect()->route('addMember', ['diveId' => $request -> numDive] );
 })->name("addMemberToDiveForm");
+
+Route::post('/panel/director/removeDirectorFromDiveForm', function (Request $request) {
+    AcnRegisteredController::delete($request->numMember, $request->numDive);
+    return redirect()->route('addMember', ['diveId' => $request -> numDive] );
+})->name("removeDirectorFromDiveForm");
 
 Route::get('/panel/director/diveInformation/{diveId}', function ($diveId)  {
     return AcnDirectorController::diveInformation($diveId);
