@@ -29,4 +29,8 @@ class AcnSite extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    static public function getAllSites() {
+        return AcnSite::where("SIT_DELETED", "=", 0)->get();
+    }
 }

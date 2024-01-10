@@ -40,4 +40,19 @@ class AcnBoatController extends Controller
         $capacity = (array) $capacity[0];
         return $capacity['BOA_NAME'];
     }
+
+    static public function create(Request $request) {
+        //return AcnBoatController;
+    }
+
+    static public function delete($boat_id) {
+        $boat = AcnBoat::find($boat_id);
+        $boat->BOA_DELETED = 1;
+        $boat->save();
+    }
+
+    static public function getBoatUpdateView($siteId) {
+        $site = AcnBoat::find($siteId);
+        return view("manager/updateBoat");
+    }
 }

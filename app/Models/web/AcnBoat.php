@@ -29,4 +29,8 @@ class AcnBoat extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    static public function getAllBoats() {
+        return AcnBoat::where("BOA_DELETED", "=", 0)->get();
+    }
 }
