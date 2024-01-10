@@ -42,7 +42,23 @@ class AcnBoatController extends Controller
     }
 
     static public function create(Request $request) {
-        //return AcnBoatController;
+        $errors = array();
+        $nameAlreadyExist = AcnBoat::where("BOA_NAME", "=", strtoupper($request->boa_name))->exists();
+        if ($nameAlreadyExist) {
+            $errors["name"] = "Le nom donné est déjà existant.";
+        }
+        if ($request->boa_capacity < 4) {
+            $errors["number"] = "La capacité doit être supérieure ou égale à 4.";
+        }
+        if (empty($request->boa_name) || empty($request->boa_capacity)) {
+            $errors["empty_entry"] = "Tous les champs doivent êtres remplis.";
+        }
+        if (count($errors) != 0) return back()->withErrors($errors);
+        $boat = new AcnBoat;
+        $boat->BOA_NAME = strtoupper($request->boa_name);
+        $boat->BOA_CAPACITY = $request->boa_capacity;
+        $boat->save();
+        return redirect(route("managerPanel"));
     }
 
     static public function delete($boatId) {
@@ -60,6 +76,9 @@ class AcnBoatController extends Controller
         }
         if ($request->boa_capacity < 4) {
             $errors["number"] = "La capacité doit être supérieure ou égale à 4.";
+        }
+        if (empty($request->boa_name) || empty($request->boa_capacity)) {
+            $errors["empty_entry"] = "Tous les champs doivent êtres remplis.";
         }
         if (count($errors) != 0) return back()->withErrors($errors);
         $boat->BOA_NAME = strtoupper($request->boa_name);

@@ -2,6 +2,7 @@
 
 @section("content")
     <h2>Bateaux</h2>
+    <a href="{{ route('boatCreate') }}">Créer un bateau</a>
     @foreach ($boats as $boat)
         <p>{{ $boat->BOA_NAME }} ({{ $boat->BOA_CAPACITY }})</p>
         <form action="{{ route('boatUpdate', ['boatId' => $boat->BOA_NUM_BOAT]) }}" method="GET">
@@ -16,6 +17,7 @@
     @endforeach
 
     <h2>Sites</h2>
+    <a href="{{ route('siteCreate') }}">Créer un site</a>
     @foreach ($sites as $site)
         <h3>{{ $site->SIT_NAME }} ({{ $site->SIT_COORD }})</h3>
         <p>Profondeur : {{ $site->SIT_DEPTH }}</p>

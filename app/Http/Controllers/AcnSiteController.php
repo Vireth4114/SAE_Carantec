@@ -7,6 +7,31 @@ use Illuminate\Http\Request;
 
 class AcnSiteController extends Controller
 {
+    static public function create(Request $request) {
+        $errors = array();
+        $nameAlreadyExist = AcnSite::where("SIT_NAME", "=", strtoupper($request->sit_name))->exists();
+        if ($nameAlreadyExist) {
+            $errors["name"] = "Le nom donné est déjà existant.";
+        }
+        if (strlen($request->sit_coord) > 127) {
+            $errors["coord_len"] = "Les coordonnées ne doivent pas faire plus de 127 caractères.";
+        }
+        if (strlen($request->sit_description) > 255) {
+            $errors["coord_len"] = "La description ne doit pas faire plus de 255 caractères.";
+        }
+        if (empty($request->sit_name) || empty($request->sit_coord) || empty($request->sit_depth) || empty($request->sit_description)) {
+            $errors["empty_entry"] = "Tous les champs doivent êtres remplis.";
+        }
+        if (count($errors) != 0) return back()->withErrors($errors);
+        $site = new AcnSite;
+        $site->SIT_NAME = strtoupper($request->sit_name);
+        $site->SIT_COORD = $request->sit_coord;
+        $site->SIT_DEPTH  = $request->sit_depth;
+        $site->SIT_DESCRIPTION  = $request->sit_description;
+        $site->save();
+        return redirect(route("managerPanel"));
+    }
+
     static public function delete($siteId) {
         $site = AcnSite::find($siteId);
         $site->SIT_DELETED = 1;
@@ -26,6 +51,9 @@ class AcnSiteController extends Controller
         if (strlen($request->sit_description) > 255) {
             $errors["coord_len"] = "La description ne doit pas faire plus de 255 caractères.";
         }
+        if (empty($request->sit_name) || empty($request->sit_coord) || empty($request->sit_depth) || empty($request->sit_description)) {
+            $errors["empty_entry"] = "Tous les champs doivent êtres remplis.";
+        }
         if (count($errors) != 0) return back()->withErrors($errors);
         $site->SIT_NAME = strtoupper($request->sit_name);
         $site->SIT_COORD = $request->sit_coord;
@@ -37,6 +65,6 @@ class AcnSiteController extends Controller
 
     static public function getSiteUpdateView($siteId) {
         $site = AcnSite::find($siteId);
-        return view("manager/updateSite", ["site" => $site, 'errors' => array()]);
+        return view("manager/createSite", ["site" => $site]);
     }
 }
