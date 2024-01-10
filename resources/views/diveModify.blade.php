@@ -59,17 +59,27 @@
             </select>
 
         <label>Choisir un directeur de plongée :</label>
-        <select name="lead" id="lead">
-            @if($lead == "")
-            <option selected value="">--Choisir un adhérent--</option>
-            @endif
-        @foreach ($leads as $lead)
-            @if($lead->MEM_NUM_MEMBER == $dive->DIV_NUM_MEMBER_LEAD)
-                <option selected value='{{$lead->MEM_NUM_MEMBER}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
-            @else
-                <option value='{{$lead->MEM_NUM_MEMBER}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
-            @endif
-        @endforeach
+        @if (!$isDirector)
+            <select name="lead" id="lead">
+                @if($lead == "")
+                    <option selected value="">--Choisir un adhérent--</option>
+                @endif
+            @foreach ($leads as $lead)
+                @if($lead->MEM_NUM_MEMBER == $dive->DIV_NUM_MEMBER_LEAD)
+                    <option selected value='{{$lead->MEM_NUM_MEMBER}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
+                @else
+                    <option value='{{$lead->MEM_NUM_MEMBER}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
+                @endif
+            @endforeach
+        @else
+            <select disabled name="lead" id="lead">
+            @foreach ($leads as $lead)
+                @if($lead->MEM_NUM_MEMBER == $dive->DIV_NUM_MEMBER_LEAD )
+                    <option selected disabled value='{{$dive->DIV_NUM_MEMBER_LEAD}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
+                @endif
+            @endforeach
+        @endif
+
         <option value="">--Choisir un ahdérent--</option>
         </select>
 

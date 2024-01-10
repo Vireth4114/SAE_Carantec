@@ -21,7 +21,7 @@ class AcnDiveCreationController extends Controller
         $sites = AcnSite::all();
         $periods = AcnPeriod::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
-
+        
         $leads = AcnMember::getAllLeader();
 
         $pilots = AcnMember::getAllPilots();

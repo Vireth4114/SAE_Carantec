@@ -18,9 +18,9 @@ use League\CommonMark\Extension\Attributes\Node\Attributes;
 
 class AcnDiveModifyController extends Controller
 {
-    static public function getAll() {
+    static public function getAll($diveId) {
 
-        $dive = AcnDives::getDive(2);
+        $dive = AcnDives::getDive($diveId);
         $period = AcnPeriod::getPeriod($dive[0]->DIV_NUM_PERIOD);
         $site = AcnSite::getSite($dive[0]->DIV_NUM_SITE);
         if($site->isEmpty()){
@@ -59,8 +59,9 @@ class AcnDiveModifyController extends Controller
             $security = $security[0]->MEM_NAME.$security[0]->MEM_SURNAME;
         }
 
-
-
+        
+        $isDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
+        
         $boats = AcnBoat::all();
         $sites = AcnSite::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
@@ -73,7 +74,8 @@ class AcnDiveModifyController extends Controller
          "dive" => $dive[0], "site" => $site,
          "boat" => $boat, "prerogative" => $prerogative,
         "lead" => $lead, "pilot" => $pilot,
-        "security" => $security]);
+        "security" => $security, 
+        'isDirector' => $isDirector]);
     }
 
     static public function modify(Request $request) {

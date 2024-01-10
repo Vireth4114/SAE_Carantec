@@ -54,13 +54,13 @@ Route::get('/secretary', function () {
     return view('secretary', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
 })->middleware(['auth'])->middleware('isSecretary')->name("secretary");
 
-Route::get('/diveCreation', function () {
+Route::get('/diveCreation/{}', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
 
-Route::get('/diveModify', function () {
-    return AcnDiveModifyController::getAll();
+Route::get('/diveModify/{diveId}', function ($diveId) {
+    return AcnDiveModifyController::getAll($diveId);
 })->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModifyleware f");
 
 Route::get('/panel/manager', function () {
