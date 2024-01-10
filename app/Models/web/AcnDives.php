@@ -67,6 +67,20 @@ class AcnDives extends Model
         ]);
     }
 
+    public static function updateData($numDive, $site, $boat, $lvl_required, $lead, $pilot, $security, $min_divers, $max_divers){
+        DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $numDive)
+            ->update([
+                'DIV_NUM_SITE' => $site,
+                'DIV_NUM_BOAT' => $boat,
+                'DIV_NUM_PREROG' => $lvl_required,
+                'DIV_NUM_MEMBER_LEAD' => $lead,
+                'DIV_NUM_MEMBER_PILOTING' => $pilot,
+                'DIV_NUM_MEMBER_SECURED'=> $security,
+                'DIV_MIN_REGISTERED' => $min_divers,
+                'DIV_MAX_REGISTERED'=> $max_divers,
+            ]);
+    }
+
     /**
      * The table associated with the model.
      *

@@ -167,18 +167,9 @@ class AcnDiveModifyController extends Controller
             echo $strErr;
         }
         else {
-            DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $request -> numDive)
-            ->update([
-                'DIV_NUM_SITE' => $request -> site,
-                'DIV_NUM_BOAT' => $request -> boat,
-                'DIV_NUM_PREROG' => $request -> lvl_required,
-                'DIV_NUM_MEMBER_LEAD' => $request -> lead,
-                'DIV_NUM_MEMBER_PILOTING' => $request -> pilot,
-                'DIV_NUM_MEMBER_SECURED'=> $request -> security,
-                'DIV_MIN_REGISTERED' => $request -> min_divers,
-                'DIV_MAX_REGISTERED'=> $request -> max_divers,
-            ])
-            ;
+
+            AcnDives::updateData($request -> numDive, $request -> site, $request -> boat, $request -> lvl_required, $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);
+
         }
 
     }
