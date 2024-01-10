@@ -104,6 +104,7 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
     AcnSiteController::delete($siteId);
     return back();
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
+
 Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
     return AcnDirectorController::addDiveMember($diveId);
 })->name("addMember");

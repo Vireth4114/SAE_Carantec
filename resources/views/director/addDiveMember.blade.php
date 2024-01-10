@@ -6,7 +6,7 @@
 @endphp
 
 <h3>Ajouter des membres pour la plongée n°{{$dive['DIV_NUM_DIVE']}} du {{Carbon::parse($dive['DIV_DATE'])->locale('fr_FR')->translatedFormat('l j F Y')}}</h3>
-
+<a href="{{ route('diveInformation', $dive['DIV_NUM_DIVE'] ) }}">Revenir aux informations de la plongée</a>
 <table>
     <thead>
         <tr>
