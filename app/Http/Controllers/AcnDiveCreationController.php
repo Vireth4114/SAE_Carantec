@@ -22,31 +22,11 @@ class AcnDiveCreationController extends Controller
         $periods = AcnPeriod::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
 
-        $leads = DB::table('ACN_MEMBER')
-            -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
-            -> distinct()
-            -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
-            -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('PRE_PRIORITY', '>', '12')
-            -> where('MEM_STATUS','=','1')
-            -> get();
+        $leads = AcnMember::getAllLeader();
 
-        $pilots = DB::table('ACN_MEMBER')
-            -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
-            -> distinct()
-            -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
-            -> where ('NUM_FUNCTION','=','3')
-            -> where('MEM_STATUS','=','1')
-            -> get();
+        $pilots = AcnMember::getAllPilots();
 
-        $securitys = DB::table('ACN_MEMBER')
-        -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
-        -> distinct()
-        -> join('ACN_WORKING', 'ACN_MEMBER.MEM_NUM_MEMBER','=', 'ACN_WORKING.NUM_MEMBER')
-        -> where ('NUM_FUNCTION','=','2')
-        -> where('MEM_STATUS','=','1')
-        -> get();
-
+        $securitys = AcnMember::getAllSecurity();
         return view ('diveCreation', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
     }
 
