@@ -52,6 +52,11 @@ Route::get('/panel/director/diveInformation/{diveId}', function ($diveId)  {
     return AcnDirectorController::diveInformation($diveId);
 })->name("diveInformation");
 
+Route::post('/panel/director/removeMemberFromDiveForm', function (Request $request) {
+    AcnRegisteredController::delete($request->numMember, $request->numDive);
+    return redirect()->route('diveInformation', ['diveId' => $request -> numDive] );
+})->name("removeMemberFromDiveForm");
+
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
 require __DIR__.'/auth.php';

@@ -17,6 +17,9 @@ class AcnRegistered extends Model
 
     static public function deleteData($numMember, $numDive) {
         DB::table('ACN_REGISTERED')
-            -> destroy($numMember, $numDive);
+            ->where ('NUM_MEMBER', $numMember)
+            ->where ('NUM_DIVE', $numDive)
+            ->delete();
     }
 }
+                                    

@@ -27,23 +27,23 @@ class AcnDirectorController extends Controller
         $period = "de ".$period->PER_START_TIME->format('H')."h à ".$period->PER_END_TIME->format('H')."h";
 
         if (is_null($dive['DIV_NUM_SITE'])) {
-            $site = null;
+            $site = "non définit";
         } else {
             $site = AcnSite::find($dive['DIV_NUM_SITE'])->SIT_NAME;
         }
 
         if (is_null($dive['DIV_NUM_MEMBER_SECURED'])) {
-            $selectedSecurity = "non définie";
+            $selectedSecurity = "non définit";
         } else {
             $selectedSecurity = AcnMember::find($dive['DIV_NUM_MEMBER_SECURED'])->MEM_NUM_MEMBER;
         }
         if (is_null($dive['DIV_NUM_MEMBER_LEAD'])) {
-            $selectedLead = "non définie";
+            $selectedLead = "non définit";
         } else {
             $selectedLead = AcnMember::find($dive['DIV_NUM_MEMBER_LEAD'])->MEM_NUM_MEMBER;
         }
         if (is_null($dive['DIV_NUM_MEMBER_PILOT'])) {
-            $selectedPilot = "non définie";
+            $selectedPilot = "non définit";
         } else {
             $selectedPilot = AcnMember::find($dive['DIV_NUM_MEMBER_PILOT'])->MEM_NUM_MEMBER;
         }
