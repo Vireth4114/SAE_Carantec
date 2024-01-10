@@ -13,7 +13,7 @@ class AcnDirectorController extends Controller
 {
 
     public static function addDiveMember($diveId) {
-        $members = AcnMember::all();
+        $members = AcnDives::getMembersNotInDive($diveId);
         $dive = AcnDives::find($diveId);
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive]);
     }

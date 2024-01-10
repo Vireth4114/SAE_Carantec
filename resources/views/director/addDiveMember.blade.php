@@ -12,23 +12,20 @@
             <th>Numéro de licence</th>
             <th>Prénom</th>
             <th>Nom</th>
-            <th>Forfait</th>
-            <th>Plongées restantes</th>
+            <th>Ajouter</th>
         </tr>
     </thead>
     <tbody>
-@foreach($members as $member) 
+@foreach($members as $member)
         <tr>
-            <th>{{$member['MEM_NUM_LICENCE']}}</th>
-            <th>{{$member['MEM_NAME']}}</th>
-            <th>{{$member['MEM_SURNAME']}}</th>
-            <th>{{$member['MEM_PRICING']}}</th>
-            <th>{{$member['MEM_REMAINING_DIVES']}}</th>
+            <th>{{$member->MEM_NUM_LICENCE}}</th>
+            <th>{{$member->MEM_NAME}}</th>
+            <th>{{$member->MEM_SURNAME}}</th>
             <th>
                 <form action="{{ route('addMemberToDiveForm') }}" method="POST">
                     @csrf
                     @method('post')
-                    <input type="hidden" name="numMember" value="{{ $member['MEM_NUM_MEMBER'] }}">
+                    <input type="hidden" name="numMember" value="{{ $member->MEM_NUM_MEMBER }}">
                     <input type="hidden" name="numDive" value="{{ $dive['DIV_NUM_DIVE'] }}">
                     <button type="submit">ajouter</button>
                 </form>
