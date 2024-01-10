@@ -38,10 +38,9 @@ header {
 
 .memberInGroup {
     display: flex;
-    direction: row;
+    flex-direction: row;
     align-items: center;
     gap: 30px;
-    margin: 10px;
 }
 
 .memberInGroup a {
@@ -50,4 +49,14 @@ header {
     padding: 5px;
     border: 1px solid red;
     border-radius: 100px;
+}
+
+.groupBox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+    width: fit-content;
 }

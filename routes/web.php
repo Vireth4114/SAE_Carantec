@@ -42,12 +42,10 @@ Route::get('/groupsMaking', function () {
     return AcnGroupsMakingController::getAll();
 })->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
 
-Route::get('/addGroup', function () {
-    return AcnGroupsMakingController::add_group();
-})->middleware(['auth'])->middleware('isDirector')->name("addGroup");
-
-Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'remove_member'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
+Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'removeMember'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
 
 Route::post('addMemberToGroup', [AcnGroupsMakingController::class, 'add'])->middleware(['auth'])->middleware('isDirector')->name("addMemberToGroup");
+
+Route::post('addGroup', [AcnGroupsMakingController::class, 'addGroup'])->middleware(['auth'])->middleware('isDirector')->name("addGroup");
 
 require __DIR__.'/auth.php';
