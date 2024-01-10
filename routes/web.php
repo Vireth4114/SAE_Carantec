@@ -38,7 +38,7 @@ Route::get('/diveCreation', function () {
 
 Route::get('/diveModify', function () {
     return AcnDiveModifyController::getAll();
-})->name("diveModifyForm");
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModifyleware f");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
