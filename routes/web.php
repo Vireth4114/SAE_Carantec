@@ -25,6 +25,10 @@ Route::get('/dives', function () {
     return AcnDivesController::getDivesValues();
 })->name("dives");
 
+Route::get('/dives/informations/{id}', function ($id){
+    return AcnDivesController::getAllDiveInformation($id);
+})->name("dives_informations");
+
 Route::get('/dashboard', function () {
     return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
 })->middleware(['auth'])->name('dashboard');
