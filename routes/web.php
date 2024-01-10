@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcnBoatController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
+use App\Http\Controllers\AcnMemberController;
 use App\Http\Controllers\AcnSiteController;
 use App\Http\Controllers\ManagerPanelController;
 use Illuminate\Http\Request;
@@ -86,7 +87,7 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
 
 Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {
-    return AcnSiteController::update($request, $userId);
+    return AcnMemberController::updateRolesMember($request, $userId);
 })->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");

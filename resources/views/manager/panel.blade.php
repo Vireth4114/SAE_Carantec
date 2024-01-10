@@ -60,13 +60,13 @@
             @endif
             />
             <label for="pilot">Pilote</label>
-            <input type="checkbox" id="pilot" name="pilot" @if (!$memberFunction->where("FUN_LABEL", "=", "Pilote")->isEmpty())
+            <input type="checkbox" id="pilot" name="pilot"
+            @if (!$memberFunction->where("FUN_LABEL", "=", "Pilote")->isEmpty())
                 checked
-                @elseif
             @endif
             />
             <label for="secretary">Secrétaire</label>
-            <input type="checkbox" id="secretary" name="secretary" 
+            <input type="checkbox" id="secretary" name="secretary"
             @if (!$memberFunction->where("FUN_LABEL", "=", "Secrétaire")->isEmpty())
                 checked
             @endif

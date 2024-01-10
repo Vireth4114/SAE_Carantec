@@ -10,12 +10,23 @@ use Illuminate\Support\Facades\DB;
 
 class AcnMemberController extends Controller
 {
-    public static function getMember($numMember) {
-        return AcnMember::find($numMember);
+    public static function getMember($memberNum) {
+        return AcnMember::find($memberNum);
     }
 
-    public static function updateRolesMember(Request $request, $numMember) {
-        $member = AcnMember::find($numMember);
-        
+    public static function updateRolesMember(Request $request, $memberNum) {
+        $checkboxFields = array("security", "secretary", "pilot");
+        $fieldsMappingToNameInDatabase = array("security" => "Sécurité de surface",
+                                                "secretary" => "Secrétaire",
+                                                "pilot" => "Pilote");
+        foreach($checkboxFields as $field) {
+            $nameInDatabase = $fieldsMappingToNameInDatabase[$field];
+            if ($request->exists($field)) {
+                AcnMember::createUserRole($memberNum, $nameInDatabase);
+            } else {
+                AcnMember::deleteUserRole($memberNum, $nameInDatabase);
+            }
+        }
+        return redirect(route("managerPanel"));
     }
 }
