@@ -10,6 +10,9 @@ use App\Http\Controllers\AcnDirectorController;
 use App\Http\Controllers\AcnMemberController;
 use App\Http\Controllers\AcnRegisteredController;
 use Illuminate\Http\Request;
+
+use App\Models\web\AcnMember;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +57,7 @@ Route::get('/secretary', function () {
 Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
+
 
 Route::get('/diveModify', function () {
     return AcnDiveModifyController::getAll();
@@ -121,6 +125,17 @@ Route::post('/panel/director/removeMemberFromDiveForm', function (Request $reque
     AcnRegisteredController::delete($request->numMember, $request->numDive);
     return redirect()->route('diveInformation', ['diveId' => $request -> numDive] );
 })->name("removeMemberFromDiveForm");
+
+Route::get('/members', function () {
+    return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
+})->middleware(['auth'])->middleware('isSecretary')->name("members");
+
+Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) {
+    return AcnMemberController::modifyForm($mem_num_member);
+})->middleware(['auth'])->middleware('isSecretary')->name("member_modification");
+
+Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
+
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 

@@ -71,6 +71,30 @@ class AcnMember extends Authenticatable
 
     }
 
+    public static function getMemberInfo($mem_num){
+        return DB::table("ACN_MEMBER")->selectRaw('*')->where('MEM_NUM_MEMBER','=',$mem_num)->get();
+    }
+
+    public static function getPrincing(){
+        return DB::table("ACN_MEMBER")->select('MEM_PRICING')->distinct()->get();
+    }
+
+    public static function getPrerog(){
+        return DB::table('ACN_PREROGATIVE')->select('ACN_PREROGATIVE.*')->get();
+    }
+
+    public static function getPrerogLabel($prerogative){
+        return DB::table('ACN_PREROGATIVE')->select('PRE_LEVEL')->where('PRE_PRIORITY','=',$prerogative)->get();
+    }
+
+    public static function getMemberPrerog($member_num){
+        return DB::table('ACN_PREROGATIVE')
+        ->select('ACN_PREROGATIVE.*')
+        ->join('ACN_RANKED', 'ACN_PREROGATIVE.PRE_NUM_PREROG','=','ACN_RANKED.NUM_PREROG')
+        ->where('NUM_MEMBER','=',$member_num)
+        ->max('ACN_RANKED.NUM_PREROG');
+    }
+
     static public function isUserSecretary($num_member) {
         $isSecretary = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
@@ -92,7 +116,7 @@ class AcnMember extends Authenticatable
     static public function isUserDirector($num_member) {
         $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_RANKED", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_RANKED.NUM_MEMBER")
         ->join("ACN_PREROGATIVE", "ACN_PREROGATIVE.PRE_NUM_PREROG", "=", "ACN_RANKED.NUM_PREROG")
-        ->where("ACN_PREROGATIVE.PRE_PRIORITY", ">", "12")
+        ->where("ACN_RANKED.NUM_PREROG", ">", "13")
         ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
         ->select("*")->exists();
         return $isUserDirector;
@@ -144,6 +168,56 @@ class AcnMember extends Authenticatable
             -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
             -> where('MEM_NUM_MEMBER', $numMember)
             -> max('PRE_PRIORITY');
+    }
+
+    static public function getAllPRevPrerogativeNotE1($member_num,$member_prerogative){
+        return DB::table('ACN_RANKED')
+                ->select('NUM_PREROG')->distinct()
+                ->where('NUM_PREROG', '<=' , $member_prerogative)
+                ->where('NUM_PREROG', '>' , 4)
+                ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
+                ->select('NUM_PREROG')
+                ->where('NUM_MEMBER', '=', $member_num))
+                ->get();
+    }
+
+    static public function getAllPRevPrerogativeButE1($member_num,$member_prerogative){
+        return DB::table('ACN_RANKED')
+        ->select('NUM_PREROG')->distinct()
+        ->where('NUM_PREROG', '<=' , 8)
+        ->where('NUM_PREROG', '>' , 4)
+        ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
+        ->select('NUM_PREROG')
+        ->where('NUM_MEMBER', '=', $member_num))
+        ->get();
+    }
+
+    static public function getAllPRevPrerogativeChildren($member_num,$member_prerogative){
+        return DB::table('ACN_RANKED')
+        ->select('NUM_PREROG')->distinct()
+        ->where('NUM_PREROG', '<=' , $member_prerogative)
+        ->where('NUM_PREROG', '<' , 4)
+        ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
+        ->select('NUM_PREROG')
+        ->where('NUM_MEMBER', '=', $member_num))
+        ->get();
+    }
+
+    static public function insertAllPrerogative($pre,$member_num){
+        foreach($pre as $prerogative){
+            DB::table('ACN_RANKED')->where('NUM_MEMBER','=',$member_num)->insert(['NUM_MEMBER'=>$member_num,'NUM_PREROG'=>$prerogative->NUM_PREROG]);
+        }
+    }
+
+    static public function updateMemberInfos($request){
+        DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $request -> member_num)
+            ->update([
+                'MEM_NAME' => $request -> member_name,
+                'MEM_SURNAME' => $request -> member_surname,
+                'MEM_DATE_CERTIF' => $request -> certif_date,
+                'MEM_PRICING' => $request -> pricing_type,
+                'MEM_REMAINING_DIVES' => $request -> remaining_dive,
+            ]);
     }
 
 }

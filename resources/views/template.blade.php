@@ -23,7 +23,7 @@
                         $isUserDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
                     @endphp
                     @if($isUserSecretary || $isUserManager)
-                        <a class="no-deco" href="">Adhérents</a>
+                        <a class="no-deco" href="{{ route("members") }}">Adhérent</a>
                     @endif
                     @if($isUserManager)
                             <a class="no-deco" href="">Archives</a>
