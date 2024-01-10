@@ -4,7 +4,8 @@ use App\Http\Controllers\AcnBoatController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
 use App\Http\Controllers\AcnSiteController;
-use App\Http\Controllers\DirectorPanelController;
+use App\Http\Controllers\ManagerPanelController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,9 +39,9 @@ Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
-Route::get('/panel/director', function () {
-    return DirectorPanelController::displayDirectorPanel();
-})->middleware(['auth'])->middleware('isManager')->name("directorPanel");
+Route::get('/panel/manager', function () {
+    return ManagerPanelController::displayManagerPanel();
+})->middleware(['auth'])->middleware('isManager')->name("managerPanel");
 
 Route::get('/create/boat', function () {
     //return AcnDiveCreationController::getAll();
@@ -49,6 +50,10 @@ Route::get('/create/boat', function () {
 Route::get('/update/boat/{boatId}', function ($boatId) {
     return AcnBoatController::getBoatUpdateView($boatId);
 })->middleware(['auth'])->middleware('isManager')->name("boatUpdate");
+
+Route::patch('/update/boat/{boatId}', function (Request $request, $boatId) {
+    return AcnBoatController::update($request, $boatId);
+})->middleware(['auth'])->middleware('isManager')->name("boatUpdateForm");
 
 Route::delete('/delete/boat/{boatId}', function ($boatId) {
     AcnBoatController::delete($boatId);
@@ -62,6 +67,10 @@ Route::get('/create/site', function () {
 Route::get('/update/site/{siteId}', function ($siteId) {
     return AcnSiteController::getSiteUpdateView($siteId);
 })->middleware(['auth'])->middleware('isManager')->name("siteUpdate");
+
+Route::patch('/update/site/{siteId}', function (Request $request, $siteId) {
+    return AcnSiteController::update($request, $siteId);
+})->middleware(['auth'])->middleware('isManager')->name("siteUpdateForm");
 
 Route::delete('/delete/site/{siteId}', function ($siteId) {
     AcnSiteController::delete($siteId);

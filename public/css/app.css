@@ -12,7 +12,7 @@ header {
     background-color: black;
 }
 
-a {
+a.no-deco {
     text-decoration: none;
     color: white;
 }

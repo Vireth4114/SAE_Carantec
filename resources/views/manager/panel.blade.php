@@ -5,9 +5,8 @@
     @foreach ($boats as $boat)
         <p>{{ $boat->BOA_NAME }} ({{ $boat->BOA_CAPACITY }})</p>
         <form action="{{ route('boatUpdate', ['boatId' => $boat->BOA_NUM_BOAT]) }}" method="GET">
-            @csrf
             @method("get")
-            <input type="submit" value="Supprimer le bateau" />
+            <input type="submit" value="Modifier le bateau" />
         </form>
         <form action="{{ route('boatDelete', ['boatId' => $boat->BOA_NUM_BOAT]) }}" method="POST">
             @csrf
@@ -24,9 +23,8 @@
             <p> {{ $site->SIT_DESCRIPTION }}</p>
         @endif
         <form action="{{ route('siteUpdate', ['siteId' => $site->SIT_NUM_SITE]) }}" method="GET">
-            @csrf
             @method("get")
-            <input type="submit" value="Supprimer le site" />
+            <input type="submit" value="Modifier le site" />
         </form>
         <form action="{{ route('siteDelete', ['siteId' => $site->SIT_NUM_SITE]) }}" method="POST">
             @csrf

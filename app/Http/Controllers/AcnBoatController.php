@@ -45,14 +45,31 @@ class AcnBoatController extends Controller
         //return AcnBoatController;
     }
 
-    static public function delete($boat_id) {
-        $boat = AcnBoat::find($boat_id);
+    static public function delete($boatId) {
+        $boat = AcnBoat::find($boatId);
         $boat->BOA_DELETED = 1;
         $boat->save();
     }
 
-    static public function getBoatUpdateView($siteId) {
-        $site = AcnBoat::find($siteId);
-        return view("manager/updateBoat");
+    static public function update(Request $request, $boatId) {
+        $boat = AcnBoat::find($boatId);
+        $errors = array();
+        $nameAlreadyExist = AcnBoat::where("BOA_NAME", "=", strtoupper($request->boa_name))->where("BOA_NUM_BOAT", "!=", $boatId)->exists();
+        if ($nameAlreadyExist) {
+            $errors["name"] = "Le nom donné est déjà existant.";
+        }
+        if ($request->boa_capacity < 4) {
+            $errors["number"] = "La capacité doit être supérieure ou égale à 4.";
+        }
+        if (count($errors) != 0) return back()->withErrors($errors);
+        $boat->BOA_NAME = $request->boa_name;
+        $boat->BOA_CAPACITY = $request->boa_capacity;
+        $boat->save();
+        return redirect(route("managerPanel"));
+    }
+
+    static public function getBoatUpdateView($boatId) {
+        $boat = AcnBoat::find($boatId);
+        return view("manager/updateBoat", ["boat" => $boat]);
     }
 }
