@@ -44,8 +44,12 @@ Route::get('/panel/manager', function () {
 })->middleware(['auth'])->middleware('isManager')->name("managerPanel");
 
 Route::get('/create/boat', function () {
-    //return AcnDiveCreationController::getAll();
+    return view("manager/createBoat");
 })->middleware(['auth'])->middleware('isManager')->name("boatCreate");
+
+Route::post('/create/boat', function (Request $request) {
+    return AcnBoatController::create($request);
+})->middleware(['auth'])->middleware('isManager')->name("boatCreateForm");
 
 Route::get('/update/boat/{boatId}', function ($boatId) {
     return AcnBoatController::getBoatUpdateView($boatId);
@@ -61,8 +65,12 @@ Route::delete('/delete/boat/{boatId}', function ($boatId) {
 })->middleware(['auth'])->middleware('isManager')->name("boatDelete");
 
 Route::get('/create/site', function () {
-    //return AcnDiveCreationController::getAll();
+    return view("manager/createSite");
 })->middleware(['auth'])->middleware('isManager')->name("siteCreate");
+
+Route::post('/create/site', function (Request $request) {
+    return AcnSiteController::create($request);
+})->middleware(['auth'])->middleware('isManager')->name("siteCreateForm");
 
 Route::get('/update/site/{siteId}', function ($siteId) {
     return AcnSiteController::getSiteUpdateView($siteId);
