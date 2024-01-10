@@ -38,4 +38,8 @@ class AcnBoat extends Model
         ->get();
         return $boat;
     }
+
+    static public function getAllBoats() {
+        return AcnBoat::where("BOA_DELETED", "=", 0)->get();
+    }
 }

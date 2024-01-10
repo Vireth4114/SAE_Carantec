@@ -23,27 +23,27 @@
                         $isUserDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
                     @endphp
                     @if($isUserSecretary || $isUserManager)
-                        <a href="">Adhérent</a>
+                        <a class="no-deco" href="">Adhérents</a>
                     @endif
                     @if($isUserManager)
-                            <a href="">Archives</a>
+                            <a class="no-deco" href="">Archives</a>
                     @elseif($isUserDirector)
-                        <a href="">Mes séances</a>
+                        <a class="no-deco" href="">Mes séances</a>
                     @endif
-                        <a href="{{ route('dives') }}">Plongée</a>
-                        <a href="">Bilan</a>
-                        <a href="">Profil</a>
+                        <a class="no-deco" href="{{ route('dives') }}">Plongée</a>
+                        <a class="no-deco" href="">Bilan</a>
+                        <a class="no-deco" href="">Profil</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
-                        <x-dropdown-link :href="route('logout')"
+                        <x-dropdown-link class="no-deco" :href="route('logout')"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">
                             {{ __('Déconnexion') }}
                         </x-dropdown-link>
                     </form>
                 @elseif(!Route::is('login'))
-                    <a href="{{ route('login') }}">Connexion</a>
+                    <a class="no-deco" href="{{ route('login') }}">Connexion</a>
                 @endif
             </div>
         </nav>

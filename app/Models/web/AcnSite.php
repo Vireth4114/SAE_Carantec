@@ -38,4 +38,7 @@ class AcnSite extends Model
         -> where('SIT_NUM_SITE','=',$num_site) ->get();
         return $site;
     }
+    static public function getAllSites() {
+        return AcnSite::where("SIT_DELETED", "=", 0)->get();
+    }
 }
