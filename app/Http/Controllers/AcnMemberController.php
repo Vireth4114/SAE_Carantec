@@ -17,7 +17,7 @@ class AcnMemberController extends Controller
     /**
      * Return a view to modify the profile of a member
      *
-     * @param [int] $mem_num_member 
+     * @param [int] $mem_num_member
      * @return void
      */
     public static function modifyForm($mem_num_member){
@@ -25,15 +25,13 @@ class AcnMemberController extends Controller
         $member = AcnMember::getMemberInfo($mem_num_member);
         $pricing = AcnMember::getPrincing();
         $prerog = AcnMember::getPrerog();
-        $tutorlvl = AcnMember::getTutorLevels();
         $prerogMemLvl = AcnMember::getMemberPrerog($mem_num_member);
-        $tutorMemLvl = AcnMember::getMemberTutorLevels($mem_num_member);
 
-        return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"tutorlvl"=>$tutorlvl,"prerogation_member_level" =>$prerogMemLvl,"tutor_member_level"=>$tutorMemLvl]);
+        return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
     }
 
     /**
-     * Check if the modifications are legal and update the data
+     * Check if the modifications are legal and update the data if they are, else go on an Exception page
      *
      * @param Request $request
      * @return void
@@ -45,91 +43,53 @@ class AcnMemberController extends Controller
         //ceation of the error message
         $strErr = "";
 
-        // //Checks if the leader, the pilot and the surface security are different person.
-        // if ($request -> member_prerog < $request -> member_tutor_lvl) {
-        //     $member = AcnMemberController::getMember($request -> lead);
-        //     $err = true;
-        //     $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
-        // }
-        // if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
-        //     $member = AcnMemberController::getMember($request -> lead);
-        //     $err = true;
-        //     $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
-        // }
-        // if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
-        //     $member = AcnMemberController::getMember($request -> pilot);
-        //     $err = true;
-        //     $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
-        // }
+        $member = AcnMember::getMemberInfo($request->member_num);
+        $prerogMemLvl = AcnMember::getMemberPrerog($request->member_num);
+        $preroglabel = AcnMember::getPrerogLabel($request->member_prerog);
 
-        // $dive=AcnDives::getDive($request -> numDive);
 
-        // if ($dive[0] -> DIV_MIN_REGISTERED < $request -> min_divers) {
-        //     $err = true;
-        //     $strErr .= "-L'effectif minimum ne peut qu'être diminué<br>";
-        // }
-
-        // if ($dive[0] -> DIV_MAX_REGISTERED > $request -> max_divers) {
-        //     $err = true;
-        //     $strErr .= "-L'effectif maximum ne peut qu'être augmenté<br>";
-        // }
-
-        // $divers_lvl = AcnDives::find($request -> numDive)->divers;
-        // $minAllDivers = AcnPrerogative::all()->max('PRE_PRIORITY');
-        // foreach($divers_lvl as $diver) {
-        //     $maxLocalDiver = $diver->prerogatives->max("PRE_PRIORITY");
-        //     if ($maxLocalDiver < $minAllDivers) {
-        //         $minAllDivers = $maxLocalDiver;
-        //     }
-        // }
-        // if($minAllDivers < AcnPrerogative::find($request -> lvl_required)->PRE_PRIORITY) {
-        //     $err = true;
-        //     $strErr .= "-Le niveau saisi est trop élevé <br>";
-        // }
-
-        // $max = AcnDivesController::getNumMax();
+        //Checks if the secretary attempt to dicrease the number of remaining dive.
+        if ($request -> remaining_dive < $member[0]->MEM_REMAINING_DIVES) {
+            $err = true;
+            $strErr .= "- Vous ne pouvez pas retirer des plongées à un adhérent, ne descendez pas en dessous de ".$member[0]->MEM_REMAINING_DIVES." plongées restante.;";
+        }
+        if ($request->pricing_type == 'enfant' && $request->member_prerog > 4) {
+            $err = true;
+            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+        }
+        if ($request->pricing_type == 'adulte' && $request->member_prerog <= 4 ) {
+            $err = true;
+            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+        }if ($request->member_prerog < $prerogMemLvl && $prerogMemLvl != 13) {
+            $err = true;
+            $strErr .= "- Vous ne pouvez pas retirer des prérogatives à un adhérents, vous avez saisi un niveau de prérogative inférieur au dernier qu'il possède;";
+        }if ($request->member_prerog < 8 && $prerogMemLvl == 13) {
+            $err = true;
+            $strErr .= "- Vous ne pouvez pas retirer des prérogatives à un adhérents, vous avez saisi un niveau de prérogative inférieur au dernier qu'il possède;";
+        }
 
         if ($err) {
-            echo $strErr;
+            $arrayErr = explode(";",$strErr);
+            return view('modificationException',['member_num'=>$request->member_num,'error_msg'=>$arrayErr]);
         }
         else {
-            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $request -> member_num)
-            ->update([
-                'MEM_NAME' => $request -> member_name,
-                'MEM_SURNAME' => $request -> member_surname,
-                'MEM_DATE_CERTIF' => $request -> certif_date,
-                'MEM_PRICING' => $request -> pricing_type,
-                'MEM_REMAINING_DIVES' => $request -> remaining_dive,
-            ])
-            ;
+            AcnMember::updateMemberInfos($request);
 
-            //search for every prerogation a member don't have and are below the prerogation selected, meant to add them later
-            $pre = DB::table('ACN_RANKED')
-            ->select('NUM_PREROG')->distinct()
-            ->where('NUM_PREROG', '<=' , 15)
-            ->where('NUM_PREROG', '>' , 4)
-            ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
-            ->select('NUM_PREROG')
-            ->where('NUM_MEMBER', '=', $request -> member_num))
-            ->get();
+            //search for every prerogation a member don't have and are below the prerogation selected, meant to add them later (for the 3 request below)
+        if($request->pricing_type == 'adulte'){
+            if($request->member_prerog  == 13){
+                $pre = AcnMember::getAllPRevPrerogativeButE1($request->member_num,$request->member_prerog);
 
+            }else{
+                $pre = AcnMember::getAllPRevPrerogativeNotE1($request->member_num,$request->member_prerog);
+            }
+        }else{
+            //same but for children
+            $pre = AcnMember::getAllPRevPrerogativeChildren($request -> member_num,$request->member_prerog);
+        }
 
-
-
-
-            // DB::table('ACN_RANKED')
-            // ->select('NUM_PREROG')
-            // ->where('NUM_MEMBER', '=', $request -> member_num);
-
-            // DB::table('ACN_RANKED')->where('NUM_MEMBER', '=', $request -> member_num)
-            // ->insert([
-            //     'MEM_NAME' => $request -> member_name,
-            //     'MEM_SURNAME' => $request -> member_surname,
-            //     'MEM_DATE_CERTIF' => $request -> certif_date,
-            //     'MEM_PRICING' => $request -> pricing_type,
-            //     'MEM_REMAINING_DIVES' => $request -> remaining_dive,
-            // ])
-            // ;
+        //insert All the prerogative selected
+        AcnMember::insertAllPrerogative($pre,$request->member_num);
 
             return redirect('members');
         }

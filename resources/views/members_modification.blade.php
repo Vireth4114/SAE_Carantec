@@ -16,7 +16,7 @@
 
         <label>Numéro de licence :</label>
         <input type="text" required disabled id="member_licence" name="member_licence" value={{$member->MEM_NUM_LICENCE}} /><br>
-        
+
         <label>Date de certification :</label>
         <input type="date" required id="certif_date" name="certif_date" value={{$member->MEM_DATE_CERTIF}} /><br>
 
@@ -34,25 +34,13 @@
         <label>Nombre de plongée restante :</label>
         <input type="number" required id="remaining_dive" name="remaining_dive" value={{$member->MEM_REMAINING_DIVES}} /><br>
 
-        <label>Prérogations :</label>
+        <label>Prérogative :</label>
             <select name="member_prerog" id="member_prerog">
             @foreach ($prerogation as $prerog)
                 @if($prerogation_member_level == $prerog->PRE_PRIORITY)
                     <option selected value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
                 @else
                     <option value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
-                @endif
-            @endforeach
-            </select><br>
-
-        <label>Niveau formateur :</label>
-            <select name="member_tutor_lvl" id="member_tutor_lvl">
-                <option value=0>Aucun</option>
-            @foreach ($tutorlvl as $tutor)
-                @if($tutor_member_level == $tutor->PRE_PRIORITY)
-                    <option selected value='{{$tutor->PRE_PRIORITY}}'>{{$tutor->PRE_LEVEL}}</option>
-                @else
-                    <option value='{{$tutor->PRE_PRIORITY}}'>{{$tutor->PRE_LEVEL}}</option>
                 @endif
             @endforeach
             </select><br>
