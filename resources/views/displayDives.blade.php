@@ -14,14 +14,14 @@
             <form>
             <p>
                 <a href="{{route('dives_informations',$dive->DIV_NUM_DIVE)}}">
-                <input  type='checkbox'>
+                <input type='checkbox'>
                 {{ $date }}
                 de {{ $heureStart }}h à {{ $heureFin }}h
                 Site prevu : {{ $dive->SIT_NAME }}
                 ( {{ $dive->SIT_DESCRIPTION }} )
                 Niveau : {{$dive->PRE_LABEL}}
-                </a>
                 <i class="fa-solid fa-magnifying-glass"></i>
+            </a>
             </p>
             </form>
         @endforeach

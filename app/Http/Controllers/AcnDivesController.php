@@ -33,10 +33,6 @@ class AcnDivesController extends Controller
     }
 
     public static function getAllDiveInformation($id){
-        $months = DB::table('ACN_DIVES')
-        ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
-        ->orderBy('mois_nb')
-        ->get();
 
         $dives = DB::table("ACN_DIVES")
         ->join("ACN_PERIOD","PER_NUM_PERIOD","=","DIV_NUM_PERIOD")
@@ -57,6 +53,12 @@ class AcnDivesController extends Controller
         ->whereRaw("DIV_NUM_DIVE = ?",$id)
         ->get();
 
-        return view("divesInformation",["dives" => $dives, "months" => $months, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot]);
+        $dives_register =  DB::table("ACN_MEMBER")
+        ->join("ACN_REGISTERED","MEM_NUM_MEMBER","=","NUM_MEMBER")
+        ->join("ACN_DIVES","DIV_NUM_DIVE","=","NUM_DIVE")
+        ->whereRaw("DIV_NUM_DIVE = ?",$id)
+        ->get();
+
+        return view("divesInformation",["dives" => $dives, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot, "dives_register"=> $dives_register]);
     }
 }

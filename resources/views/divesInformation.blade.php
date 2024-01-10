@@ -12,7 +12,14 @@
     <p>Directeur de plongée : {{$dives[0]->MEM_NAME}} {{$dives[0]->MEM_SURNAME}}</p>
     <p>Sécurité surface : {{$dives_secur[0]->MEM_NAME}} {{$dives_secur[0]->MEM_SURNAME}}</p>
     <p>Pilote : {{$dives_pilot[0]->MEM_NAME}} {{$dives_pilot[0]->MEM_SURNAME}}</p>
-    <p>Nom du bateau: {{$dives[0]->BOA_NAME}} avec {{$dives[0.]->BOA_CAPACITY}} place maximum</p>
+    <p>Nom du bateau: {{$dives[0]->BOA_NAME}}</p>
+
+    <div>
+        <h3>Liste des Membres Inscrit</h3>
+        @foreach($dives_register as $dive)
+            <p>{{$dive->MEM_NAME}} {{$dive->MEM_SURNAME}}</p>
+        @endforeach
+    </div>
 @endsection
 
 
