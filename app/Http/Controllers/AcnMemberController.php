@@ -46,6 +46,14 @@ class AcnMemberController extends Controller
         return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
     }
 
+    public static function registerForm($mem_num_member){
+
+        $pricing = AcnMember::getPrincing();
+        $prerog = AcnMember::getPrerog();
+
+        return view('members_modification',["pricing" => $pricing,"prerogation"=>$prerog]);
+    }
+
     /**
      * Check if the modifications are legal and update the data if they are, else go on an Exception page
      *
@@ -111,4 +119,6 @@ class AcnMemberController extends Controller
         }
 
     }
+
+
 }
