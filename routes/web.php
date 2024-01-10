@@ -85,6 +85,10 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
     return back();
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
 
+Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {
+    return AcnSiteController::update($request, $userId);
+})->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
+
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
 require __DIR__.'/auth.php';

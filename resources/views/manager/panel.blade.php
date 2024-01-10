@@ -45,7 +45,33 @@
             @endif)
             </a>
         </h3>
-        <p>Il reste {{ $member->MEM_REMAINING_DIVES }} à ce membre.</p>
-        
+        <p>Il reste {{ $member->MEM_REMAINING_DIVES }} plongées à ce membre.</p>
+        @php
+            $memberFunction = $member->functions;
+            $f
+        @endphp
+        <form action="{{ route('userRolesUpdate', ['userId' => $member->MEM_NUM_MEMBER]) }}" method="POST">
+            @csrf
+            @method("patch")
+            <label for="security">Sécurité de surface</label>
+            <input type="checkbox" id="security" name="security"
+            @if (!$memberFunction->where("FUN_LABEL", "=", "Sécurité de surface")->isEmpty())
+                checked
+            @endif
+            />
+            <label for="pilot">Pilote</label>
+            <input type="checkbox" id="pilot" name="pilot" @if (!$memberFunction->where("FUN_LABEL", "=", "Pilote")->isEmpty())
+                checked
+                @elseif
+            @endif
+            />
+            <label for="secretary">Secrétaire</label>
+            <input type="checkbox" id="secretary" name="secretary" 
+            @if (!$memberFunction->where("FUN_LABEL", "=", "Secrétaire")->isEmpty())
+                checked
+            @endif
+            />
+            <input type="submit" value="Mettre à jour le membre" />
+        </form>
     @endforeach
 @endsection

@@ -13,4 +13,9 @@ class AcnMemberController extends Controller
     public static function getMember($numMember) {
         return AcnMember::find($numMember);
     }
+
+    public static function updateRolesMember(Request $request, $numMember) {
+        $member = AcnMember::find($numMember);
+        
+    }
 }
