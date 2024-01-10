@@ -32,7 +32,7 @@ class AcnPeriod extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'ACN_PERIOD';
+    protected $primaryKey = 'PER_NUM_PERIOD';
 
     /**
      * Indicates if the model should be timestamped.
