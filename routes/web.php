@@ -137,6 +137,10 @@ Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) 
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
 
 
+Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {
+    return AcnMemberController::updateRolesMember($request, $userId);
+})->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
+
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
 Route::post('diveModifyForm', [AcnDiveModifyController::class, 'modify'])->name('diveModifyForm');

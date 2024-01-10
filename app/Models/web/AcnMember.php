@@ -95,29 +95,29 @@ class AcnMember extends Authenticatable
         ->max('ACN_RANKED.NUM_PREROG');
     }
 
-    static public function isUserSecretary($num_member) {
+    static public function isUserSecretary($memberNum) {
         $isSecretary = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
         ->where("ACN_FUNCTION.FUN_LABEL", "=", "Secrétaire")
-        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$memberNum)
         ->select("*")->exists();
         return $isSecretary;
     }
 
-    static public function isUserManager($num_member) {
+    static public function isUserManager($memberNum) {
         $isUserManager = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
         ->where("ACN_FUNCTION.FUN_LABEL", "=", "Responsable")
-        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$memberNum)
         ->select("*")->exists();
         return $isUserManager;
     }
 
-    static public function isUserDirector($num_member) {
+    static public function isUserDirector($memberNum) {
         $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_RANKED", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_RANKED.NUM_MEMBER")
         ->join("ACN_PREROGATIVE", "ACN_PREROGATIVE.PRE_NUM_PREROG", "=", "ACN_RANKED.NUM_PREROG")
-        ->where("ACN_RANKED.NUM_PREROG", ">", "13")
-        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
+        ->where("ACN_PREROGATIVE.PRE_PRIORITY", ">", "13")
+        ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$memberNum)
         ->select("*")->exists();
         return $isUserDirector;
     }
@@ -220,4 +220,13 @@ class AcnMember extends Authenticatable
             ]);
     }
 
+    static public function deleteUserRole($memberNum, $roleName) {
+        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
+        DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->delete();
+    }
+
+    static public function createUserRole($memberNum, $roleName) {
+        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
+        DB::table("ACN_WORKING")->insert(["NUM_FUNCTIOn" =>$roleId, "NUM_MEMBER" => $memberNum]);
+    }
 }
