@@ -1,5 +1,6 @@
 @extends('template')
 
+@section("content")
 @php
     use Carbon\Carbon;
 @endphp
@@ -34,3 +35,4 @@
 @endforeach
     </tbody>
 </table>
+@endsection
