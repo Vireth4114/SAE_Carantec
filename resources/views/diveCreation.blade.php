@@ -1,7 +1,7 @@
         <title>Création d'un créneau</title>
     </head>
     <body>
-        <form action="/formSuggest" method="POST">
+        <form action="{{ route("diveCreationForm") }}" method="POST">
             @csrf
             <label>Insérer une date (obligatoire) :</label>
             <input type="date" required id="date" name="date"  min="{{date('Y')}}-03-01" max="{{date('Y')}}-11-31" />

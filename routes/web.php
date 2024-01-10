@@ -31,10 +31,10 @@ Route::get('/secretary', function () {
     return view('secretary', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
 })->middleware(['auth'])->middleware('isSecretary')->name("secretary");
 
-Route::get('/suggest', function () {
+Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
-})->middleware(['auth'])->middleware('isManager')->name("suggest");
+})->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
-Route::post('formSuggest', [AcnDiveCreationController::class, 'create']);
+Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
 require __DIR__.'/auth.php';

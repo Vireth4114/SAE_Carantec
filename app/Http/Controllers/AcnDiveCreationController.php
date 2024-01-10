@@ -47,7 +47,7 @@ class AcnDiveCreationController extends Controller
         -> where('MEM_STATUS','=','1')
         -> get();
 
-        return view ('suggestSlot', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
+        return view ('diveCreation', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
     }
 
     static public function create(Request $request) {
@@ -104,19 +104,19 @@ class AcnDiveCreationController extends Controller
         if (!is_null($request -> lead) && !is_null($request -> pilot) && ($request -> lead == $request -> pilot) ) {
             $member = AcnMemberController::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";     
+            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
         }
         if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
             $member = AcnMemberController::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";                 
+            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
         }
         if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
             $member = AcnMemberController::getMember($request -> pilot);
             $err = true;
             $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
         }
-        
+
         $max = AcnDivesController::getNumMax();
 
         if ($err) {
@@ -136,6 +136,6 @@ class AcnDiveCreationController extends Controller
                 'DIV_MAX_REGISTERED'=> $request -> max_divers,
             ]);
         }
-        
+
     }
 }
