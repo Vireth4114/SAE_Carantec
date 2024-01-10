@@ -12,7 +12,7 @@ header {
     background-color: black;
 }
 
-a {
+#headerLinks > a {
     text-decoration: none;
     color: white;
 }

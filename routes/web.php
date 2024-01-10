@@ -3,6 +3,7 @@
 use App\Http\Controllers\AcnDiveModifyController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,18 @@ Route::get('/', function () {
 Route::get('/dives', function () {
     return AcnDivesController::getAllDivesValues();
 })->middleware(['auth'])->name("dives");
+
+Route::get('/dives/informations/{id}', function ($id){
+    return AcnDivesController::getAllDiveInformation($id);
+})->name("dives_informations");
+
+Route::post('/dives/register', function (Request $request){
+    return AcnDivesController::register($request);
+})->name("membersDivesRegister");
+
+Route::post('/dives/unregister', function (Request $request){
+    return AcnDivesController::unregister($request);
+})->name("membersDivesUnregister");
 
 Route::get('/dashboard', function () {
     return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
