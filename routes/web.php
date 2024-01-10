@@ -6,6 +6,9 @@ use App\Http\Controllers\AcnBoatController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnSiteController;
 use App\Http\Controllers\ManagerPanelController;
+use App\Http\Controllers\AcnDirectorController;
+use App\Http\Controllers\AcnMemberController;
+use App\Http\Controllers\AcnRegisteredController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +104,15 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
     AcnSiteController::delete($siteId);
     return back();
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
+Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
+    return AcnDirectorController::addDiveMember($diveId);
+})->name("addMember");
+
+Route::post('/panel/director/addMemberToDiveForm', function (Request $request) {
+    AcnRegisteredController::create($request->numMember, $request->numDive);
+    return redirect()->route('addMember', ['diveId' => $request -> numDive] );
+})->name("addMemberToDiveForm");
+
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 

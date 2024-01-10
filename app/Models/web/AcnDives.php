@@ -13,6 +13,20 @@ class AcnDives extends Model
 {
     use HasFactory;
 
+    static public function getMembersNotInDive($diveId) {
+
+        $members = AcnDives::find($diveId)->divers;
+        $memNums=array();
+        foreach($members as $member){
+            array_push($memNums, $member['MEM_NUM_MEMBER']);
+        }
+
+        return DB::table('ACN_MEMBER')
+        -> where ('MEM_NUM_MEMBER', '>', 0)
+        -> whereNotIn('MEM_NUM_MEMBER', $memNums)
+        -> get();
+    }
+
     /**
      * The table associated with the model.
      *
