@@ -4,6 +4,8 @@ use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
 use App\Http\Controllers\AcnDirectorController;
 use App\Http\Controllers\AcnMemberController;
+use App\Http\Controllers\AcnRegisteredController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +42,11 @@ Route::get('/diveCreation', function () {
 Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
     return AcnDirectorController::addDiveMember($diveId);
 })->name("addMember");
+
+Route::post('/panel/director/addMemberToDiveForm', function (Request $request) {
+    AcnRegisteredController::create($request->numMember, $request->numDive);
+    return redirect()->route('addMember', ['diveId' => $request -> numDive] );
+})->name("addMemberToDiveForm");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");

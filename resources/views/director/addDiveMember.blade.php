@@ -24,7 +24,15 @@
             <th>{{$member['MEM_SURNAME']}}</th>
             <th>{{$member['MEM_PRICING']}}</th>
             <th>{{$member['MEM_REMAINING_DIVES']}}</th>
-            <th><a href="https://www.codeur.com">ajouter</a></th>
+            <th>
+                <form action="{{ route('addMemberToDiveForm') }}" method="POST">
+                    @csrf
+                    @method('post')
+                    <input type="hidden" name="numMember" value="{{ $member['MEM_NUM_MEMBER'] }}">
+                    <input type="hidden" name="numDive" value="{{ $dive['DIV_NUM_DIVE'] }}">
+                    <button type="submit">ajouter</button>
+                </form>
+            </th>
         </tr>
 @endforeach
     </tbody>
