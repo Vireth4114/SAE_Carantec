@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
+use App\Http\Controllers\AcnGroupsMakingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,5 +37,17 @@ Route::get('/diveCreation', function () {
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
+
+Route::get('/groupsMaking', function () {
+    return AcnGroupsMakingController::getAll();
+})->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
+
+Route::get('/addGroup', function () {
+    return AcnGroupsMakingController::add_group();
+})->middleware(['auth'])->middleware('isDirector')->name("addGroup");
+
+Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'remove_member'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
+
+Route::post('addMemberToGroup', [AcnGroupsMakingController::class, 'add'])->middleware(['auth'])->middleware('isDirector')->name("addMemberToGroup");
 
 require __DIR__.'/auth.php';

@@ -12,7 +12,7 @@ header {
     background-color: black;
 }
 
-a {
+#headerLinks a {
     text-decoration: none;
     color: white;
 }
@@ -36,3 +36,18 @@ a {
     margin-top: 50px;
 }
 
+.memberInGroup {
+    display: flex;
+    direction: row;
+    align-items: center;
+    gap: 30px;
+    margin: 10px;
+}
+
+.memberInGroup a {
+    text-decoration: none;
+    color: red;
+    padding: 5px;
+    border: 1px solid red;
+    border-radius: 100px;
+}
