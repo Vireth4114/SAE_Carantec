@@ -71,6 +71,40 @@ class AcnMember extends Authenticatable
 
     }
 
+    public static function getMemberInfo($mem_num){
+        return DB::table("ACN_MEMBER")->selectRaw('*')->where('MEM_NUM_MEMBER','=',$mem_num)->get();
+    }
+
+    public static function getPrincing(){
+        return DB::table("ACN_MEMBER")->select('MEM_PRICING')->distinct()->get();
+    }
+
+    public static function getPrerog(){
+        return DB::table('ACN_PREROGATIVE')->select('ACN_PREROGATIVE.*')->where('PRE_LEVEL','not like', 'E%')->get();
+    }
+
+    public static function getTutorLevels(){
+        return DB::table('ACN_PREROGATIVE')->select('ACN_PREROGATIVE.*')->where('PRE_LEVEL','like', 'E%')->get();
+    }
+
+    public static function getMemberPrerog($member_num){
+        return DB::table('ACN_PREROGATIVE')
+        ->select('ACN_PREROGATIVE.*')
+        ->join('ACN_RANKED', 'ACN_PREROGATIVE.PRE_NUM_PREROG','=','ACN_RANKED.NUM_PREROG')
+        ->where('NUM_MEMBER','=',$member_num)
+        ->where('PRE_LEVEL','not like', 'E%')
+        ->max('ACN_RANKED.NUM_PREROG');
+    }
+
+    public static function getMemberTutorLevels($member_num){
+        return DB::table('ACN_PREROGATIVE')
+        ->select('ACN_PREROGATIVE.*')
+        ->join('ACN_RANKED', 'ACN_PREROGATIVE.PRE_NUM_PREROG','=','ACN_RANKED.NUM_PREROG')
+        ->where('NUM_MEMBER','=',$member_num)
+        ->where('PRE_LEVEL','like', 'E%')
+        ->max('ACN_RANKED.NUM_PREROG');
+    }
+
     static public function isUserSecretary($num_member) {
         $isSecretary = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
@@ -92,7 +126,7 @@ class AcnMember extends Authenticatable
     static public function isUserDirector($num_member) {
         $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_RANKED", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_RANKED.NUM_MEMBER")
         ->join("ACN_PREROGATIVE", "ACN_PREROGATIVE.PRE_NUM_PREROG", "=", "ACN_RANKED.NUM_PREROG")
-        ->where("ACN_PREROGATIVE.PRE_PRIORITY", ">", "12")
+        ->where("ACN_RANKED.NUM_PREROG", ">", "13")
         ->where("ACN_MEMBER.MEM_NUM_MEMBER","=",$num_member)
         ->select("*")->exists();
         return $isUserDirector;

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnDiveCreationController;
+use App\Http\Controllers\AcnMemberController;
+use App\Models\web\AcnMember;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +36,20 @@ Route::get('/secretary', function () {
 Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
+
+Route::get('/members', function () {
+    return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
+})->middleware(['auth'])->middleware('isSecretary')->name("members");
+
+Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) {
+    return AcnMemberController::modifyForm($mem_num_member);
+})->middleware(['auth'])->middleware('isSecretary')->name("member_modification");
+
+Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
+
+// Route::get('/members/modification/{id}', function ($id){
+//     return AcnDivesController::getAllDiveInformation($id);
+// })->name("dives_informations");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
