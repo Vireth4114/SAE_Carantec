@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SiteRequest;
-use App\Http\Resources\SiteResource;
+use App\Http\Requests\Api\SiteRequest;
+use App\Http\Resources\Api\SiteResource;
 use App\Models\web\AcnSite;
 use Exception;
 
