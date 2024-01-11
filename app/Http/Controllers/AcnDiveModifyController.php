@@ -22,7 +22,7 @@ class AcnDiveModifyController extends Controller
      * Get all the dive's informations
      *
      * @param $diveId the identification of the dive
-     * @return \view the datas of a dive to modify
+     * @return mixed the datas of a dive to modify
      */
     static public function getAll($diveId) {
 
@@ -95,6 +95,39 @@ class AcnDiveModifyController extends Controller
         $err = false;
         //ceation of the error message
         $strErr = "";
+
+
+        //check if the level has been changed from an adult dive to a child dive, if there are members that can't participate, the modifications are cancelled
+        $dive = AcnDives::find($request -> numDive);
+        if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY < 5 && $request -> lvl_required >=5) {
+            foreach($dive->divers as $member) {
+                if (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBE) < 5) {
+                    $err=true;
+                }
+            }
+            if ($err) {
+                $strErr .= "- Vous avez passé le niveau de la plongée de niveau enfant à adulte mais des enfants en font partie.<br>";
+            }
+        }
+        //check if the level has been changed from a child dive to an adult dive, if there are members that can't participate, the modifications are cancelled
+        else if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY > 4 && $request -> lvl_required <= 4 ) {
+            foreach($dive->divers as $member) {
+                $memPri = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBE);
+                if ($request -> lvl_required <= 2) {
+                    if ($memPri > 5 && $memPri < 13 ) {
+                        $err=true;
+                    }
+                }
+                else {
+                    if ($memPri > 5 && $memPri < 14 ) {
+                        $err=true;
+                    }
+                }
+            }
+            if ($err) {
+                $strErr .= "- Vous avez passé le niveau de la plongée de niveau adulte à enfant mais des adultes non formateurs en font partie.<br>";
+            }
+        }
 
         //if the boat exists, check if the max_divers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
         if (!is_null($request->boat)) {
