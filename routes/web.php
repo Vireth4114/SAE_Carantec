@@ -185,6 +185,10 @@ Route::get('/managerDivesReport', function () {
     return AcnDivesController::getAllDivesReport();
 })->name("managerDivesReport");
 
+Route::get('/directorDivesReport', function () {
+    return AcnDivesController::getAllDivesReportIsDirector();
+})->name("DirectorDivesReport");
+
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 

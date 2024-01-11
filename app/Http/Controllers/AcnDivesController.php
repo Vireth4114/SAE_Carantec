@@ -138,7 +138,7 @@ class AcnDivesController extends Controller
      * @return \redirect to the page of dives
      */
     static public function unregister(Request $request){
-        
+
         $userId = auth()->user()->MEM_NUM_MEMBER;
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
 
@@ -175,6 +175,18 @@ class AcnDivesController extends Controller
             $startDate = Carbon::createFromDate($year,3,1);
             $dives = AcnDives::all()->where("DIV_DATE",'>',$startDate)->where("DIV_DATE",'<',Carbon::now());
         }
+        $periods = array();
+        foreach($dives as $dive) {
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
+    }
+
+    public static function getAllDivesReportIsDirector() {
+        $numMember = auth()->user()->MEM_NUM_MEMBER ;
+        $dives = AcnMember::find($numMember)->dives->where('DIV_NUM_MEMBER_LEAD','=',$numMember);
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);

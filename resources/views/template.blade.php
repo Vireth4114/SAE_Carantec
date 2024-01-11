@@ -28,14 +28,12 @@
                     @elseif($isUserManager)
                         <a class="no-deco" href="{{ route("managerPanel") }}">Partie Responsable</a>
                         <a class="no-deco" href="{{ route("diveCreation") }}">Création de plongée</a>
-                        {{-- <a class="no-deco" href="{{ route("diveCreation") }}">Historique des plongées total</a> TO DO WHEN ON MASTER --}}
+                        <a class="no-deco" href="{{ route("managerDivesReport") }}">Historique total</a>
                     @elseif($isUserDirector)
-                        {{-- <a class="no-deco" href="{{ route("diveCreation") }}">Historique des plongées ou directeur</a> TO DO WHEN ON MASTER --}}
+                        <a class="no-deco" href={{ route("DirectorDivesReport") }}>Historique DP</a>
                     @endif
 
-                    {{-- @if($isUserManager)
-                            <a class="no-deco" href="">Archives</a> --}}
-                    {{--@else--}}@if($isUserDirector)
+                    @if($isUserDirector)
                         <a class="no-deco" href="{{route('myDirectorDives')}}">Mes séances</a>
                     @endif
                         <a class="no-deco" href="{{ route('dives') }}">S'inscrire</a>
