@@ -48,10 +48,10 @@ class AcnSiteController extends Controller
     {
         try {
             $site = AcnSite::findOrFail($id);
-            if ($site->SIT_DELETED === 1) return response("Resource requested does not exist.", 404);
+            if ($site->SIT_DELETED === 1) return response(["message" => "Resource requested does not exist."], 404);
             return new SiteResource($site);
         } catch (Exception $e) {
-            return response("Resource requested does not exist.", 404);
+            return response(["message" => "Resource requested does not exist."], 404);
         }
         
     }
@@ -81,7 +81,7 @@ class AcnSiteController extends Controller
                 $response["errors"] = array("name" => __("validation.unique", ["attribute" => "name"]));
                 return response()->json($response, 422);
             }
-            if ($site->SIT_DELETED === 1) return response("Resource requested does not exist.", 404);
+            if ($site->SIT_DELETED === 1) return response(["message" => "Resource requested does not exist."], 404);
             $site->SIT_NAME = strtoupper($request->name);
             $site->SIT_COORD = $request->coord;
             $site->SIT_DEPTH = $request->depth;
@@ -89,7 +89,7 @@ class AcnSiteController extends Controller
             $site->save();
             return new SiteResource($site);
         } catch (Exception $e) {
-            return response("Resource requested does not exist.", 404);
+            return response(["message" => "Resource requested does not exist."], 404);
         }
     }
 

@@ -46,10 +46,10 @@ class AcnBoatController extends Controller
     {
         try {
             $site = AcnBoat::findOrFail($id);
-            if ($site->SIT_DELETED === 1) return response("Resource requested does not exist.", 404);
+            if ($site->SIT_DELETED === 1) return response(["message" => "Resource requested does not exist."], 404);
             return new BoatResource($site);
         } catch (Exception $e) {
-            return response("Resource requested does not exist.", 404);
+            return response(["message" => "Resource requested does not exist."], 404);
         }
     }
 
@@ -77,13 +77,13 @@ class AcnBoatController extends Controller
                 return response()->json($response, 422);
             }
             $boat = AcnBoat::findOrFail($id);
-            if ($boat->BOA_DELETED === 1) return response("Resource requested does not exist.", 404);
+            if ($boat->BOA_DELETED === 1) return response(["message" => "Resource requested does not exist."], 404);
             $boat->BOA_NAME = strtoupper($request->name);
             $boat->BOA_CAPACITY = $request->capacity;
             $boat->save();
             return new BoatResource($boat);
         } catch (Exception $e) {
-            return response("Resource requested does not exist.", 404);
+            return response(["message" => "Resource requested does not exist."], 404);
         }
     }
 
