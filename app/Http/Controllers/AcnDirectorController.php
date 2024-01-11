@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class AcnDirectorController extends Controller
 {
-
+    /**
+     * Add a member to a dive
+     *
+     * @param $diveId the identification of the dive
+     * @return the view for adding a new dive with his parameters
+     */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
         $members = AcnDives::getMembersNotInDive($diveId);
@@ -25,14 +30,20 @@ class AcnDirectorController extends Controller
             array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
         }
         $registeredMembers = $dive->divers;
-
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
         
         $maxReached = $registeredMembers->count()==$dive['DIV_MAX_REGISTERED'];
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, 
         "maxReached" => $maxReached, 'levels' => $levels]);
+
     }
 
+    /**
+     * Get the dive's informations for a director
+     *
+     * @param $diveId the identification of the dive
+     * @return all the information of a dive
+     */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
         $allMembers = AcnDives::find($diveId)->divers;

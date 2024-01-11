@@ -16,6 +16,11 @@ use Carbon\Carbon;
 
 class AcnDivesController extends Controller
 {
+    /**
+     * Get all the dive's values
+     *
+     * @return \view the dive and his month
+     */
     public static function getAllDivesValues() {
     $months = AcnDives::getMonthWithDive();
 
@@ -27,17 +32,6 @@ class AcnDivesController extends Controller
         return view("displayDives",["dives" => $dives, "months" => $months]);
     }
 
-    static public function getNumMax() {
-        $max = DB::table('ACN_DIVES')
-            -> selectRaw('max(DIV_NUM_DIVE)+1 as maxi')
-            -> get();
-
-        $max = (array) $max[0];
-        return $max['maxi'];
-    }
-
-
-
     static public function existDive($date, $numPeriod) {
         return DB::table('ACN_DIVES')
             -> select(DB::raw(1))
@@ -47,6 +41,12 @@ class AcnDivesController extends Controller
 
     }
 
+    /**
+     * Get all dive's informations
+     *
+     * @param number $id the identification of the dive
+     * @return \view with all the informations of a dive thanks to his id
+     */
     public static function getAllDiveInformation($id){
         $dives = AcnDives::find($id);
         $dives_lead = AcnMember::find($dives -> DIV_NUM_MEMBER_LEAD);
@@ -98,7 +98,12 @@ class AcnDivesController extends Controller
         "prerogative" => $prerogative, "period" => $period, "site" => $site, "boat" => $boat]);
     }
 
-
+    /**
+     * Register a member to a dive
+     *
+     * @param Request $request the request to register a new diver in a dive
+     * @return mixed the redirection after an attempt of a registering
+     */
     static public function register(Request $request){
         $userPriority = auth()->user()->prerogatives->max("PRE_PRIORITY");
 
@@ -126,6 +131,12 @@ class AcnDivesController extends Controller
         return redirect(route("dives"));
     }
 
+    /**
+     * Unregister a member to a dive
+     *
+     * @param Request $request a request to unregister a diver in a dive
+     * @return \redirect to the page of dives
+     */
     static public function unregister(Request $request){
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
         return redirect(route("dives"));

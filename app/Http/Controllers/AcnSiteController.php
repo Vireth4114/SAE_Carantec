@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class AcnSiteController extends Controller
 {
+    /**
+     * Create a site
+     *
+     * @param Request $request the request to create a new site
+     * @return mixed after an attempt of a site creation
+     */
     static public function create(Request $request) {
         $errors = array();
         $nameAlreadyExist = AcnSite::where("SIT_NAME", "=", strtoupper($request->sit_name))->exists();
@@ -32,12 +38,25 @@ class AcnSiteController extends Controller
         return redirect(route("managerPanel"));
     }
 
+    /**
+     * Delete a site
+     *
+     * @param number $siteId the identification of the site to delete
+     *
+     */
     static public function delete($siteId) {
         $site = AcnSite::find($siteId);
         $site->SIT_DELETED = 1;
         $site->save();
     }
 
+    /**
+     * Update site's informations
+     *
+     * @param Request $request the request of updating a site
+     * @param number $siteId the identification of the site to update
+     * @return mixed redirection after an attemps of updating
+     */
     static public function update(Request $request, $siteId) {
         $site = AcnSite::find($siteId);
         $errors = array();
@@ -63,6 +82,12 @@ class AcnSiteController extends Controller
         return redirect(route("managerPanel"));
     }
 
+    /**
+     * Get the update interface of a site
+     *
+     * @param number $siteId the identification of the site
+     * @return \view of the manager'panel page
+     */
     static public function getSiteUpdateView($siteId) {
         $site = AcnSite::find($siteId);
         return view("manager/updateSite", ["site" => $site]);

@@ -8,7 +8,7 @@ use Closure;
 class IsSecretary
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request for determinate if the user is a secretary or not
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
