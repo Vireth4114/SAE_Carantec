@@ -44,6 +44,7 @@ class AcnMemberController extends Controller
         $member->MEM_STATUS = 1;
         $member->MEM_REMAINING_DIVES = 99;
         $member->MEM_PASSWORD = Hash::make($request->password);
+        $member->MEM_SUBDATE = Carbon::parse($request->subdate);
         $member->save();
         $functionId = AcnFunction::where("FUN_LABEL", "Adhérent")->first()->FUN_NUM_FUNCTION;
         DB::insert("INSERT INTO ACN_WORKING (NUM_MEMBER, NUM_FUNCTION) values (?, ?)", [$member->MEM_NUM_MEMBER, $functionId]);
@@ -136,6 +137,7 @@ class AcnMemberController extends Controller
             "pricing" => "string|required|in:adulte,enfant",
             "remaining_dives" => "integer|numeric",
             "password" => "string|sometimes",
+            "subdate" => "date|required",
         ]);
         try {
             $member = AcnMember::findOrFail($id);
@@ -144,6 +146,7 @@ class AcnMemberController extends Controller
             $member->MEM_SURNAME = $request->surname;
             $member->MEM_DATE_CERTIF = Carbon::parse($request->date_certification);
             $member->MEM_PRICING = strtolower($request->pricing);
+            $member->MEM_SUBDATE = strtolower($request->subdate);
             if (isset($request->remaining_dives)) $member->MEM_REMAINING_DIVES = $request->remaining_dives;
             if (isset($request->password)) $member->MEM_PASSWORD = Hash::make($request->password);
             $member->save();

@@ -24,6 +24,7 @@ class MemberResource extends JsonResource
                 "date_certification" => $this->MEM_DATE_CERTIF,
                 "pricing" => $this->MEM_PRICING,
                 "remaining_dives" => $this->MEM_REMAINING_DIVES,
+                "subdate" => $this->MEM_SUBDATE,
                 "functions" => $this->functions,
                 "dives" => $this->dives,
                 "groups" => $this->groups

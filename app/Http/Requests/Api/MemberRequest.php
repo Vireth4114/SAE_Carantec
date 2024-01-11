@@ -30,6 +30,7 @@ class MemberRequest extends FormRequest
             "date_certification" => "date|required",
             "pricing" => "string|required|in:adulte,enfant",
             "password" => "string|required",
+            "subdate" => "date|required",
         ];
     }
 }
