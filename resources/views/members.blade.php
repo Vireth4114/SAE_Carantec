@@ -1,13 +1,5 @@
 @extends('template')
 @section('content')
-
-@php
-use app\Models\web\AcnMember;
-
-$members = AcnMember::all();
- AcnMember::checkStatus();
-
-@endphp
 <a type="button" class="btn btn-success" href={{route('member_registration')}}>Ajouter un adhérent</a>
 <h3>Liste des adhérents :</h3>
     <table>
