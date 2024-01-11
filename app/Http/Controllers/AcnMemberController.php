@@ -49,6 +49,14 @@ class AcnMemberController extends Controller
         return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
     }
 
+    public static function registerForm(){
+
+        $pricing = AcnMember::getPrincing();
+        $prerog = AcnMember::getPrerog();
+
+        return view('members_registration',["pricing" => $pricing,"prerogation"=>$prerog]);
+    }
+
     /**
      * Check if the modifications are legal and update the data if they are, else go on an Exception page
      *
@@ -89,7 +97,7 @@ class AcnMemberController extends Controller
 
         if ($err) {
             $arrayErr = explode(";",$strErr);
-            return view('modificationException',['member_num'=>$request->member_num,'error_msg'=>$arrayErr]);
+            return view('memberException',['member_num'=>$request->member_num,'error_msg'=>$arrayErr,'actionType'=>'Modification']);
         }
         else {
             AcnMember::updateMemberInfos($request);
@@ -114,4 +122,54 @@ class AcnMemberController extends Controller
         }
 
     }
+
+    static public function register(Request $request) {
+
+        //creation of the error variable
+        $err = false;
+        //ceation of the error message
+        $strErr = "";
+
+        $preroglabel = AcnMember::getPrerogLabel($request->member_prerog);
+        $newNumMember = AcnMember::getNewNumMember();
+
+
+        if ($request->pricing_type == 'enfant' && $request->member_prerog > 4) {
+            $err = true;
+            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+        }
+        if ($request->pricing_type == 'adulte' && $request->member_prerog <= 4 ) {
+            $err = true;
+            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+        }
+
+        if ($err) {
+            $arrayErr = explode(";",$strErr);
+            return view('memberException',['member_num'=>$newNumMember,'error_msg'=>$arrayErr,'actionType'=>'Registration']);
+        }
+        else {
+            AcnMember::insertNewMember($request,$newNumMember);
+
+            //search for every prerogative a member need to have before the prerogation selected, meant to add every prerogative needed later (same for the 2 request below)
+        if($request->pricing_type == 'adulte'){
+            if($request->member_prerog  == 13){
+                $pre = AcnMember::getAllPRevPrerogativeButE1($newNumMember,$request->member_prerog);
+
+            }else{
+                $pre = AcnMember::getAllPRevPrerogativeNotE1($newNumMember,$request->member_prerog);
+            }
+        }else{
+            //same but for children
+            $pre = AcnMember::getAllPRevPrerogativeChildren($newNumMember,$request->member_prerog);
+        }
+
+        //insert All the prerogative selected
+        AcnMember::insertAllPrerogative($pre,$newNumMember);
+
+            return redirect('members');
+        }
+
+    }
+
+
 }

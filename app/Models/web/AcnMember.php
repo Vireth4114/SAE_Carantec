@@ -5,6 +5,7 @@ namespace App\Models\web;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AcnMember extends Authenticatable
 {
@@ -67,7 +68,7 @@ class AcnMember extends Authenticatable
 
     /**
      * Return the hashed password of the member
-     * 
+     *
      * @return [String] -> hashed Password
      */
     public function getAuthPassword()
@@ -79,7 +80,7 @@ class AcnMember extends Authenticatable
     /**
      * return the member
      * @param int $mem_num -> the specified member's id
-     * 
+     *
      * @return [data_Member] -> the member
      */
     public static function getMemberInfo($mem_num){
@@ -88,7 +89,7 @@ class AcnMember extends Authenticatable
 
     /**
      * returns all the pricings
-     * 
+     *
      * @return [list[String]] -> the pricings
      */
     public static function getPrincing(){
@@ -98,7 +99,7 @@ class AcnMember extends Authenticatable
     /**
      * check is the user is a Secretary
      * @param int $memberNum -> the specified user
-     * 
+     *
      * @return boolean -> True if the user is a Secretary, false otherwise
      */
     static public function isUserSecretary($memberNum) {
@@ -113,7 +114,7 @@ class AcnMember extends Authenticatable
     /**
      * check is the user is a Manager
      * @param int $memberNum -> the specified user
-     * 
+     *
      * @return boolean -> True if the user is a Manager, false otherwise
      */
     static public function isUserManager($memberNum) {
@@ -128,7 +129,7 @@ class AcnMember extends Authenticatable
     /**
      * check is the user is a Director
      * @param int $memberNum -> the specified user
-     * 
+     *
      * @return boolean -> True if the user is a Director, false otherwise
      */
     static public function isUserDirector($memberNum) {
@@ -142,7 +143,7 @@ class AcnMember extends Authenticatable
 
     /**
      * return all the users that are eligible to be director
-     * 
+     *
      * @return [list[data_Member]] -> all the members that can be director
      */
     static public function getAllLeader(){
@@ -158,7 +159,7 @@ class AcnMember extends Authenticatable
 
     /**
      * return all the users that are pilots
-     * 
+     *
      * @return [list[data_Member]] -> all the members that are pilots
      */
     static public function getAllPilots(){
@@ -174,7 +175,7 @@ class AcnMember extends Authenticatable
     /**
      * return the member
      * @param int $memberNum -> the id of the specified member
-     * 
+     *
      * @return [data_Member] -> the specified members
      */
     static public function getMember($memberNum){
@@ -187,7 +188,7 @@ class AcnMember extends Authenticatable
 
     /**
      * return all the users that are security
-     * 
+     *
      * @return [list[data_Member]] -> all the members that are surface security
      */
     static public function getAllSecurity() {
@@ -203,7 +204,7 @@ class AcnMember extends Authenticatable
     /**
      * return the max priority of the member's prerogatives
      * @param int $memberNum -> the id of the specified member
-     * 
+     *
      * @return int -> the maximum pre_priority of the member
      */
     static public function getMemberMaxPriority($memberNum) {
@@ -229,4 +230,34 @@ class AcnMember extends Authenticatable
                 'MEM_REMAINING_DIVES' => $request -> remaining_dive,
             ]);
     }
+
+    static public function getNewNumMember(){
+        return DB::table('ACN_MEMBER')->max('MEM_NUM_MEMBER')+1;
+    }
+
+    static public function insertNewMember($request,$mem_num_member){
+        DB::table('ACN_MEMBER')
+            ->insert([
+                'MEM_NUM_MEMBER' => $mem_num_member,
+                'MEM_NUM_LICENCE' => $request -> member_licence,
+                'MEM_NAME' => $request -> member_name,
+                'MEM_SURNAME' => $request -> member_surname,
+                'MEM_DATE_CERTIF' => $request -> certif_date,
+                'MEM_PRICING' => $request -> pricing_type,
+                'MEM_STATUS' => 1,
+                'MEM_REMAINING_DIVES' => 80,
+                'MEM_PASSWORD' => Hash::make($request->member_password),
+            ]);
+    }
+
+    static public function deleteUserRole($memberNum, $roleName) {
+        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
+        DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->delete();
+    }
+
+    static public function createUserRole($memberNum, $roleName) {
+        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
+        DB::table("ACN_WORKING")->insert(["NUM_FUNCTIOn" =>$roleId, "NUM_MEMBER" => $memberNum]);
+    }
+
 }

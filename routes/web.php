@@ -136,12 +136,17 @@ Route::get('/members', function () {
     return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
 })->middleware(['auth'])->middleware('isSecretary')->name("members");
 
+Route::get('/members/registration', function () {
+    return AcnMemberController::registerForm();
+})->middleware(['auth'])->middleware('isSecretary')->name("member_registration");
+
+Route::post('member/registration/validation', [AcnMemberController::class, 'register'])->name('register_member');
+
 Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) {
     return AcnMemberController::modifyForm($mem_num_member);
 })->middleware(['auth'])->middleware('isSecretary')->name("member_modification");
 
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
-
 
 Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {
     return AcnMemberController::updateRolesMember($request, $userId);
