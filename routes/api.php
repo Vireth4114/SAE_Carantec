@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AcnBoatController;
 use App\Http\Controllers\Api\AcnSiteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::apiResource("sites", AcnSiteController::class);
+Route::apiResource("boats", AcnBoatController::class);
