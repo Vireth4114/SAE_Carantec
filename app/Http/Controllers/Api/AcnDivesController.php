@@ -8,6 +8,7 @@ use App\Http\Requests\Api\DivesRequest;
 use App\Http\Resources\Api\DivesResource;
 use App\Models\web\AcnBoat;
 use App\Models\web\AcnDives;
+use App\Models\web\AcnGroups;
 use App\Models\web\AcnMember;
 use App\Models\web\AcnPeriod;
 use App\Models\web\AcnSite;
@@ -193,6 +194,56 @@ class AcnDivesController extends Controller
         $entryExist = DB::table("ACN_REGISTERED")->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->exists();
         if (!$entryExist) return response(["message" => "The member is not registered for this dive."], 404);
         AcnRegisteredController::delete($memberId, $diveId);
+        return response(["message" => "OK"], 200);
+    }
+    /**
+     * Register a member of a dive in a group if possible.
+     *
+     * @param  int  $diveId
+     * @param  int  $memberId
+     * @param  int  $groupId
+     * @return \Illuminate\Http\Response
+     */
+    static public function registerMemberFromDiveInGroup(int $diveId, int $memberId, int $groupId) {
+        try { AcnDives::findOrFail($diveId); } catch (Exception $e) {
+            return response(["message" => "The dive given does not exist."], 404);
+        }
+        try { AcnMember::findOrFail($memberId); } catch (Exception $e) {
+            return response(["message" => "The member given does not exist."], 404);
+        }
+        try { AcnGroups::findOrFail($groupId); } catch (Exception $e) {
+            return response(["message" => "The group given does not exist."], 404);
+        }
+        $isMemberRegistered = DB::table('ACN_REGISTERED')->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->exists();
+        if ($isMemberRegistered) {
+            DB::table("ACN_REGISTERED")->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->update(["NUM_GROUPS" => $groupId]);
+        } else {
+            DB::table("ACN_REGISTERED")->insert([
+                "NUM_DIVE" => $diveId,
+                "NUM_MEMBER" => $memberId,
+                "NUM_GROUPS" => $groupId,
+            ]);
+        }
+        return response(["message" => "OK"], 200);
+    }
+
+    /**
+     * Unregister a member from a dive if possible.
+     *
+     * @param  int  $diveId
+     * @param  int  $memberId
+     * @return \Illuminate\Http\Response
+     */
+    static public function unregisterMemberFromDiveInGroup(int $diveId, int $memberId) {
+        try { AcnDives::findOrFail($diveId); } catch (Exception $e) {
+            return response(["message" => "The dive given does not exist."], 404);
+        }
+        try { AcnMember::findOrFail($memberId); } catch (Exception $e) {
+            return response(["message" => "The member given does not exist."], 404);
+        }
+        $entryExist = DB::table("ACN_REGISTERED")->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->exists();
+        if (!$entryExist) return response(["message" => "The member is not registered for this dive."], 404);
+        DB::table("ACN_REGISTERED")->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->update(["NUM_GROUPS" => null]);
         return response(["message" => "OK"], 200);
     }
 }

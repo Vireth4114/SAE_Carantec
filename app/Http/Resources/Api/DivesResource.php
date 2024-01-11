@@ -29,7 +29,7 @@ class DivesResource extends JsonResource
                 "leader" => $this->leader,
                 "pilot" => $this->pilot,
                 "divers" => $this->divers,
-                "groups" => $this->groups,
+                "groups" => $this->groups->unique("GRP_NUM_GROUPS"),
             ]
         ];
     }

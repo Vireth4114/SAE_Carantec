@@ -48,3 +48,9 @@ Route::post("/dives/{diveId}/member/{memberId}", function(Request $request, $div
 Route::delete("/dives/{diveId}/member/{memberId}", function(Request $request, $diveId, $memberId) {
     return AcnDivesController::unregisterMemberInDive($diveId, $memberId);
 });
+Route::post("/dives/{diveId}/member/{memberId}/group/{groupId}", function(Request $request, $diveId, $memberId, $groupId) {
+    return AcnDivesController::registerMemberFromDiveInGroup($diveId, $memberId, $groupId);
+});
+Route::delete("/dives/{diveId}/member/{memberId}/group", function(Request $request, $diveId, $memberId) {
+    return AcnDivesController::unregisterMemberFromDiveInGroup($diveId, $memberId);
+});
