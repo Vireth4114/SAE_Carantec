@@ -11,6 +11,7 @@
             <td>Niveau</td>
             <td>Date de certification </td>
             <td>Type d'abonnement </td>
+            <td>Date de dernier renouvellement d'abonnement </td>
             <td>Nombre de plongée restante </td>
             <td>Statut </td>
         </tr>
@@ -25,6 +26,7 @@
                 <td>{{$member->PRE_LEVEL }}</td>
                 <td>{{$member->MEM_DATE_CERTIF}} </td>
                 <td>{{$member->MEM_PRICING}} </td>
+                <td>{{$member->MEM_SUBDATE}} </td>
                 <td>{{$member->MEM_REMAINING_DIVES}}</td>
                 <td>@if($member->MEM_STATUS)
                         <p class="active_member">actif</p>

@@ -259,6 +259,7 @@ class AcnMember extends Authenticatable
                 'MEM_STATUS' => 1,
                 'MEM_REMAINING_DIVES' => 99,
                 'MEM_PASSWORD' => Hash::make($request->member_password),
+                'MEM_SUBDATE' => Carbon::now(),
             ]);
     }
 

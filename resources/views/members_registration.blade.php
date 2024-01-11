@@ -28,7 +28,7 @@
             @foreach ($pricing as $price)
                     <option value='{{$price->MEM_PRICING}}'>{{$price->MEM_PRICING}}</option>
             @endforeach
-            </select><br>
+        </select><br>
 
         <label>Prérogative :</label>
             <select name="member_prerog" id="member_prerog">

@@ -175,7 +175,7 @@ class AcnMemberController extends Controller
         //ceation of the error message
         $strErr = "";
 
-        $preroglabel = AcnMember::getPrerogLabel($request->member_prerog);
+        $preroglabel = AcnPrerogative::getPrerogLabel($request->member_prerog);
         $newNumMember = AcnMember::getNewNumMember();
 
 
@@ -198,18 +198,18 @@ class AcnMemberController extends Controller
             //search for every prerogative a member need to have before the prerogation selected, meant to add every prerogative needed later (same for the 2 request below)
         if($request->pricing_type == 'adulte'){
             if($request->member_prerog  == 13){
-                $pre = AcnMember::getAllPRevPrerogativeButE1($newNumMember,$request->member_prerog);
+                $pre = AcnRanked::getAllPRevPrerogativeButE1($newNumMember,$request->member_prerog);
 
             }else{
-                $pre = AcnMember::getAllPRevPrerogativeNotE1($newNumMember,$request->member_prerog);
+                $pre = AcnRanked::getAllPRevPrerogativeNotE1($newNumMember,$request->member_prerog);
             }
         }else{
             //same but for children
-            $pre = AcnMember::getAllPRevPrerogativeChildren($newNumMember,$request->member_prerog);
+            $pre = AcnRanked::getAllPRevPrerogativeChildren($newNumMember,$request->member_prerog);
         }
 
         //insert All the prerogative selected
-        AcnMember::insertAllPrerogative($pre,$newNumMember);
+        AcnRanked::insertAllPrerogative($pre,$newNumMember);
 
             return redirect('members');
         }
