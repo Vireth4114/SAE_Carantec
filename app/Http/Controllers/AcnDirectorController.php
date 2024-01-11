@@ -18,20 +18,31 @@ class AcnDirectorController extends Controller
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
         $members = AcnDives::getMembersNotInDive($diveId);
+        $levels = array();
+        foreach($members as $member) {
+            $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
+            array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
+        }
         $registeredMembers = $dive->divers;
 
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
         
         $maxReached = $registeredMembers->count()==$dive['DIV_MAX_REGISTERED'];
-        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, "maxReached" => $maxReached]);
+        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, 
+        "maxReached" => $maxReached, 'levels' => $levels]);
     }
 
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
+        $levels = array();
         foreach($allMembers as $member) {
-            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) array_push($members, $member); 
+            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) {
+                array_push($members, $member);
+                $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
+                array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
+            }
         }
         $nbMembers = count($members);
         $period = AcnPeriod::find($dive['DIV_NUM_PERIOD']);
@@ -67,7 +78,7 @@ class AcnDirectorController extends Controller
         
         return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
         'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
-        'max_divers' => $max_divers, 'nbMembers' => $nbMembers]);
+        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels]);
     }
 
     public static function myDirectorDives() {

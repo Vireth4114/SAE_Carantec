@@ -61,7 +61,15 @@ Route::get('/diveCreation', function () {
 
 Route::get('/diveModify/{diveId}', function ($diveId) {
     return AcnDiveModifyController::getAll($diveId);
-})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModifyleware f");
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModify");
+
+Route::get('/panel/director/redirectDiveModify/{diveId}', function($diveId) {
+    if (AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER)) {
+        return redirect(route('dives'));
+    } else {
+        return redirect(route('diveInformation', $diveId));
+    }
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("redirectDiveModify");
 
 Route::get('/panel/manager', function () {
     return ManagerPanelController::displayManagerPanel();
