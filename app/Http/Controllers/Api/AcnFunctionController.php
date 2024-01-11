@@ -7,7 +7,6 @@ use App\Http\Requests\Api\FunctionRequest;
 use App\Http\Resources\Api\FunctionResource;
 use App\Models\web\AcnFunction;
 use Exception;
-use Illuminate\Http\Request;
 
 class AcnFunctionController extends Controller
 {
@@ -55,7 +54,7 @@ class AcnFunctionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FunctionRequest $request, $id)
     {
         //
     }

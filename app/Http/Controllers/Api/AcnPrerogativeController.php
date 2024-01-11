@@ -7,7 +7,6 @@ use App\Http\Requests\Api\PretogativeRequest;
 use App\Http\Resources\Api\PrerogativeResource;
 use App\Models\web\AcnPrerogative;
 use Exception;
-use Illuminate\Http\Request;
 
 class AcnPrerogativeController extends Controller
 {
