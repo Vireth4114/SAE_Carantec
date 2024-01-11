@@ -30,6 +30,24 @@ class AcnGroupsMakingController extends Controller
         -> get()
         -> toArray();
 
+        $superIn = DB::table('ACN_MEMBER')
+        -> select('ACN_MEMBER.MEM_NUM_MEMBER as MEM_NUM_MEMBER')
+        -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
+        -> join('ACN_PREROGATIVE', 'PRIORITY_TABLE.MAX_PRIORITY', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+        -> where('PRIORITY_TABLE.MAX_PRIORITY','>=', 13)
+        -> whereIn('ACN_MEMBER.MEM_NUM_MEMBER', $members);
+
+
+        $superIn2 = $superIn -> get() -> toArray();
+
+        DB::table('ACN_REGISTERED')
+        -> joinSub($superIn, 'SUPER_IN', 'SUPER_IN.MEM_NUM_MEMBER', '=', 'ACN_REGISTERED.NUM_MEMBER')
+        -> where('NUM_DIVE', '=', $dive)
+        -> delete();
+
+
+        $supervisors = array_merge($supervisors, $superIn2);
+
         $members = $members->get()->toArray();
         shuffle($members);
 
@@ -89,6 +107,9 @@ class AcnGroupsMakingController extends Controller
                                 break;
                             } elseif ($maxcount-1 > $count_member && $rank != 1) {
                                 DB::update('update ACN_REGISTERED set NUM_GROUPS='.$group->NUM_GROUPS.' where NUM_DIVE='.$dive.' and NUM_MEMBER='.$member);
+                                if (sizeof($supervisors) == 0) {
+                                    return AcnGroupsMakingController::getAll("Il y a eu des problèmes");
+                                }
                                 $supervisor = array_pop($supervisors)->MEM_NUM_MEMBER;
                                 DB::table('ACN_REGISTERED')->insert([
                                     'NUM_MEMBER' => $supervisor,
@@ -116,6 +137,9 @@ class AcnGroupsMakingController extends Controller
                 $max = ((array) $max[0])['maxi'];
                 DB::update('update ACN_REGISTERED set NUM_GROUPS='.$max.' where NUM_DIVE='.$dive.' and NUM_MEMBER='.$member);
                 if ($rank <= 4 || $rank == 5 || $rank == 7 || $rank == 10) {
+                    if (sizeof($supervisors) == 0) {
+                        return AcnGroupsMakingController::getAll("Il y a eu des problèmes");
+                    }
                     $supervisor = array_pop($supervisors)->MEM_NUM_MEMBER;
                     DB::table('ACN_REGISTERED')->insert([
                         'NUM_MEMBER' => $supervisor,
