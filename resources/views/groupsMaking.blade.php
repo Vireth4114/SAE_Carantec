@@ -67,7 +67,7 @@
 @else
     <a href='{{Route('validateGroup', ["diveId" => $dive])}}'>Valider</a>
 @endif
-<a href='{{Route('automaticGroup')}}'>Arrangement aléatoire</a>
+<a href='{{Route('automaticGroup', ["diveId" => $dive])}}'>Arrangement aléatoire</a>
 </div>
 </section>
 @endsection
