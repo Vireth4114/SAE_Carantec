@@ -2,11 +2,11 @@
 
 @section('content')
 <section id='groupsSection'>
-<h2>{{$message}}</h2>
-<div id='automaticContainer'>
+<h2 id='groupTitle'>{{$message}}</h2>
+<div id='groupContainer'>
 @foreach ($members as $key=>$group)
     @if ($key != null)
-        <div class='automaticBox'>
+        <div class='groupBox'>
             @foreach ($group[0] as $member)
                 <div class='memberInGroup'>
                     <p>{{$member->MEM_NAME.' '.$member->MEM_SURNAME.' '.$member->PRE_LABEL}}</p>
@@ -52,6 +52,7 @@
 @endforeach
 </div>
 
+<div id ='bottomGroups'>
 @if (array_key_exists(null, $members))
     <form id='addToNew' action='{{Route('addGroup')}}' method='POST'>
         @csrf
@@ -67,5 +68,6 @@
     <a href='{{Route('validateGroup', ["diveId" => $dive])}}'>Valider</a>
 @endif
 <a href='{{Route('automaticGroup')}}'>Arrangement aléatoire</a>
+</div>
 </section>
 @endsection

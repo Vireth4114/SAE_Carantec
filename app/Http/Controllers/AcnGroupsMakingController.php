@@ -359,7 +359,7 @@ class AcnGroupsMakingController extends Controller
                 sizeof(array_filter($usefulPriorities, static function($element) {
                     return $element == 6 || $element == 8 || $element == 9 || $element == 11;
                 }))])[0] != 2) {
-                    if ($message == "Palanquées validées") {
+                    if (substr($message, 0, 4) != "Prob") {
                         $message = 'Problème dans le groupe '.$numGroup;
                     } else {
                         $message .= ' et '.$numGroup;
