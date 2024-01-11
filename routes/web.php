@@ -46,9 +46,9 @@ Route::post('/dives/unregister', function (Request $request){
     return AcnDivesController::unregister($request);
 })->name("membersDivesUnregister");
 
-Route::get('/dashboard', function () {
-    return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
-})->middleware(['auth'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
+// })->middleware(['auth'])->name('dashboard');
 
 Route::get('/secretary', function () {
     return view('secretary', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);

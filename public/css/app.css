@@ -3,6 +3,37 @@
     padding: 0;
 }
 
+#headerLinks > a {
+    text-decoration: none;
+    color: white;
+}
+
+#logOutButton:hover{
+    cursor : pointer;
+}
+
+.hyperlink-no_style{
+    text-decoration: none;
+}
+
+#divesDisplayed{
+    font-size: bold;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.center_display{
+    text-align: center;
+    align-content: center;
+}
+
+.button{
+    margin-left:0.5%;
+    background-color: blue;
+    font-size: bold;
+    color: white;
+}
+
 header {
     display: flex;
     flex-direction: row;
@@ -12,10 +43,7 @@ header {
     background-color: black;
 }
 
-#headerLinks > a {
-    text-decoration: none;
-    color: white;
-}
+
 
 #logo {
     max-width: 400px;

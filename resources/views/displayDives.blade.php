@@ -7,6 +7,7 @@
     use Carbon\Carbon;
     $user = auth()->user();
 @endphp
+    <div class="center_display">
     @if(!empty(session('errors')))
         @foreach (session('errors')->all() as $error)
             <p>{{ $error }}</p>
@@ -23,6 +24,7 @@
                 $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_END_TIME), 'G');
                 $buttonText = "S'inscrire"
             @endphp
+            <div id="divesDisplayed">
             <form
             @if ($user->dives->contains("DIV_NUM_DIVE", $dive->DIV_NUM_DIVE))
                 action="{{ route('membersDivesUnregister') }}"
@@ -35,8 +37,8 @@
             method="POST">
                 @csrf
                 @method('post')
-                <p>
-                    <a href="{{route('dives_informations',$dive->DIV_NUM_DIVE)}}">
+                <p >
+                    <a  class="hyperlink-no_style"  href="{{route('dives_informations',$dive->DIV_NUM_DIVE)}}">
                         <input
                         type='hidden'
                         name='dive'
@@ -49,13 +51,14 @@
                         Niveau : {{$dive->PRE_LABEL}}
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
+                    <input class="button" type="submit" value="{{ $buttonText }}"
+                    @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
+                        disabled
+                    @endif>
                 </p>
-                <input type="submit" value="{{ $buttonText }}"
-                @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
-                    disabled
-                @endif
-                >
             </form>
+        </div>
         @endforeach
     @endforeach
+    </div>
 @endsection

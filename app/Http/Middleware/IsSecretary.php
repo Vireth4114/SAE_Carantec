@@ -19,7 +19,7 @@ class IsSecretary
         $isSecretary = AcnMember::isUserSecretary(auth()->user()->MEM_NUM_MEMBER);
 
         if (!$isSecretary) {
-            return redirect('/dashboard');
+            return redirect('/welcome');
         }
 
         return $next($request);

@@ -1,5 +1,5 @@
 @extends('template')
-
+@section('content')
 <x-app-layout>
     <x-slot name="header">
     </x-slot>
@@ -14,3 +14,4 @@
         </div>
     </div>
 </x-app-layout>
+@endsection

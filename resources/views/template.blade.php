@@ -14,7 +14,7 @@
 <body>
     <header>
         <nav>
-            <img src="{{URL::asset('images/logo.png')}}" alt="Logo Carentec Nautisme">
+            <a href="{{ route("welcome") }}"> <img src="{{URL::asset('images/logo.png')}}" alt="Logo Carentec Nautisme"></a>
             <div id="headerLinks">
                 @if(Auth::check())
                     @php
@@ -36,11 +36,11 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
-                        <x-dropdown-link class="no-deco" :href="route('logout')"
+                        <a class="no-deco" id="logOutButton" :href="route('logout')"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">
                             {{ __('Déconnexion') }}
-                        </x-dropdown-link>
+                        </a>
                     </form>
                 @elseif(!Route::is('login'))
                     <a class="no-deco" href="{{ route('login') }}">Connexion</a>

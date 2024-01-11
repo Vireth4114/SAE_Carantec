@@ -19,7 +19,7 @@ class IsManager
         $isManager = AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER);
 
         if (!$isManager) {
-            return redirect('/dashboard');
+            return redirect('/welcome');
         }
 
         return $next($request);
