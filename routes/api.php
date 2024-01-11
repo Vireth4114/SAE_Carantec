@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AcnBoatController;
+use App\Http\Controllers\Api\AcnDivesController;
 use App\Http\Controllers\Api\AcnFunctionController;
 use App\Http\Controllers\Api\AcnGroupsController;
 use App\Http\Controllers\Api\AcnMemberController;
@@ -40,3 +41,4 @@ Route::delete("/members/{memberId}/function/{functionId}", function(Request $req
     return AcnMemberController::deleteMemberFunction($memberId, $functionId);
 });
 Route::apiResource("groups", AcnGroupsController::class);
+Route::apiResource("dives", AcnDivesController::class);
