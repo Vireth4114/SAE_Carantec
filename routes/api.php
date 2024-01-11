@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AcnMemberController;
 use App\Http\Controllers\Api\AcnPeriodController;
 use App\Http\Controllers\Api\AcnPrerogativeController;
 use App\Http\Controllers\Api\AcnSiteController;
+use App\Models\web\AcnDives;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,10 @@ Route::post("/members/{memberId}/prerogative/{prerogativeId}", function(Request 
 });
 Route::delete("/members/{memberId}/prerogative/{prerogativeId}", function(Request $request, $memberId, $prerogativeId) {
     return AcnMemberController::deleteMemberPrerogative($memberId, $prerogativeId);
+});
+Route::post("/members/{memberId}/function/{functionId}", function(Request $request, $memberId, $functionId) {
+    return AcnMemberController::storeMemberFunction($memberId, $functionId);
+});
+Route::delete("/members/{memberId}/function/{functionId}", function(Request $request, $memberId, $functionId) {
+    return AcnMemberController::deleteMemberFunction($memberId, $functionId);
 });

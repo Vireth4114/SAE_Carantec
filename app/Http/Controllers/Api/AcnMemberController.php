@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\MemberRequest;
 use App\Http\Resources\Api\MemberResource;
+use App\Models\web\AcnDives;
 use App\Models\web\AcnFunction;
 use App\Models\web\AcnMember;
 use App\Models\web\AcnPrerogative;
@@ -74,6 +75,34 @@ class AcnMemberController extends Controller
             return response(["message" => "The member has already the prerogative given."], 404);
         }
         DB::insert("INSERT INTO ACN_RANKED (NUM_PREROG, NUM_MEMBER) values (?, ?)", [$prerogativeId, $memberId]);
+        return response(["message" => "OK"], 200);
+    }
+
+    /**
+     * Store a newly prerogative for a given member in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $memberId
+     * @param  int  $prerogativeId
+     * @return \Illuminate\Http\Response
+     */
+    static public function storeMemberFunction($memberId, $functionId)
+    {
+        $member = null;
+        try {
+            $member = AcnMember::findOrFail($memberId);
+        } catch (Exception $e) {
+            return response(["message" => "Member given does not exist."], 404);
+        }
+        try {
+            AcnFunction::findOrFail($functionId);
+        } catch (Exception $e) {
+            return response(["message" => "Function given does not exist."], 404);
+        }
+        if($member->functions->contains("PRE_NUM_PREROG", $functionId)) {
+            return response(["message" => "The member has already the function given."], 404);
+        }
+        DB::insert("INSERT INTO ACN_WORKING (NUM_FUNCTION, NUM_MEMBER) values (?, ?)", [$functionId, $memberId]);
         return response(["message" => "OK"], 200);
     }
 
@@ -169,6 +198,34 @@ class AcnMemberController extends Controller
             return response(["message" => "The member has not the prerogative."], 404);
         }
         DB::table("ACN_RANKED")->where("NUM_PREROG", $prerogativeId)->where("NUM_MEMBER", $memberId)->delete();
+        return response(["message" => "OK"], 200);
+    }
+
+    /**
+     * Remove the specified function for the member given from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $memberId
+     * @param  int  $functionId
+     * @return \Illuminate\Http\Response
+     */
+    static public function deleteMemberFunction($memberId, $functionId)
+    {
+        $member = null;
+        try {
+            $member = AcnMember::findOrFail($memberId);
+        } catch (Exception $e) {
+            return response(["message" => "Member given does not exist."], 404);
+        }
+        try {
+            AcnFunction::findOrFail($functionId);
+        } catch (Exception $e) {
+            return response(["message" => "Function given does not exist."], 404);
+        }
+        if(!$member->functions->contains("FUN_NUM_FUNCTION", $functionId)) {
+            return response(["message" => "The member has not the function."], 404);
+        }
+        DB::table("ACN_WORKING")->where("NUM_FUNCTION", $functionId)->where("NUM_MEMBER", $memberId)->delete();
         return response(["message" => "OK"], 200);
     }
 }
