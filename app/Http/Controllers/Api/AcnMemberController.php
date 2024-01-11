@@ -53,7 +53,6 @@ class AcnMemberController extends Controller
     /**
      * Store a newly prerogative for a given member in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $memberId
      * @param  int  $prerogativeId
      * @return \Illuminate\Http\Response
@@ -81,7 +80,6 @@ class AcnMemberController extends Controller
     /**
      * Store a newly prerogative for a given member in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $memberId
      * @param  int  $prerogativeId
      * @return \Illuminate\Http\Response
@@ -176,7 +174,6 @@ class AcnMemberController extends Controller
     /**
      * Remove the specified prerogative for the member given from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $memberId
      * @param  int  $prerogativeId
      * @return \Illuminate\Http\Response
@@ -204,7 +201,6 @@ class AcnMemberController extends Controller
     /**
      * Remove the specified function for the member given from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $memberId
      * @param  int  $functionId
      * @return \Illuminate\Http\Response
