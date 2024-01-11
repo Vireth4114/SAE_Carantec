@@ -5,6 +5,7 @@ namespace App\Models\web;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AcnMember extends Authenticatable
 {
@@ -217,6 +218,25 @@ class AcnMember extends Authenticatable
                 'MEM_DATE_CERTIF' => $request -> certif_date,
                 'MEM_PRICING' => $request -> pricing_type,
                 'MEM_REMAINING_DIVES' => $request -> remaining_dive,
+            ]);
+    }
+
+    static public function getNewNumMember(){
+        return DB::table('ACN_MEMBER')->max('MEM_NUM_MEMBER')+1;
+    }
+
+    static public function insertNewMember($request,$mem_num_member){
+        DB::table('ACN_MEMBER')
+            ->insert([
+                'MEM_NUM_MEMBER' => $mem_num_member,
+                'MEM_NUM_LICENCE' => $request -> member_licence,
+                'MEM_NAME' => $request -> member_name,
+                'MEM_SURNAME' => $request -> member_surname,
+                'MEM_DATE_CERTIF' => $request -> certif_date,
+                'MEM_PRICING' => $request -> pricing_type,
+                'MEM_STATUS' => 1,
+                'MEM_REMAINING_DIVES' => 80,
+                'MEM_PASSWORD' => Hash::make($request->member_password),
             ]);
     }
 
