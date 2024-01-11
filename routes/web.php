@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view("welcome");
+    return redirect(route('dives'));
 })->middleware(['auth'])->middleware('homePage')->name("welcome");
 
 Route::get('/dives', function () {

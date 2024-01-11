@@ -21,7 +21,7 @@ class IsManagerOrSecretary
 
         if (!$isManager) {
             if(!$isSecretary){
-                return redirect('/welcome');
+                return redirect(route("welcome"));
             }
         }
 
