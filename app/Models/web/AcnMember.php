@@ -245,7 +245,7 @@ class AcnMember extends Authenticatable
                 'MEM_DATE_CERTIF' => $request -> certif_date,
                 'MEM_PRICING' => $request -> pricing_type,
                 'MEM_STATUS' => 1,
-                'MEM_REMAINING_DIVES' => 80,
+                'MEM_REMAINING_DIVES' => 99,
                 'MEM_PASSWORD' => Hash::make($request->member_password),
             ]);
     }
@@ -253,6 +253,32 @@ class AcnMember extends Authenticatable
     static public function deleteUserRole($memberNum, $roleName) {
         $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
         DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->delete();
+    }
+
+    //check for a member that are inactive and change their status and conversely   ((NEED TO BE FINISHED ))
+    static public function checkStatus() {
+        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_DATE_CERTIF))/365.25','>',1)->get());
+
+        foreach($members as $member){
+            dd($member);
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>0]);
+        }
+
+        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','!=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_DATE_CERTIF))/365.25','<',1)->get());
+
+        foreach($members as $member){
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>1]);
+        }
+    }
+
+    static public function changeStatus($member_num) {
+        $members = DB::table('ACN_MEMBER')->select('MEM_STATUS')->where('MEM_NUM_MEMBER','=',$member_num)->get();
+
+        if($members[0]->MEM_STATUS == 0){
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member_num)->update(['MEM_STATUS'=>1]);
+        }else{
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member_num)->update(['MEM_STATUS'=>0]);
+        }
     }
 
     static public function createUserRole($memberNum, $roleName) {

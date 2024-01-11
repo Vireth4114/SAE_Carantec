@@ -33,6 +33,11 @@ class AcnMemberController extends Controller
         return redirect(route("managerPanel"));
     }
 
+    public static function updateStatus($member_num){
+        AcnMember::changeStatus($member_num);
+        return redirect('members');
+    }
+
     /**
      * Return a view to modify the profile of a member
      *

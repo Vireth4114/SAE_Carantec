@@ -146,6 +146,10 @@ Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) 
     return AcnMemberController::modifyForm($mem_num_member);
 })->middleware(['auth'])->middleware('isSecretary')->name("member_modification");
 
+Route::get('/members/status/{mem_num_member}', function ($mem_num_member) {
+    return AcnMemberController::updateStatus($mem_num_member);
+})->middleware(['auth'])->middleware('isSecretary')->name("member_status");
+
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
 
 Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {

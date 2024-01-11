@@ -1,10 +1,11 @@
 @extends('template')
 @section('content')
 
-@php 
+@php
 use app\Models\web\AcnMember;
 
 $members = AcnMember::all();
+// AcnMember::checkStatus();    //Need to be finished
 
 @endphp
     <table>
@@ -16,15 +17,15 @@ $members = AcnMember::all();
             <td>Date de certification </td>
             <td>Type d'abonnement </td>
             <td>Nombre de plongée restante</td>
-            <td>Activité</td>
+            <td>Statut</td>
         </tr>
 
         @foreach($members as $member)
             @php
                 $info = AcnMember::find(1);
-                
+
             @endphp
-            
+
             <tr>
                 <td>{{$member->MEM_NUM_MEMBER}}</td>
                 <td>{{$member->MEM_NUM_LICENCE}} </td>
@@ -40,8 +41,9 @@ $members = AcnMember::all();
                     @endif
                 </td>
                 <td><a href={{route("member_modification",$member->MEM_NUM_MEMBER)}}>Modifier</a></td>
+                <td><a href={{route("member_status",$member->MEM_NUM_MEMBER)}}>Changer son statut</a></td>
             </tr>
-    
+
 @endforeach
     </table>
 @endsection
