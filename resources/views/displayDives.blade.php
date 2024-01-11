@@ -17,7 +17,6 @@
 
         @foreach($dives[$month->mois_mot] as $dive)
             @php
-                //$newDate = new Carbon($dive->DIV_DATE);
                 $date = Carbon::parse($dive->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y');
                 $heureStart = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_START_TIME), 'G');
                 $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_END_TIME), 'G');

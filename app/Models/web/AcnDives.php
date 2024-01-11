@@ -259,4 +259,15 @@ class AcnDives extends Model
             ->get();
     }
 
+    /**
+     * return the dives where the specified member is the dive's director
+     * @param int $numMember -> the specified user
+     * 
+     * @return [list[data_Dives]] -> the dives 
+     */
+    public static function getDirectorDives($numMember) {
+        return DB::table('ACN_DIVES')
+            -> where('DIV_NUM_MEMBER_LEAD', $numMember)
+            -> get();
+    }
 }

@@ -84,7 +84,7 @@ class AcnDivesController extends Controller
         }
 
         $prerogative = AcnPrerogative::find($dives->DIV_NUM_PREROG);
-        if (is_null($boat)) {
+        if (is_null($prerogative)) {
             $prerogative = "non définit";
         } else {
             $prerogative = $prerogative->PRE_LABEL;

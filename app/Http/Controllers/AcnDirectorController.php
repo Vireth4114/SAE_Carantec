@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\web\AcnMember;
 use App\Models\web\AcnDives;
+use App\Models\web\AcnPrerogative;
 use App\Models\web\AcnSite;
 use App\Models\web\AcnPeriod;
 use Illuminate\Http\Request;
@@ -17,21 +18,11 @@ class AcnDirectorController extends Controller
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
         $members = AcnDives::getMembersNotInDive($diveId);
-        $directorRegistered = true;
-        foreach($members as $member) {
-            if ($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD']) $directorRegistered=false;
-        }
+        $registeredMembers = $dive->divers;
 
-        $tempMembers = AcnDives::find($diveId)->divers;
-        $regMembers = array();
-        foreach($tempMembers as $member) {
-            if ($member->MEM_NUM_MEMBER != $dive['DIV_NUM_MEMBER_LEAD']) array_push($regMembers, $member);
-        }
+        $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
         
-        $maxReached = count($regMembers)==$dive['DIV_MAX_REGISTERED'];
-        foreach($members as $member) {
-            if ($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD']) $directorRegistered=false;
-        }
+        $maxReached = $registeredMembers->count()==$dive['DIV_MAX_REGISTERED'];
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, "maxReached" => $maxReached]);
     }
 
@@ -77,6 +68,35 @@ class AcnDirectorController extends Controller
         return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
         'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
         'max_divers' => $max_divers, 'nbMembers' => $nbMembers]);
+    }
+
+    public static function myDirectorDives() {
+        $dives = AcnDives::getDirectorDives(auth()->user()->MEM_NUM_MEMBER);
+        $sites = array();
+        $prerogatives = array();
+        $periods = array();
+        foreach($dives as $dive) {
+            $site = AcnSite::find($dive->DIV_NUM_SITE);
+            if (is_null($site)) {
+                $site = "non définit";
+            } else {
+                $site = $site->SIT_NAME." (".$site->SIT_DESCRIPTION.")";
+            }
+            array_push($sites, $site);
+
+            $prerogative = AcnPrerogative::find($dive->DIV_NUM_PREROG);
+            if (is_null($prerogative)) {
+                $prerogative = "non définit";
+            } else {
+                $prerogative = $prerogative->PRE_LABEL;
+            }
+            array_push($prerogatives, $prerogative);
+
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view('director/myDirectorDives', ['dives' => $dives, 'sites' => $sites, 'prerogatives' => $prerogatives, 'periods' => $periods]);
     }
 
 
