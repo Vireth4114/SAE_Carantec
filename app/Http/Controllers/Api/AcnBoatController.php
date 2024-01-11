@@ -76,7 +76,6 @@ class AcnBoatController extends Controller
                 $response["errors"] = array("name" => __("validation.unique", ["attribute" => "name"]));
                 return response()->json($response, 422);
             }
-            $boat = AcnBoat::findOrFail($id);
             if ($boat->BOA_DELETED === 1) return response(["message" => "Resource requested does not exist."], 404);
             $boat->BOA_NAME = strtoupper($request->name);
             $boat->BOA_CAPACITY = $request->capacity;
