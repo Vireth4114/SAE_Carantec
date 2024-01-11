@@ -121,9 +121,9 @@
 
         <input type="hidden" name="numDive" value="{{ $dive->DIV_NUM_DIVE }}">
 
-        <button type="submit">Modifier le créneau</button>
+        <button type="submit">Valider les modifications</button>
 
     </form>
-    <a href="{{ route("redirectDiveModify", $dive->DIV_NUM_DIVE) }}"><button>Revenir aux plongée</button></a>
+    <a href="{{ route("redirectDiveModify", $dive->DIV_NUM_DIVE) }}"><button>Revenir aux plongées</button></a>
 </body>
 @endsection

@@ -27,17 +27,19 @@
                         <a class="no-deco" href="{{ route("members") }}">Liste d'adhérent</a>
                     @elseif($isUserManager)
                         <a class="no-deco" href="{{ route("managerPanel") }}">Partie Responsable</a>
-                    @endif
-                    @if($isUserManager)
                         <a class="no-deco" href="{{ route("diveCreation") }}">Création de plongée</a>
+                        {{-- <a class="no-deco" href="{{ route("diveCreation") }}">Historique des plongées total</a> TO DO WHEN ON MASTER --}}
+                    @elseif($isUserDirector)
+                        {{-- <a class="no-deco" href="{{ route("diveCreation") }}">Historique des plongées ou directeur</a> TO DO WHEN ON MASTER --}}
                     @endif
+
                     {{-- @if($isUserManager)
                             <a class="no-deco" href="">Archives</a> --}}
                     {{--@else--}}@if($isUserDirector)
                         <a class="no-deco" href="{{route('myDirectorDives')}}">Mes séances</a>
                     @endif
                         <a class="no-deco" href="{{ route('dives') }}">S'inscrire</a>
-                        <a class="no-deco" href="{{route('diveReport')}}">Historique</a>
+                        <a class="no-deco" href="{{route('diveReport')}}">Mon historique</a>
                         <a class="no-deco" href="{{route('profil_page')}}">Profil</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
