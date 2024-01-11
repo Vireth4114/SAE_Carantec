@@ -31,10 +31,12 @@ class AcnSite extends Model
      */
     public $timestamps = false;
 
+    protected $hidden = ["SIT_DELETED"];
+
     /**
      * return the site
      * @param int $num_site -> the id of the specified site
-     * 
+     *
      * @return [data_Site] -> the site
      */
     public static function getSite($num_site){
