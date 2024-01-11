@@ -71,6 +71,29 @@ class AcnMemberController extends Controller
         return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
     }
 
+    /**
+     * Return a view to modify the profile of a member
+     *
+     * @param [int] $mem_num_member
+     * @return view
+     */
+    public static function modifyProfil(){
+
+        $mem_num_member = auth()->user()->MEM_NUM_MEMBER;
+        $member = AcnMember::getMemberInfo($mem_num_member);
+        $prerog = AcnPrerogative::getPrerog();
+        $prerogMemLvl = AcnPrerogative::getMemberPrerog($mem_num_member);
+
+        return view('profil_modification',["member" => $member[0],"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
+    }
+
+    public static function profilUpdate(Request $request){
+
+        AcnMember::updateMemberProfil($request,auth()->user()->MEM_NUM_MEMBER);
+
+        return redirect(route('welcome'));
+    }
+
     public static function registerForm(){
 
         $pricing = AcnMember::getPrincing();

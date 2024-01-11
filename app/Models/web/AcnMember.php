@@ -231,6 +231,17 @@ class AcnMember extends Authenticatable
             ]);
     }
 
+    /**
+     * update the data of a user by a user but very few options
+     */
+    static public function updateMemberProfil($request,$member_num){
+        DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $member_num)
+            ->update([
+                'MEM_NAME' => $request -> member_name,
+                'MEM_SURNAME' => $request -> member_surname,
+            ]);
+    }
+
     static public function getNewNumMember(){
         return DB::table('ACN_MEMBER')->max('MEM_NUM_MEMBER')+1;
     }
@@ -257,14 +268,14 @@ class AcnMember extends Authenticatable
 
     //check for a member that are inactive and change their status and conversely   ((NEED TO BE FINISHED ))
     static public function checkStatus() {
-        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_DATE_CERTIF))/365.25','>',1)->get());
+        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_SUBDATE))/365.25','>',1)->get());
 
         foreach($members as $member){
             dd($member);
             DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>0]);
         }
 
-        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','!=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_DATE_CERTIF))/365.25','<',1)->get());
+        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','!=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_SUBDATE))/365.25','<',1)->get());
 
         foreach($members as $member){
             DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>1]);
