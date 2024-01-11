@@ -51,13 +51,15 @@
                         Niveau : {{$dive->PRE_LABEL}}
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <button id="buttonDisplayDives" class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
-                        disabled
-                    @endif>{{ $buttonText }}</button>
-                    @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
-                        <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
-                        {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
-                    @endif
+                    <div id='buttonsDive'>
+                        <button class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
+                            disabled
+                        @endif>{{ $buttonText }}</button>
+                        @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
+                            <a class='btn btn-secondary' href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
+                            {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
+                        @endif
+                    </div>
                 </p>
             </form>
         </div>
