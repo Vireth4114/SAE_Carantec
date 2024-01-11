@@ -72,7 +72,8 @@
                 @endif
             @endforeach
         @else
-            <select disabled name="lead" id="lead">
+            <input hidden="hidden" value={{$dive->DIV_NUM_MEMBER_LEAD}} name="lead" id="lead"/>
+            <select disabled id="lead">
             @foreach ($leads as $lead)
                 @if($lead->MEM_NUM_MEMBER == $dive->DIV_NUM_MEMBER_LEAD )
                     <option selected disabled value='{{$dive->DIV_NUM_MEMBER_LEAD}}'>{{$lead->MEM_NAME." ".$lead->MEM_SURNAME}}</option>
