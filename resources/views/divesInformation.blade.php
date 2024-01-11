@@ -2,22 +2,23 @@
 
 @section("content")
     @php
-        $date = date_Format(DateTime::createFromFormat('Y-m-d',$dives[0]->DIV_DATE), 'l j F Y');
-        $heureStart = date_Format(DateTime::createFromFormat('H:i:s',$dives[0]->PER_START_TIME), 'G');
-        $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dives[0]->PER_END_TIME), 'G');
+        use Carbon\Carbon;
+        $date = Carbon::parse($dives->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y');
+        $heureStart = $period->PER_START_TIME->format('H');
+        $heureFin = $period->PER_END_TIME->format('H');
     @endphp
     <p>Plongée du {{$date}} de {{$heureStart}}h à {{$heureFin}}h.</p>
-    <p>Niveau de la plongée: {{$dives[0]->PRE_LABEL}}</p>
-    <p>Site de {{$dives[0]->SIT_NAME}} ({{$dives[0]->SIT_DESCRIPTION}})</p>
-    <p>Directeur de plongée : {{$dives[0]->MEM_NAME}} {{$dives[0]->MEM_SURNAME}}</p>
-    <p>Sécurité surface : {{$dives_secur[0]->MEM_NAME}} {{$dives_secur[0]->MEM_SURNAME}}</p>
-    <p>Pilote : {{$dives_pilot[0]->MEM_NAME}} {{$dives_pilot[0]->MEM_SURNAME}}</p>
-    <p>Nom du bateau: {{$dives[0]->BOA_NAME}}</p>
+    <p>Niveau de la plongée: {{$prerogative}}</p>
+    <p>Site : {{$site}}</p>
+    <p>Directeur de plongée : {{$dives_lead}}</p>
+    <p>Sécurité surface : {{$dives_secur}}</p>
+    <p>Pilote : {{$dives_pilot}}</p>
+    <p>Nom du bateau : {{$boat}}</p>
 
     <div>
         <h3>Liste des Membres Inscrit</h3>
-        @foreach($dives_register as $dive)
-            <p>{{$dive->MEM_NAME}} {{$dive->MEM_SURNAME}}</p>
+        @foreach($dives_register as $member)
+            <p>{{$member->MEM_NAME}} {{$member->MEM_SURNAME}}</p>
         @endforeach
     </div>
 @endsection

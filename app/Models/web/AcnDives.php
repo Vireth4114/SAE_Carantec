@@ -81,6 +81,21 @@ class AcnDives extends Model
             ]);
     }
 
+    public static function getMonthWithDive() {
+        return DB::table('ACN_DIVES')
+            ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
+            ->orderBy('mois_nb')
+            ->get();
+    }
+
+    public static function getDivesOfAMonth($month) {
+        return DB::table("ACN_DIVES")
+            ->join("ACN_PERIOD","PER_NUM_PERIOD","DIV_NUM_PERIOD")
+            ->join("ACN_SITE","SIT_NUM_SITE","DIV_NUM_SITE")
+            ->join("ACN_PREROGATIVE","PRE_NUM_PREROG","DIV_NUM_PREROG")
+            ->whereRaw("date_format(DIV_DATE, '%m') = ?", $month)
+            ->get();
+    }
     /**
      * The table associated with the model.
      *
