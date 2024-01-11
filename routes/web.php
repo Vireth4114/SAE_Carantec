@@ -188,7 +188,7 @@ Route::get('/directorDivesReport', function () {
 
 Route::get('/managerArchives', function () {
     return AcnDivesController::getAllArchives();
-})->name("archives");
+})->middleware(['auth'])->middleware('isManager')->name("archives");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");

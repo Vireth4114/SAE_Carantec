@@ -29,6 +29,7 @@
                         <a class="no-deco" href="{{ route("managerPanel") }}">Administration</a>
                         <a class="no-deco" href="{{ route("diveCreation") }}">Création de plongée</a>
                         <a class="no-deco" href="{{ route("managerDivesReport") }}">Historique total</a>
+                        <a class="no-deco" href="{{ route("archives") }}">Archives</a>
                     @elseif($isUserDirector)
                         <a class="no-deco" href={{ route("DirectorDivesReport") }}>Historique DP</a>
                     @endif
