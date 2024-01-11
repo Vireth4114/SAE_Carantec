@@ -12,6 +12,7 @@ use App\Models\web\AcnSite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use LDAP\Result;
+use Carbon\Carbon;
 
 class AcnDivesController extends Controller
 {
@@ -54,13 +55,13 @@ class AcnDivesController extends Controller
         } else {
             $dives_lead = $dives_lead->MEM_NAME." ".$dives_lead->MEM_SURNAME;
         }
-        
+
         $dives_secur = AcnMember::find($dives -> DIV_NUM_MEMBER_SECURED);
         if (is_null($dives_secur)) {
             $dives_secur = "non définit";
         } else {
             $dives_secur = $dives_secur->MEM_NAME." ".$dives_secur->MEM_SURNAME;
-        } 
+        }
 
         $dives_pilot = AcnMember::find($dives -> DIV_NUM_MEMBER_PILOTING);
         if (is_null($dives_pilot)) {
@@ -74,7 +75,7 @@ class AcnDivesController extends Controller
             $site = "non définit";
         } else {
             $site = $site->SIT_NAME." (".$site->SIT_DESCRIPTION.")";
-        } 
+        }
 
         $boat = AcnBoat::find($dives->DIV_NUM_BOAT);
         if (is_null($boat)) {
@@ -93,7 +94,7 @@ class AcnDivesController extends Controller
         $period = AcnPeriod::find($dives->DIV_NUM_PERIOD);
         $dives_register = AcnDives::find($id)->divers;
 
-        return view("divesInformation",["dives" => $dives, "dives_lead" => $dives_lead, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot, "dives_register"=> $dives_register, 
+        return view("divesInformation",["dives" => $dives, "dives_lead" => $dives_lead, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot, "dives_register"=> $dives_register,
         "prerogative" => $prerogative, "period" => $period, "site" => $site, "boat" => $boat]);
     }
 
@@ -129,5 +130,19 @@ class AcnDivesController extends Controller
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
         return redirect(route("dives"));
     }
+
+    public static function getAllDivesReport() {
+
+        $numMember = auth()->user()->MEM_NUM_MEMBER ;
+        $dives = AcnMember::find($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
+        $periods = array();
+        foreach($dives as $dive) {
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
+    }
+
 
 }
