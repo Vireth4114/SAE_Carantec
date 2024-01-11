@@ -1,5 +1,13 @@
 @extends('template')
 @section('content')
+
+@php
+use app\Models\web\AcnMember;
+
+$members = AcnMember::all();
+ AcnMember::checkStatus();
+
+@endphp
 <a type="button" class="btn btn-success" href={{route('member_registration')}}>Ajouter un adhérent</a>
 <h3>Liste des adhérents :</h3>
     <table>
@@ -33,7 +41,6 @@
                     @endif
                 </td>
                 <td><a href={{route("member_modification",$member->MEM_NUM_MEMBER)}}>Modifier</a></td>
-                <td><a href={{route("member_status",$member->MEM_NUM_MEMBER)}}>Changer son statut</a></td>
             </tr>
 
 @endforeach

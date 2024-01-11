@@ -4,6 +4,7 @@ namespace App\Models\web;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -266,29 +267,24 @@ class AcnMember extends Authenticatable
         DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->delete();
     }
 
-    //check for a member that are inactive and change their status and conversely   ((NEED TO BE FINISHED ))
+    /**
+     * check for a member that are inactive and change their status and conversely
+     **/
     static public function checkStatus() {
-        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_SUBDATE))/365.25','>',1)->get());
+        $members = DB::table('ACN_MEMBER')
+        ->where('MEM_STATUS','=','1')
+        ->where('MEM_SUBDATE','<',Carbon::now()->subYear())->get();
 
         foreach($members as $member){
-            dd($member);
-            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>0]);
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member->MEM_NUM_MEMBER)->update(['MEM_STATUS'=>0]);
         }
 
-        $members = DB::table('ACN_MEMBER')->where('MEM_STATUS','!=','1')->whereIn('MEM_NUM_MEMBER',DB::table('ACN_MEMBER')->select('MEM_NUM_MEMBER')->where('DATEDIFF(CURDATE(),date(MEM_SUBDATE))/365.25','<',1)->get());
+        $members = DB::table('ACN_MEMBER')
+        ->where('MEM_STATUS','=','0')
+        ->where('MEM_SUBDATE','>',Carbon::now()->subYear())->get();
 
         foreach($members as $member){
-            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member)->update(['MEM_STATUS'=>1]);
-        }
-    }
-
-    static public function changeStatus($member_num) {
-        $members = DB::table('ACN_MEMBER')->select('MEM_STATUS')->where('MEM_NUM_MEMBER','=',$member_num)->get();
-
-        if($members[0]->MEM_STATUS == 0){
-            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member_num)->update(['MEM_STATUS'=>1]);
-        }else{
-            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member_num)->update(['MEM_STATUS'=>0]);
+            DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER','=',$member->MEM_NUM_MEMBER)->update(['MEM_STATUS'=>1]);
         }
     }
 

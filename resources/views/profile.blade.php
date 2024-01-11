@@ -5,7 +5,7 @@
 use app\Models\web\AcnMember;
 
 $members = AcnMember::all();
-// AcnMember::checkStatus();    //Need to be finished
+ AcnMember::checkStatus();
 
 @endphp
             @if($member->MEM_PRICING == 'enfant')
