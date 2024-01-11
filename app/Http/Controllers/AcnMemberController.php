@@ -17,6 +17,10 @@ class AcnMemberController extends Controller
         return AcnMember::find($memberNum);
     }
 
+    public static function getProfilePage(){
+        return view("profile",["member"=>auth()->user()]);
+    }
+
     public static function updateRolesMember(Request $request, $memberNum) {
         $checkboxFields = array("security", "secretary", "pilot");
         $fieldsMappingToNameInDatabase = array("security" => "Sécurité de surface",

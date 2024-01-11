@@ -140,6 +140,10 @@ Route::get('/members/registration', function () {
     return AcnMemberController::registerForm();
 })->middleware(['auth'])->middleware('isSecretary')->name("member_registration");
 
+Route::get('/profil', function () {
+    return AcnMemberController::getProfilePage();
+})->middleware(['auth'])->name("profil_page");
+
 Route::post('member/registration/validation', [AcnMemberController::class, 'register'])->name('register_member');
 
 Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) {

@@ -32,7 +32,7 @@
                     @endif
                         <a class="no-deco" href="{{ route('dives') }}">Plongée</a>
                         <a class="no-deco" href="">Bilan</a>
-                        <a class="no-deco" href="">Profil</a>
+                        <a class="no-deco" href="{{route('profil_page')}}">Profil</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
