@@ -12,6 +12,12 @@ class AcnBoatController extends Controller
         return view ('propose_slot', ["boats" => AcnBoat::all() ]);
     }
 
+    /**
+     * 
+     *
+     * @param $BoatNum num from the specific boat
+     * @return the capacity from the boat
+     */
     static public function getBoatCapacity($BoatNum) {
         $capacity = DB::table('ACN_BOAT')
             -> select('BOA_CAPACITY')
@@ -22,6 +28,10 @@ class AcnBoatController extends Controller
         return $capacity['BOA_CAPACITY'];
     }
 
+    /**
+     *
+     * @return the max capacity from all the boat
+     */
     static public function getMaxCapacity() {
         $capacity = DB::table('ACN_BOAT')
             -> selectRaw('max(BOA_CAPACITY) as max')
@@ -31,6 +41,11 @@ class AcnBoatController extends Controller
         return $capacity['max'];
     }
 
+    /**
+     *
+     * @param $BoatNum num from the specific boat
+     * @return the name from the boat
+     */
     static public function getBoatName($BoatNum) {
         $capacity = DB::table('ACN_BOAT')
             -> select('BOA_NAME')
@@ -41,6 +56,12 @@ class AcnBoatController extends Controller
         return $capacity['BOA_NAME'];
     }
 
+    /**
+     * 
+     *
+     * @param Request $request 
+     * @return void
+     */
     static public function create(Request $request) {
         $errors = array();
         $nameAlreadyExist = AcnBoat::where("BOA_NAME", "=", strtoupper($request->boa_name))->exists();
