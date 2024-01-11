@@ -2,7 +2,7 @@
 @section('content')
 <a type="button" class="btn btn-success" href={{route('member_registration')}}>Ajouter un adhérent</a>
 <h3>Liste des adhérents :</h3>
-    <table>
+    <table id='listMembers'>
         <tr>
             <td>Numéro d'adhérent </td>
             <td>Numéro de licence </td>
@@ -27,9 +27,9 @@
                 <td>{{$member->MEM_PRICING}} </td>
                 <td>{{$member->MEM_REMAINING_DIVES}}</td>
                 <td>@if($member->MEM_STATUS)
-                        <p class="active_member">actif</p>
+                        <span class="active_member">actif</span>
                     @else
-                        <p class="inactive_member">inactif</p>
+                        <span class="inactive_member">inactif</span>
                     @endif
                 </td>
                 <td><a href={{route("member_modification",$member->MEM_NUM_MEMBER)}}>Modifier</a></td>

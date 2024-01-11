@@ -4,21 +4,22 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{URL::asset('/css/app.css')}}" rel="stylesheet">
     <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
 
-    <title>Document</title>
+    <title>Carantec Nautisme</title>
     <script src="https://kit.fontawesome.com/70f23b7858.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
         <nav>
-            <a href="{{ route("welcome") }}"> <img src="{{URL::asset('images/logo.png')}}" alt="Logo Carentec Nautisme"></a>
+            <a href="{{ route("welcome") }}"> <img id='logo' src="{{URL::asset('images/logo.png')}}" alt="Logo Carentec Nautisme"></a>
             <div id="headerLinks">
                 @if(Auth::check())
+                    <label id='remainingDives'>{{auth()->user()->MEM_REMAINING_DIVES}} plongées restantes</label>
                     @php
                         $isUserSecretary = AcnMember::isUserSecretary(auth()->user()->MEM_NUM_MEMBER);
                         $isUserManager = AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER);
@@ -53,9 +54,6 @@
                     <a class="no-deco" href="{{ route('login') }}">Connexion</a>
                 @endif
             </div>
-            @if(Auth::check())
-                <label>{{auth()->user()->MEM_REMAINING_DIVES}} plongée restante</label>
-            @endif
         </nav>
     </header>
 

@@ -168,6 +168,11 @@ Route::get('/panel/director/myDirectorDives', function() {
     return AcnDirectorController::myDirectorDives();
 })->middleware(['auth'])->middleware('isDirector')->name("myDirectorDives");
 
+Route::get('/panel/director/myDirectorDives', function() {
+    return AcnDirectorController::myDirectorDives();
+})->middleware(['auth'])->middleware('isDirector')->name("myDirectorDives");
+
+
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
 
 Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {

@@ -4,24 +4,24 @@
         <x-auth-card>
 
             <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
+            <x-auth-session-status class="mb-4 alert alert-danger" :status="session('status')" />
 
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-auth-validation-errors class="mb-4 alert alert-danger" :errors="$errors" />
 
-            <form method="POST" action="{{ route('login') }}">
+            <form id='loginForm' method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <!-- Email Address -->
-                <div>
-                    <x-label for="MEM_NUM_LICENCE" :value="__('Licence')" />
+                <div id='licenceDiv'>
+                    <label for="MEM_NUM_LICENCE">Licence</label>
 
                     <x-input id="MEM_NUM_LICENCE" class="block mt-1 w-full" type="text" name="MEM_NUM_LICENCE" :value="old('MEM_NUM_LICENCE')" required autofocus />
                 </div>
 
                 <!-- Password -->
-                <div class="mt-4">
-                    <x-label for="password" :value="__('Mot de passe')" />
+                <div id='passwordDiv'>
+                    <label for="password">Mot de passe</label>
 
                     <x-input id="password" class="block mt-1 w-full"
                                     type="password"
@@ -30,18 +30,16 @@
                 </div>
 
                 <!-- Remember Me -->
-                <div class="block mt-4">
+                <div id='rememberMeDiv'">
                     <label for="remember_me" class="inline-flex items-center">
                         <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
                         <span class="ml-2 text-sm text-gray-600">{{ __('Se souvenir de moi') }}</span>
                     </label>
                 </div>
 
-                <div class="flex items-center justify-end mt-4">
-                    <x-button class="ml-3">
-                        {{ __('Log in') }}
-                    </x-button>
-                </div>
+                <button id='buttonLogIn' class="btn btn-primary ml-3">
+                    Log in
+                </button>
             </form>
         </x-auth-card>
     </x-guest-layout>
