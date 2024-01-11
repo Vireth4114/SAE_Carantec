@@ -15,7 +15,7 @@
     <p>Pilote : {{$dives_pilot}}</p>
     <p>Nom du bateau : {{$boat}}</p>
 
-    <div>
+    <div class=diveInfos>
         <h3>Liste des Membres Inscrit</h3>
         @foreach($dives_register as $member)
             <p>{{$member->MEM_NAME}} {{$member->MEM_SURNAME}}</p>
