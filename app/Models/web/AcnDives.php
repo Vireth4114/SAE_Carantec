@@ -119,7 +119,7 @@ class AcnDives extends Model
     /**
      * returns the Dive
      * @param int $diveId -> the specified dive
-     * 
+     *
      * @return [data_Dives] -> the dive
      */
     public static function getDive($diveId){
@@ -131,7 +131,7 @@ class AcnDives extends Model
     /**
      * returns all the members that aren't registered and that are eligible for the dive
      * @param int $diveId -> the specified dive
-     * 
+     *
      * @return [list[data_Member]] -> a list of member
      */
     static public function getMembersNotInDive($diveId) {
@@ -157,8 +157,8 @@ class AcnDives extends Model
                     array_push($eligibleMembers, $member);
                 }
             } else {
-                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) 
-                && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 
+                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY)
+                && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4
                 || AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) > 12) {
                     array_push($eligibleMembers, $member);
                 }
@@ -170,7 +170,7 @@ class AcnDives extends Model
     /**
      * retuns the prerogative's priority of the dive's prerogative
      * @param int $diveId -> the specified dive
-     * 
+     *
      * @return [int] -> the perogative's priority
      */
     static public function getPrerogPriority($diveId) {
@@ -180,7 +180,7 @@ class AcnDives extends Model
             -> where('DIV_NUM_DIVE', $diveId)
             -> get();
     }
-    
+
     /**
      * creates a new Dive, the ID (DIV_NUM_DIVE) isn't specified because it is auto-incremented in the database
      * @param [date] $DIV_DATE -> the date of the dive
@@ -237,7 +237,7 @@ class AcnDives extends Model
 
     /**
      * return all the months during which there is at a least one dive
-     * 
+     *
      * @return [list[month]] -> the months are in date_format
      */
     public static function getMonthWithDive() {
@@ -250,7 +250,7 @@ class AcnDives extends Model
     /**
      * get all the dives happening in a specified month
      * @param [date] $month -> a date with the month of the dive you want to retrieve, only the month will be retrieved.
-     * 
+     *
      * @return [list[data_Dives]]
      */
     public static function getDivesOfAMonth($month) {
@@ -265,13 +265,13 @@ class AcnDives extends Model
     /**
      * return the dives where the specified member is the dive's director
      * @param int $numMember -> the specified user
-     * 
-     * @return [list[data_Dives]] -> the dives 
+     *
+     * @return [list[data_Dives]] -> the dives
      */
     public static function getDirectorDives($numMember) {
         return DB::table('ACN_DIVES')
             -> where('DIV_NUM_MEMBER_LEAD', $numMember)
-            -> where('DIV_DATE', '>', Carbon::now())
+            -> where('DIV_DATE', '>=', Carbon::today()->format("Y-m-d"))
             -> orderBy('DIV_DATE')
             -> get();
     }

@@ -54,9 +54,9 @@ class AcnDiveModifyController extends Controller
         }
         $pilot = AcnMember::getMember($dive[0]->DIV_NUM_MEMBER_PILOTING);
         if($pilot->isEmpty()){
-            $lead = "";
+            $pilot = "";
         }else{
-            $lead = $pilot[0]->MEM_NAME.$pilot[0]->MEM_SURNAME;
+            $pilot = $pilot[0]->MEM_NAME.$pilot[0]->MEM_SURNAME;
         }
         $security = AcnMember::getMember($dive[0]->DIV_NUM_MEMBER_SECURED);
         if($security->isEmpty()){
@@ -67,7 +67,6 @@ class AcnDiveModifyController extends Controller
 
 
         $isDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
-
         $boats = AcnBoat::all();
         $sites = AcnSite::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
@@ -212,6 +211,11 @@ class AcnDiveModifyController extends Controller
 
             AcnDives::updateData($request -> numDive, $request -> site, $request -> boat, $request -> lvl_required, $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);
 
+            if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER)){
+                return redirect(route('dives'));
+            }else if(AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER)){
+                return redirect(route('diveInformation',['diveId'=>$request -> numDive]));
+            }
         }
 
     }
