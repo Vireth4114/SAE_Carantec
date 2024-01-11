@@ -58,7 +58,32 @@
                 </p>
             </form>
             @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
-                <a href ="{{ route('diveDeletion', $dive->DIV_NUM_DIVE) }}"><button>Supprimer</button></a>
+                <button onclick="document.getElementById('id01').style.display='block'">Supprimer</button>
+                <div id="id01" class="modal">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                    <form class="modal-content" action="/action_page.php">
+                        <div class="container">
+                            <h1>Surpprimer la plongée</h1>
+                            <p>êtes vous sure de vouloir supprimer cette plongée ?</p>
+                    
+                            <div class="clearfix">
+                                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn" >Annuler</button>
+                                <a href ="{{ route('diveDeletion', $dive->DIV_NUM_DIVE) }}"><button type="button" class="deletebtn">Supprimer</button></a>
+                            </div>
+                         </div>
+                    </form>
+                </div>
+                <script>
+                    // Get the modal
+                    var modal = document.getElementById('id01');
+                    
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                </script>
                 <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
                 {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
             @endif
