@@ -146,7 +146,7 @@ class AcnDives extends Model
 
 
         $members = DB::table('ACN_MEMBER')
-            -> where ('MEM_NUM_MEMBER', '>', 0)
+            -> where ('MEM_REMAINING_DIVES', '>', 0)
             -> whereNotIn('MEM_NUM_MEMBER', $memNums)
             -> get();
 

@@ -49,6 +49,9 @@ class AcnDirectorController extends Controller
      */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
+        if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
+            return redirect()->route('welcome');
+        }
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
         $levels = array();
