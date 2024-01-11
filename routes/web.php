@@ -61,7 +61,15 @@ Route::get('/diveCreation', function () {
 
 Route::get('/diveModify/{diveId}', function ($diveId) {
     return AcnDiveModifyController::getAll($diveId);
-})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModifyleware f");
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModify");
+
+Route::get('/panel/director/redirectDiveModify/{diveId}', function($diveId) {
+    if (AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER)) {
+        return redirect(route('dives'));
+    } else {
+        return redirect(route('diveInformation', $diveId));
+    }
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("redirectDiveModify");
 
 Route::get('/panel/manager', function () {
     return ManagerPanelController::displayManagerPanel();
@@ -153,6 +161,11 @@ Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) 
 Route::get('/members/status/{mem_num_member}', function ($mem_num_member) {
     return AcnMemberController::updateStatus($mem_num_member);
 })->middleware(['auth'])->middleware('isSecretary')->name("member_status");
+
+Route::get('/panel/director/myDirectorDives', function() {
+    return AcnDirectorController::myDirectorDives();
+})->middleware(['auth'])->middleware('isDirector')->name("myDirectorDives");
+
 
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
 

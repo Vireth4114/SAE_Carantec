@@ -124,5 +124,6 @@
         <button type="submit">Modifier le créneau</button>
 
     </form>
+    <a href="{{ route("redirectDiveModify", $dive->DIV_NUM_DIVE) }}"><button>Revenir aux plongée</button></a>
 </body>
 @endsection
