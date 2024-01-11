@@ -17,11 +17,11 @@ use Carbon\Carbon;
 class AcnDivesController extends Controller
 {
     public static function getAllDivesValues() {
-        $months = AcnDives::getMonthWithDive();
+    $months = AcnDives::getMonthWithDive();
 
         $dives = array();
         foreach ($months as $month) {
-            $dive = AcnDives::getDivesOfAMonth($month->mois_nb);
+        $dive = AcnDives::getDivesOfAMonth($month->mois_nb)->where('DIV_DATE', '>', Carbon::now());
             $dives[$month->mois_mot] = $dive;
         }
         return view("displayDives",["dives" => $dives, "months" => $months]);

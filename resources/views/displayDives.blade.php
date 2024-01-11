@@ -13,8 +13,9 @@
         @endforeach
     @endif
     @foreach($months as $month)
-        <h2>{{ ucfirst(Carbon::parse($month->mois_nb."/01/2000")->locale('fr_FR')->translatedFormat('F')) }}</h2>
-
+    @if($dives[$month->mois_mot]->count() > 0)
+        <h2>{{ucfirst(Carbon::parse($month->mois_nb."/01/2000")->locale('fr_FR')->translatedFormat('F')) }}</h2>
+    @endif
         @foreach($dives[$month->mois_mot] as $dive)
             @php
                 $date = Carbon::parse($dive->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y');
