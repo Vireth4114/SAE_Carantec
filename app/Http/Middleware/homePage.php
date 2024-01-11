@@ -24,7 +24,7 @@ class homePage
         if ($isSecretary) {
             return redirect(route('members'));
         }else if($isDirector){
-            return redirect('/welcome');
+            return redirect(route(''));
         }else if($isManager){
             return redirect('/welcome');
         }else if($isAdherent){
