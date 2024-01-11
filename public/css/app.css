@@ -3,7 +3,17 @@
     padding: 0;
 }
 
+#headerLinks {
+    position: absolute;
+    float: right;
+}
+
 #headerLinks > a {
+    text-decoration: none;
+    color: white;
+}
+
+#logOutButton {
     text-decoration: none;
     color: white;
 }
@@ -14,6 +24,12 @@
 
 .hyperlink-no_style{
     text-decoration: none;
+    color: black;
+}
+
+.hyperlink-no_style:hover{
+    text-decoration: none;
+    color: black;
 }
 
 #divesDisplayed{
@@ -71,6 +87,55 @@ nav {
     color:red;
 }
 
-.diveInfos{
+#diveInfos {
     text-align: center;
+    margin-top: 5vh;
+}
+
+#diveMainInfos {
+    margin: auto;
+    width: fit-content;
+    text-align: left;
+}
+
+#diveMembers {
+    margin: auto;
+    width: 50vw;
+    gap: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#diveMembers p {
+    font-weight: bold;
+    border: 1px solid black;
+    padding: 5px;
+    margin: 0;
+}
+
+
+#loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    font-size: 1.5em;
+    width: fit-content;
+    margin: auto;
+}
+
+#rememberMeDiv {
+    display: none;
+}
+
+#licenceDiv, #passwordDiv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#buttonLogIn {
+    margin: auto;
+    font-size: 1em;
+    width: 20%;
+    border-radius: 100px;
+    padding: 15px;
 }
