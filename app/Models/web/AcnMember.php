@@ -35,6 +35,8 @@ class AcnMember extends Authenticatable
 
     protected $fillable = ["MEM_NUM_LICENCE", "MEM_PASSWORD"];
 
+    protected $hidden = ["MEM_PASSWORD"];
+
     /**
      * The functions that belong to the member.
      */

@@ -31,10 +31,12 @@ class AcnBoat extends Model
      */
     public $timestamps = false;
 
+    protected $hidden = ["BOA_DELETED"];
+
     /**
      * return the specified Boat
      * @param int $num_boat
-     * 
+     *
      * @return [data_Boat]
      */
     public static function getBoat($num_boat){
@@ -47,7 +49,7 @@ class AcnBoat extends Model
 
     /**
      * return all the boats that aren't deleted
-     * 
+     *
      * @return [list[data_Boat]] -> a list of boat
      */
     static public function getAllBoats() {
