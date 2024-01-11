@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AcnBoatController;
 use App\Http\Controllers\Api\AcnFunctionController;
+use App\Http\Controllers\Api\AcnPeriodController;
 use App\Http\Controllers\Api\AcnPrerogativeController;
 use App\Http\Controllers\Api\AcnSiteController;
 use Illuminate\Support\Facades\Route;
@@ -25,3 +26,4 @@ Route::apiResource("sites", AcnSiteController::class);
 Route::apiResource("boats", AcnBoatController::class);
 Route::apiResource("prerogatives", AcnPrerogativeController::class);
 Route::apiResource("functions", AcnFunctionController::class);
+Route::apiResource("periods", AcnPeriodController::class);
