@@ -51,10 +51,9 @@
                         Niveau : {{$dive->PRE_LABEL}}
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <input class="button" type="submit" value="{{ $buttonText }}"
-                    @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
+                    <button class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
                         disabled
-                    @endif>
+                    @endif>{{ $buttonText }}</button>
                 </p>
             </form>
         </div>

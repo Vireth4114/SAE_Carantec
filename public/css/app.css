@@ -34,12 +34,11 @@
     color: white;
 }
 
-header {
+nav {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10vw;
-    padding: 20px;
     background-color: black;
 }
 
@@ -70,4 +69,8 @@ header {
 
 .userError {
     color:red;
+}
+
+.diveInfos{
+    text-align: center;
 }
