@@ -7,6 +7,7 @@ use App\Models\web\AcnDives;
 use App\Models\web\AcnPrerogative;
 use App\Models\web\AcnSite;
 use App\Models\web\AcnPeriod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -37,6 +38,9 @@ class AcnDirectorController extends Controller
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
         $levels = array();
+        $divDate = Carbon::parse($dive['DIV_DATE']) -> startOfDay();
+        $today = Carbon::now()->startOfDay();
+        $updatable = $divDate->diffInDays($today);
         foreach($allMembers as $member) {
             if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) {
                 array_push($members, $member);
@@ -78,7 +82,7 @@ class AcnDirectorController extends Controller
         
         return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
         'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
-        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels]);
+        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels, 'updatable' => $updatable]);
     }
 
     public static function myDirectorDives() {
