@@ -38,20 +38,20 @@
                 @csrf
                 @method('post')
                 <p >
-                    <a  class="hyperlink-no_style"  href="{{route('dives_informations',$dive->DIV_NUM_DIVE)}}">
+                    <a  class="linkDisplayDives hyperlink-no_style"  href="{{route('dives_informations',$dive->DIV_NUM_DIVE)}}">
                         <input
                         type='hidden'
                         name='dive'
                         value={{$dive->DIV_NUM_DIVE}}
                         >
                         {{ $date }}
-                        de {{ $heureStart }}h à {{ $heureFin }}h
+                        de {{ $heureStart }}h à {{ $heureFin }}h <br/>
                         Site prevu : {{ $dive->SIT_NAME }}
-                        ( {{ $dive->SIT_DESCRIPTION }} )
+                        ({{ $dive->SIT_DESCRIPTION }}) <br/>
                         Niveau : {{$dive->PRE_LABEL}}
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <button class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
+                    <button id="buttonDisplayDives" class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
                         disabled
                     @endif>{{ $buttonText }}</button>
                 </p>

@@ -139,3 +139,38 @@ nav {
     border-radius: 100px;
     padding: 15px;
 }
+
+.profilePicture {
+    margin-left: 30px;
+    margin-top: 30px;
+    padding: 10px;
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid black;
+}
+
+#profileInfos {
+    font-size: 1.5em;
+    width: fit-content;
+}
+
+#profileCard {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    width: fit-content;
+    margin: auto;
+    margin-top: 50px;
+    border: 2px solid black;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.linkDisplayDives {
+    font-size: 1.2em;
+}
+
+#buttonDisplayDives {
+    margin: auto;
+    display: block;
+}
