@@ -25,7 +25,9 @@ class AcnWorking extends Model
      */
     static public function createUserRole($memberNum, $roleName) {
         $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
-        DB::table("ACN_WORKING")->insert(["NUM_FUNCTIOn" =>$roleId, "NUM_MEMBER" => $memberNum]);
+        $isBindingExist = DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->exists();
+        if ($isBindingExist) return;
+        DB::table("ACN_WORKING")->insert(["NUM_FUNCTION" =>$roleId, "NUM_MEMBER" => $memberNum]);
     }
 }
                                     
