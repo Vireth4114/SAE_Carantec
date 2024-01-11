@@ -1,11 +1,7 @@
-@font-face {
-    font-family: "Mojangles";
-    src: url();
-}
-
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', 'Arial';
 }
 
 nav {
@@ -85,6 +81,10 @@ a {
     align-items: center;
 }
 
-#nameSurname {
+.headerText {
+    font-size: 1.3em;
+}
+
+.bold {
     font-weight: bold;
 }

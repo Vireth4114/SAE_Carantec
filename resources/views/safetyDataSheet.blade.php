@@ -14,8 +14,9 @@
         $emertionTimestamp = strtotime($palanquing->GRP_TIME_OF_EMERSION);
         $emertionTime = strftime('%H:%M', $emertionTimestamp);
     @endphp
+
 <div id="safetySheet">
-    <table id="firstTable">
+    <table id="firstTable" class="bold">
         <thead>
             <tr>
                 <th colspan="4">Fiche de sécurité</th>
@@ -28,7 +29,7 @@
         </tr>
         <tr>
             <td colspan="1">Directeur de plongée</td>
-            <td colspan="1">{{$lead->MEM_NAME.' '.$lead->MEM_SURNAME}}</td>
+            <td colspan="1">{{$lead->MEM_SURNAME.' '.$lead->MEM_NAME}}</td>
         </tr>
         <tr>
             <td colspan="1">Site de plongée</td>
@@ -47,26 +48,26 @@
         </tr>
         <tr>
             <td class="firstRow">Sécurité de surface</td>
-            <td class="secondRow">{{$secure->MEM_NAME.' '.$secure->MEM_SURNAME}}</td>
+            <td class="secondRow">{{$secure->MEM_SURNAME.' '.$secure->MEM_NAME}}</td>
         </tr>
         <tr>
             <td class="firstRow">Pilote</td>
-            <td class="secondRow">{{$pilote->MEM_NAME.' '.$pilote->MEM_SURNAME}}</td>
+            <td class="secondRow">{{$pilote->MEM_SURNAME.' '.$pilote->MEM_NAME}}</td>
         </tr>
         <tr>
-            <td class="firstRow">Observation</td>
-            <td class="secondRow" rowspan="3"></td>
+            <td class="firstRow">Observation <br> > météo et marée</td>
+            <td class="secondRow"></td>
         </tr>
     </table>
 
     <table id="palanquing">
         <thead>
             <tr>
-                <th colspan="6">Palanquée n° {{$palanquing->GRP_NUM_GROUPS}}</th>
+                <th class="headerText" colspan="6">PALANQUEE N° {{$palanquing->GRP_NUM_GROUPS}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr class="bold">
                 <td>Heure de départ</td>
                 <td>{{$immertionTime}}</td>
                 <td>Heure de retour</td>
@@ -85,10 +86,10 @@
                 <td colspan="3">{{$palanquing->GRP_REACHED_DEPTH}} m</td>
             </tr>
             <tr>
-                <td id="nameSurname" colspan="3">Nom Prénom</td>
+                <td class="headerText bold" colspan="3">Nom Prénom</td>
                 <td>Aptitudes</td>
-                <td>Formation vers</td>
-                <td>Fonction</td>
+                <td class="bold">Formation vers</td>
+                <td class="bold">Fonction</td>
             </tr>
             @foreach ($members as $member)
             <tr>
