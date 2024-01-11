@@ -26,7 +26,7 @@
                     @if($isUserSecretary)
                         <a class="no-deco" href="{{ route("members") }}">Liste d'adhérent</a>
                     @elseif($isUserManager)
-                        <a class="no-deco" href="{{ route("managerPanel") }}">Partie Responsable</a>
+                        <a class="no-deco" href="{{ route("managerPanel") }}">Administration</a>
                         <a class="no-deco" href="{{ route("diveCreation") }}">Création de plongée</a>
                         <a class="no-deco" href="{{ route("managerDivesReport") }}">Historique total</a>
                     @elseif($isUserDirector)
