@@ -8,6 +8,8 @@ $members = AcnMember::all();
 // AcnMember::checkStatus();    //Need to be finished
 
 @endphp
+<a type="button" class="btn btn-success" href={{route('managerPanel')}}>Ajouter un adhérent</a>
+<h3>Liste des adhérents :</h3>
     <table>
         <tr>
             <td>Numéro d'adhérent</td>
@@ -21,10 +23,6 @@ $members = AcnMember::all();
         </tr>
 
         @foreach($members as $member)
-            @php
-                $info = AcnMember::find(1);
-
-            @endphp
 
             <tr>
                 <td>{{$member->MEM_NUM_MEMBER}}</td>

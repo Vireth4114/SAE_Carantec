@@ -23,8 +23,10 @@
                         $isUserManager = AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER);
                         $isUserDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
                     @endphp
-                    @if($isUserSecretary || $isUserManager)
+                    @if($isUserSecretary)
                         <a class="no-deco" href="{{ route("members") }}">Liste d'adhérent</a>
+                    @elseif($isUserManager)
+                        <a class="no-deco" href="{{ route("managerPanel") }}">Partie Responsable</a>
                     @endif
                     @if($isUserManager)
                         <a class="no-deco" href="{{ route("diveCreation") }}">Création de plongée</a>
@@ -35,7 +37,7 @@
                         <a class="no-deco" href="">Mes séances</a>
                     @endif
                         <a class="no-deco" href="{{ route('dives') }}">S'inscrire</a>
-                        <a class="no-deco" href="">Historique</a>
+                        <a class="no-deco" href="{{route('diveReport')}}">Historique</a>
                         <a class="no-deco" href="{{route('profil_page')}}">Profil</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -50,6 +52,9 @@
                     <a class="no-deco" href="{{ route('login') }}">Connexion</a>
                 @endif
             </div>
+            @if(Auth::check())
+                <label>{{auth()->user()->MEM_REMAINING_DIVES}} plongée restante</label>
+            @endif
         </nav>
     </header>
 
