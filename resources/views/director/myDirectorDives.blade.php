@@ -16,7 +16,7 @@
         plongée du {{ $date }}
         de {{ $startTime }}h à {{ $endTime }}h
         Site prevu : {{ $sites[$increment] }}
-        Niveau : {{$prerogatives[$increment]}}
+        Niveau : {{$prerogatives[$increment++]}}
         </p>
     </a>
 @endforeach
