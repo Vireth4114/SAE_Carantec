@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\AcnRegisteredController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DivesRequest;
 use App\Http\Resources\Api\DivesResource;
@@ -54,11 +55,6 @@ class AcnDivesController extends Controller
      * @return \Illuminate\Http\Response
      */
     static private function updateOrCreateDive(DivesRequest $request, AcnDives $dive) {
-        $dive->DIV_DATE = $request->date;
-        try{ AcnPeriod::findOrFail($request->period); } catch (Exception $e) {
-            return response(["message" => "Period given does not exist."], 404);
-        }
-        $dive->DIV_NUM_PERIOD = $request->period;
         if (isset($request->min_registered)) $dive->DIV_MIN_REGISTERED = $request->min_registered;
         if (isset($request->max_registered)) $dive->DIV_MAX_REGISTERED = $request->max_registered;
         if (isset($request->observation)) $dive->DIV_OBSERVATION = $request->observation;
@@ -92,6 +88,11 @@ class AcnDivesController extends Controller
     public function store(DivesRequest $request)
     {
         $dive = new AcnDives;
+        $dive->DIV_DATE = $request->date;
+        try{ AcnPeriod::findOrFail($request->period); } catch (Exception $e) {
+            return response(["message" => "Period given does not exist."], 404);
+        }
+        $dive->DIV_NUM_PERIOD = $request->period;
         return self::updateOrCreateDive($request, $dive);
     }
 
@@ -144,6 +145,54 @@ class AcnDivesController extends Controller
         }
         DB::delete("DELETE FROM ACN_REGISTERED WHERE NUM_DIVE = ?", [$id]);
         $dive->delete();
+        return response(["message" => "OK"], 200);
+    }
+
+    /**
+     * Register a member in a dive if possible.
+     *
+     * @param  int  $diveId
+     * @param  int  $memberId
+     * @return \Illuminate\Http\Response
+     */
+    static public function registerMemberInDive(int $diveId, int $memberId) {
+        $dive = null;
+        try { $dive = AcnDives::findOrFail($diveId); } catch (Exception $e) {
+            return response(["message" => "The dive given does not exist."], 404);
+        }
+        $member = null;
+        try { $member = AcnMember::findOrFail($memberId); } catch (Exception $e) {
+            return response(["message" => "The member given does not exist."], 404);
+        }
+        if (!isset($dive->prerogative) || !isset($dive->site))
+            return response(["message" => "The dive is not ready to add members for now."], 403);
+        if ($dive->prerogative->PRE_PRIORITY > $member->prerogatives->max("PRE_PRIORITY"))
+            return response(["message" => "The diver has not enough level to register in the dive."], 403);
+        if ($dive->divers->where("MEM_NUM_MEMBER", "!=",$dive->leader->MEM_NUM_MEMBER)->count() === $dive->DIV_MAX_REGISTERED)
+            return response(["message" => "The dive has reached its register limit."], 403);
+        AcnRegisteredController::create($memberId, $diveId);
+        return response(["message" => "OK"], 200);
+    }
+
+    /**
+     * Unregister a member from a dive if possible.
+     *
+     * @param  int  $diveId
+     * @param  int  $memberId
+     * @return \Illuminate\Http\Response
+     */
+    static public function unregisterMemberInDive(int $diveId, int $memberId) {
+        $dive = null;
+        try { $dive = AcnDives::findOrFail($diveId); } catch (Exception $e) {
+            return response(["message" => "The dive given does not exist."], 404);
+        }
+        $member = null;
+        try { $member = AcnMember::findOrFail($memberId); } catch (Exception $e) {
+            return response(["message" => "The member given does not exist."], 404);
+        }
+        $entryExist = DB::table("ACN_REGISTERED")->where("NUM_DIVE", $diveId)->where("NUM_MEMBER", $memberId)->exists();
+        if (!$entryExist) return response(["message" => "The member is not registered for this dive."], 404);
+        AcnRegisteredController::delete($memberId, $diveId);
         return response(["message" => "OK"], 200);
     }
 }

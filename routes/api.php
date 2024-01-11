@@ -42,3 +42,9 @@ Route::delete("/members/{memberId}/function/{functionId}", function(Request $req
 });
 Route::apiResource("groups", AcnGroupsController::class);
 Route::apiResource("dives", AcnDivesController::class);
+Route::post("/dives/{diveId}/member/{memberId}", function(Request $request, $diveId, $memberId) {
+    return AcnDivesController::registerMemberInDive($diveId, $memberId);
+});
+Route::delete("/dives/{diveId}/member/{memberId}", function(Request $request, $diveId, $memberId) {
+    return AcnDivesController::unregisterMemberInDive($diveId, $memberId);
+});
