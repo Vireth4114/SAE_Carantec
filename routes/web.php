@@ -42,9 +42,7 @@ Route::get('/groupsMaking', function () {
     return AcnGroupsMakingController::getAll("");
 })->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
 
-Route::get('/validateGroup', function () {
-    return AcnGroupsMakingController::validateButton();
-})->middleware(['auth'])->middleware('isDirector')->name("validateGroup");
+Route::get('validateGroup/{diveId}', [AcnGroupsMakingController::class, 'validateButton'])->middleware(['auth'])->middleware('isDirector')->name("validateGroup");
 
 Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'removeMember'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
 

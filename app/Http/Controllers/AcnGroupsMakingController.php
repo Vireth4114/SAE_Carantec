@@ -30,6 +30,15 @@ class AcnGroupsMakingController extends Controller
         -> get()
         -> toArray();
 
+        $supervisors2 = DB::table('ACN_MEMBER')
+        -> select('ACN_MEMBER.MEM_NUM_MEMBER')
+        -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
+        -> join('ACN_PREROGATIVE', 'PRIORITY_TABLE.MAX_PRIORITY', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+        -> where('PRIORITY_TABLE.MAX_PRIORITY','>=', 14)
+        -> whereNotIn('ACN_MEMBER.MEM_NUM_MEMBER', $members)
+        -> get()
+        -> toArray();
+
         $superIn = DB::table('ACN_MEMBER')
         -> select('ACN_MEMBER.MEM_NUM_MEMBER as MEM_NUM_MEMBER')
         -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
@@ -99,7 +108,39 @@ class AcnGroupsMakingController extends Controller
                     $maxcount = $minnum == 1 ? 2 : 3;
 
 
-                    if ($maxcount > $count_member) {
+                    $priorities = DB::table('ACN_MEMBER')
+                    -> select('PRE_PRIORITY')
+                    -> join('ACN_REGISTERED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_REGISTERED.NUM_MEMBER')
+                    -> join('ACN_DIVES', 'ACN_REGISTERED.NUM_DIVE', '=', 'ACN_DIVES.DIV_NUM_DIVE')
+                    -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
+                    -> join('ACN_PREROGATIVE', 'PRIORITY_TABLE.MAX_PRIORITY', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+                    -> where('NUM_DIVE','=',$dive)
+                    -> where('NUM_GROUPS','=', $group->NUM_GROUPS)
+                    -> get();
+
+                    $toadd = true;
+
+                    foreach ($priorities as $priority) {
+                        $compare = $priority->PRE_PRIORITY;
+                        if ($rank == 1) {
+                            $toadd = false;
+                        } elseif ($rank <=  4) {
+                            if ($compare > 4 && $compare < 13) {
+                                $toadd = false;
+                            }
+                        } elseif ($rank == 5 || $rank == 7 || $rank == 10) {
+                            if ($compare != 5 && $compare != 7 && $compare != 10 && $compare < 14) {
+                                $toadd = false;
+                            }
+                        } else {
+                            if ($compare < 11 && $compare != 6 && $compare != 8 && $compare != 9) {
+                                $toadd = false;
+                            }
+                        }
+                    }
+
+
+                    if ($maxcount > $count_member && $toadd) {
                         if ($rank <= 4 || $rank == 5 || $rank == 7 || $rank == 10) {
                             if ($count_superv != 0 && ($rank != 1 || $count_member == 1)) {
                                 DB::update('update ACN_REGISTERED set NUM_GROUPS='.$group->NUM_GROUPS.' where NUM_DIVE='.$dive.' and NUM_MEMBER='.$member);
@@ -110,7 +151,18 @@ class AcnGroupsMakingController extends Controller
                                 if (sizeof($supervisors) == 0) {
                                     return AcnGroupsMakingController::getAll("Il y a eu des problèmes");
                                 }
-                                $supervisor = array_pop($supervisors)->MEM_NUM_MEMBER;
+                                if ($rank <= 4) {
+                                    $supervisor = array_pop($supervisors);
+                                    if (($key = array_search($supervisor, $supervisors2)) !== false) {
+                                        unset($supervisors2[$key]);
+                                    }
+                                } else {
+                                    $supervisor = array_pop($supervisors2);
+                                    if (($key = array_search($supervisor, $supervisors)) !== false) {
+                                        unset($supervisors[$key]);
+                                    }
+                                }
+                                $supervisor = $supervisor->MEM_NUM_MEMBER;
                                 DB::table('ACN_REGISTERED')->insert([
                                     'NUM_MEMBER' => $supervisor,
                                     'NUM_DIVE'=> $dive
@@ -140,7 +192,18 @@ class AcnGroupsMakingController extends Controller
                     if (sizeof($supervisors) == 0) {
                         return AcnGroupsMakingController::getAll("Il y a eu des problèmes");
                     }
-                    $supervisor = array_pop($supervisors)->MEM_NUM_MEMBER;
+                    if ($rank <= 4) {
+                        $supervisor = array_pop($supervisors);
+                        if (($key = array_search($supervisor, $supervisors2)) !== false) {
+                            unset($supervisors2[$key]);
+                        }
+                    } else {
+                        $supervisor = array_pop($supervisors2);
+                        if (($key = array_search($supervisor, $supervisors)) !== false) {
+                            unset($supervisors[$key]);
+                        }
+                    }
+                    $supervisor = $supervisor->MEM_NUM_MEMBER;
                     DB::table('ACN_REGISTERED')->insert([
                         'NUM_MEMBER' => $supervisor,
                         'NUM_DIVE'=> $dive
@@ -149,42 +212,7 @@ class AcnGroupsMakingController extends Controller
                 }
             }
         }
-        return AcnGroupsMakingController::getAllAutomatics();
-    }
-
-    static public function getAllAutomatics() {
-        $dive = 1;
-
-        $groups = DB::table('ACN_REGISTERED')
-        -> select('NUM_GROUPS')
-        -> distinct()
-        -> join('ACN_DIVES', 'ACN_REGISTERED.NUM_DIVE', '=', 'ACN_DIVES.DIV_NUM_DIVE')
-        -> where('NUM_DIVE','=',$dive)
-        -> orderBy('NUM_GROUPS')
-        -> get();
-
-        $priorityTable = DB::table('ACN_MEMBER')
-        -> select('MEM_NUM_MEMBER', DB::raw('max(PRE_PRIORITY) as MAX_PRIORITY'))
-        -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
-        -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-        -> groupBy('MEM_NUM_MEMBER');
-
-        $members = array();
-
-        foreach ($groups as $group) {
-            $member = DB::table('ACN_MEMBER')
-            -> select('ACN_MEMBER.MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME', 'PRE_LABEL')
-            -> join('ACN_REGISTERED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_REGISTERED.NUM_MEMBER')
-            -> join('ACN_DIVES', 'ACN_REGISTERED.NUM_DIVE', '=', 'ACN_DIVES.DIV_NUM_DIVE')
-            -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
-            -> join('ACN_PREROGATIVE', 'PRIORITY_TABLE.MAX_PRIORITY', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('NUM_DIVE','=',$dive)
-            -> where('NUM_GROUPS','=', $group->NUM_GROUPS)
-            -> get();
-
-            $members[$group->NUM_GROUPS] = $member;
-        }
-        return view ('automaticGroups', ["members" => $members]);
+        return AcnGroupsMakingController::getAll("");
     }
 
     static public function getAll($message) {
@@ -280,9 +308,7 @@ class AcnGroupsMakingController extends Controller
         return AcnGroupsMakingController::getAll("");
     }
 
-    static public function validateButton() {
-        $dive = 1;
-
+    static public function validateButton($dive) {
         $groups = DB::table('ACN_REGISTERED')
         -> select('NUM_GROUPS')
         -> distinct()
@@ -298,28 +324,47 @@ class AcnGroupsMakingController extends Controller
         -> groupBy('MEM_NUM_MEMBER');
 
         $test = array();
+        $message = 'Palanquées validées';
 
         $numGroup = 1;
         foreach ($groups as $group) {
-            $priorities = DB::table('ACN_MEMBER')
-            -> select(DB::raw('min(PRE_PRIORITY) as MIN_PRIORITY'), DB::raw('max(PRE_PRIORITY) as MAX_PRIORITY'))
+            $true_priorities = DB::table('ACN_MEMBER')
+            -> select('PRE_PRIORITY')
             -> join('ACN_REGISTERED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_REGISTERED.NUM_MEMBER')
             -> join('ACN_DIVES', 'ACN_REGISTERED.NUM_DIVE', '=', 'ACN_DIVES.DIV_NUM_DIVE')
             -> joinSub($priorityTable, 'PRIORITY_TABLE', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'PRIORITY_TABLE.MEM_NUM_MEMBER')
             -> join('ACN_PREROGATIVE', 'PRIORITY_TABLE.MAX_PRIORITY', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
             -> where('NUM_DIVE','=',$dive)
-            -> where('NUM_GROUPS','=', $group->NUM_GROUPS)
-            -> get();
+            -> where('NUM_GROUPS','=', $group->NUM_GROUPS);
 
-            $minnum = $priorities[0]->MIN_PRIORITY;
-            $maxnum = $priorities[0]->MAX_PRIORITY;
-            $message = 'Palanquées validées';
-            if (($minnum == 5 || $minnum == 7 || $minnum == 10) && $maxnum < 14) {
-                $message = 'Il manque un encadrant (minimum E2) dans le groupe '.$numGroup;
+            $priorities = $true_priorities->get();
+            $maxnum = $true_priorities->select(DB::raw('max(PRE_PRIORITY) as MAX_PRIORITY'))->get()[0]->MAX_PRIORITY;
+            $usefulPriorities = array();
+            foreach ($priorities as $priority) {
+                $compare = $priority->PRE_PRIORITY;
+                $usefulPriorities[] = $compare;
+                if (($compare == 5 || $compare == 7 || $compare == 10) && $maxnum < 14) {
+                    $message = 'Il manque un encadrant (minimum E2) dans le groupe '.$numGroup;
+                }
+                if ($compare <= 4 && $maxnum < 13) {
+                    $message = 'Il manque un encadrant dans le groupe '.$numGroup;
+                }
             }
-            if ($minnum <= 4 && $maxnum < 13) {
-                $message = 'Il manque un encadrant dans le groupe '.$numGroup;
-            }
+            if (array_count_values([sizeof(array_filter($usefulPriorities, static function($element) {
+                    return $element <= 4;
+                })),
+                sizeof(array_filter($usefulPriorities, static function($element) {
+                    return $element == 5 || $element == 7 || $element == 10;
+                })),
+                sizeof(array_filter($usefulPriorities, static function($element) {
+                    return $element == 6 || $element == 8 || $element == 9 || $element == 11;
+                }))])[0] != 2) {
+                    if ($message == "Palanquées validées") {
+                        $message = 'Problème dans le groupe '.$numGroup;
+                    } else {
+                        $message .= ' et '.$numGroup;
+                    }
+                }
             $numGroup++;
         }
         return AcnGroupsMakingController::getAll($message);
