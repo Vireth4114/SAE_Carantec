@@ -138,7 +138,14 @@ class AcnDivesController extends Controller
      * @return \redirect to the page of dives
      */
     static public function unregister(Request $request){
+        
+        $userId = auth()->user()->MEM_NUM_MEMBER;
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
+
+        $user = AcnMember::find($userId);
+        $user->MEM_REMAINING_DIVES = $user->MEM_REMAINING_DIVES + 1;
+        $user->save();
+
         return redirect(route("dives"));
     }
 

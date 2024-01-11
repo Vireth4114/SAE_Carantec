@@ -73,7 +73,7 @@ class AcnDives extends Model
      */
     public function surfaceSecurity(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_SECURED');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_SECURED');
     }
 
     /**
@@ -81,7 +81,7 @@ class AcnDives extends Model
      */
     public function leader(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_LEAD');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_LEAD');
     }
 
     /**
@@ -89,7 +89,7 @@ class AcnDives extends Model
      */
     public function pilot(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_PILOTING');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_PILOTING');
     }
 
     /**
@@ -146,7 +146,7 @@ class AcnDives extends Model
 
 
         $members = DB::table('ACN_MEMBER')
-            -> where ('MEM_NUM_MEMBER', '>', 0)
+            -> where ('MEM_REMAINING_DIVES', '>', 0)
             -> whereNotIn('MEM_NUM_MEMBER', $memNums)
             -> get();
 
