@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\web\AcnMember;
 use Closure;
 
-class homePage
+class HomePage
 {
     /**
      * Handle an incoming request.

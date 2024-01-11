@@ -68,6 +68,6 @@ class Kernel extends HttpKernel
         'isManager' => \App\Http\Middleware\isManager::class,
         'isDirectorOrManager' => \App\Http\Middleware\IsDirectorOrManager::class,
         'isManagerOrSecretary' => \App\Http\Middleware\isManagerOrSecretary::class,
-        'homePage' => \App\Http\Middleware\homePage::class,
+        'homePage' => \App\Http\Middleware\HomePage::class,
     ];
 }

@@ -34,7 +34,7 @@
                     {{-- @if($isUserManager)
                             <a class="no-deco" href="">Archives</a> --}}
                     {{--@else--}}@if($isUserDirector)
-                        <a class="no-deco" href="">Mes séances</a>
+                        <a class="no-deco" href="{{route('myDirectorDives')}}">Mes séances</a>
                     @endif
                         <a class="no-deco" href="{{ route('dives') }}">S'inscrire</a>
                         <a class="no-deco" href="{{route('diveReport')}}">Historique</a>

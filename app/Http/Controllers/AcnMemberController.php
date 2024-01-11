@@ -61,7 +61,7 @@ class AcnMemberController extends Controller
     public static function registerForm(){
 
         $pricing = AcnMember::getPrincing();
-        $prerog = AcnMember::getPrerog();
+        $prerog = AcnPrerogative::getPrerog();
 
         return view('members_registration',["pricing" => $pricing,"prerogation"=>$prerog]);
     }

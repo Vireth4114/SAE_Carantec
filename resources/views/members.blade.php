@@ -8,7 +8,7 @@ $members = AcnMember::all();
 // AcnMember::checkStatus();    //Need to be finished
 
 @endphp
-<a type="button" class="btn btn-success" href={{route('managerPanel')}}>Ajouter un adhérent</a>
+<a type="button" class="btn btn-success" href={{route('member_registration')}}>Ajouter un adhérent</a>
 <h3>Liste des adhérents :</h3>
     <table>
         <tr>

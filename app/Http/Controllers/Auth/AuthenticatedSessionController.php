@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
         $isSecretary = AcnMember::isUserSecretary(auth()->user()->MEM_NUM_MEMBER);
 
         if ($isSecretary) {
-            return redirect("/secretary");
+            return redirect(route('welcome'));
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);
