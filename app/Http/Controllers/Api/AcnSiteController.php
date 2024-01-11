@@ -24,7 +24,7 @@ class AcnSiteController extends Controller
     /**
      * Store a newly created site in storage.
      *
-     * @param  \Illuminate\Http\Api\SiteRequest  $request
+     * @param  \App\Http\Requests\Api\SiteRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(SiteRequest $request)
@@ -53,7 +53,7 @@ class AcnSiteController extends Controller
         } catch (Exception $e) {
             return response(["message" => "Resource requested does not exist."], 404);
         }
-        
+
     }
 
     /**

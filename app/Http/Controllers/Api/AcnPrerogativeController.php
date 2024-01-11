@@ -23,7 +23,7 @@ class AcnPrerogativeController extends Controller
     /**
      * Store a newly created prerogative in storage.
      *
-     * @param  \Illuminate\Http\Api\PretogativeRequest  $request
+     * @param  \App\Http\Requests\Api\PretogativeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(PretogativeRequest $request)
@@ -50,7 +50,7 @@ class AcnPrerogativeController extends Controller
     /**
      * Update the specified prerogative in storage.
      *
-     * @param  \Illuminate\Http\Api\PretogativeRequest  $request
+     * @param  \App\Http\Requests\Api\PretogativeRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

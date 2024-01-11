@@ -24,7 +24,7 @@ class AcnBoatController extends Controller
     /**
      * Store a newly created boat in storage.
      *
-     * @param  \Illuminate\Http\Api\BoatRequest  $request
+     * @param  \App\Http\Requests\Api\BoatRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(BoatRequest $request)

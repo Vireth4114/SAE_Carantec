@@ -23,7 +23,7 @@ class AcnFunctionController extends Controller
     /**
      * Store a newly created function in storage.
      *
-     * @param  \Illuminate\Http\Api\FunctionRequest  $request
+     * @param  \App\Http\Requests\Api\FunctionRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(FunctionRequest $request)
@@ -50,7 +50,7 @@ class AcnFunctionController extends Controller
     /**
      * Update the specified function in storage.
      *
-     * @param  \Illuminate\Http\Api\FunctionRequest  $request
+     * @param  \App\Http\Requests\Api\FunctionRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

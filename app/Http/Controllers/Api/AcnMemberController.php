@@ -30,7 +30,7 @@ class AcnMemberController extends Controller
     /**
      * Store a newly created member in storage.
      *
-     * @param  \Illuminate\Http\Api\MemberRequest  $request
+     * @param  \App\Http\Requests\Api\MemberRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(MemberRequest $request)

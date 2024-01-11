@@ -23,7 +23,7 @@ class AcnPeriodController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Api\PeriodRequest  $request
+     * @param  \App\Http\Requests\Api\PeriodRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(PeriodRequest $request)
@@ -50,7 +50,7 @@ class AcnPeriodController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Api\PeriodRequest  $request
+     * @param  \App\Http\Requests\Api\PeriodRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
