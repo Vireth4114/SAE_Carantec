@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Mojangles";
+    src: url();
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -38,17 +43,48 @@ a {
 
 #firstTable {
     border-collapse: collapse;
-    width: 500px;
+    border: solid black 1px;
+    width: 1000px;
     margin: 10px;
 }
 
-#firstTable td, #secondTable td {
-    border: solid black 1px;
-    padding: 3px;
+#firstTable th {
+    font-size: 2em;
+    text-align: center;
 }
 
 #secondTable {
     border-collapse: collapse;
     width: 1000px;
     margin: 10px;
+}
+
+#palanquing {
+    border-collapse: collapse;
+    width: 1000px;
+    margin: 10px;
+}
+
+#firstTable td, #secondTable td, #palanquing td {
+    border: solid black 1px;
+    padding: 3px;
+}
+
+#palanquing thead {
+    background-color: rgb(181, 178, 178);
+}
+
+#palanquing th {
+    text-align: left;
+}
+
+#safetySheet {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#nameSurname {
+    font-weight: bold;
 }
