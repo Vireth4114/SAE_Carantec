@@ -13,89 +13,6 @@ class AcnDives extends Model
 {
     use HasFactory;
 
-    static public function getMembersNotInDive($diveId) {
-
-        $members = AcnDives::find($diveId)->divers;
-        $memNums=array();
-        foreach($members as $member){
-            array_push($memNums, $member['MEM_NUM_MEMBER']);
-        }
-
-        $divePriority = AcnDives::getPrerogPriority($diveId);
-
-
-        $members = DB::table('ACN_MEMBER')
-            -> where ('MEM_NUM_MEMBER', '>', 0)
-            -> whereNotIn('MEM_NUM_MEMBER', $memNums)
-            -> get();
-
-        $eligibleMembers=array();
-        foreach($members as $member) {
-            if ($divePriority[0] -> PRE_PRIORITY > 4) {
-                if (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) {
-                    array_push($eligibleMembers, $member);
-                }
-            } else {
-                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 ) {
-                    array_push($eligibleMembers, $member);
-                }
-            }
-        }
-        return $eligibleMembers;
-    }
-
-    static public function getPrerogPriority($diveId) {
-        return DB::table('ACN_DIVES')
-            -> select ('PRE_PRIORITY')
-            -> join('ACN_PREROGATIVE', 'ACN_DIVES.DIV_NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('DIV_NUM_DIVE', $diveId)
-            -> get();
-    }
-    
-    public static function create($DIV_DATE, $DIV_NUM_PERIOD, $DIV_NUM_SITE, $DIV_NUM_BOAT, $DIV_NUM_PREROG, $DIV_NUM_MEMBER_LEAD, $DIV_NUM_MEMBER_PILOTING, $DIV_NUM_MEMBER_SECURED, $DIV_MIN_REGISTERED, $DIV_MAX_REGISTERED) {
-        DB::table('ACN_DIVES')->insert([
-            'DIV_DATE' => DB::raw("str_to_date('".$DIV_DATE."','%Y-%m-%d')"),
-            'DIV_NUM_PERIOD' => $DIV_NUM_PERIOD,
-            'DIV_NUM_SITE' => $DIV_NUM_SITE,
-            'DIV_NUM_BOAT' => $DIV_NUM_BOAT,
-            'DIV_NUM_PREROG' => $DIV_NUM_PREROG,
-            'DIV_NUM_MEMBER_LEAD' => $DIV_NUM_MEMBER_LEAD,
-            'DIV_NUM_MEMBER_PILOTING' => $DIV_NUM_MEMBER_PILOTING,
-            'DIV_NUM_MEMBER_SECURED'=> $DIV_NUM_MEMBER_SECURED,
-            'DIV_MIN_REGISTERED' => $DIV_MIN_REGISTERED,
-            'DIV_MAX_REGISTERED'=> $DIV_MAX_REGISTERED,
-        ]);
-    }
-
-    public static function updateData($numDive, $site, $boat, $lvl_required, $lead, $pilot, $security, $min_divers, $max_divers){
-        DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $numDive)
-            ->update([
-                'DIV_NUM_SITE' => $site,
-                'DIV_NUM_BOAT' => $boat,
-                'DIV_NUM_PREROG' => $lvl_required,
-                'DIV_NUM_MEMBER_LEAD' => $lead,
-                'DIV_NUM_MEMBER_PILOTING' => $pilot,
-                'DIV_NUM_MEMBER_SECURED'=> $security,
-                'DIV_MIN_REGISTERED' => $min_divers,
-                'DIV_MAX_REGISTERED'=> $max_divers,
-            ]);
-    }
-
-    public static function getMonthWithDive() {
-        return DB::table('ACN_DIVES')
-            ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
-            ->orderBy('mois_nb')
-            ->get();
-    }
-
-    public static function getDivesOfAMonth($month) {
-        return DB::table("ACN_DIVES")
-            ->join("ACN_PERIOD","PER_NUM_PERIOD","DIV_NUM_PERIOD")
-            ->join("ACN_SITE","SIT_NUM_SITE","DIV_NUM_SITE")
-            ->join("ACN_PREROGATIVE","PRE_NUM_PREROG","DIV_NUM_PREROG")
-            ->whereRaw("date_format(DIV_DATE, '%m') = ?", $month)
-            ->get();
-    }
     /**
      * The table associated with the model.
      *
@@ -269,6 +186,90 @@ class AcnDives extends Model
         dd($dive);
         */
         return $dive;
+    }
+
+    static public function getMembersNotInDive($diveId) {
+
+        $members = AcnDives::find($diveId)->divers;
+        $memNums=array();
+        foreach($members as $member){
+            array_push($memNums, $member['MEM_NUM_MEMBER']);
+        }
+
+        $divePriority = AcnDives::getPrerogPriority($diveId);
+
+
+        $members = DB::table('ACN_MEMBER')
+            -> where ('MEM_NUM_MEMBER', '>', 0)
+            -> whereNotIn('MEM_NUM_MEMBER', $memNums)
+            -> get();
+
+        $eligibleMembers=array();
+        foreach($members as $member) {
+            if ($divePriority[0] -> PRE_PRIORITY > 4) {
+                if (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) {
+                    array_push($eligibleMembers, $member);
+                }
+            } else {
+                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 ) {
+                    array_push($eligibleMembers, $member);
+                }
+            }
+        }
+        return $eligibleMembers;
+    }
+
+    static public function getPrerogPriority($diveId) {
+        return DB::table('ACN_DIVES')
+            -> select ('PRE_PRIORITY')
+            -> join('ACN_PREROGATIVE', 'ACN_DIVES.DIV_NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
+            -> where('DIV_NUM_DIVE', $diveId)
+            -> get();
+    }
+    
+    public static function create($DIV_DATE, $DIV_NUM_PERIOD, $DIV_NUM_SITE, $DIV_NUM_BOAT, $DIV_NUM_PREROG, $DIV_NUM_MEMBER_LEAD, $DIV_NUM_MEMBER_PILOTING, $DIV_NUM_MEMBER_SECURED, $DIV_MIN_REGISTERED, $DIV_MAX_REGISTERED) {
+        DB::table('ACN_DIVES')->insert([
+            'DIV_DATE' => DB::raw("str_to_date('".$DIV_DATE."','%Y-%m-%d')"),
+            'DIV_NUM_PERIOD' => $DIV_NUM_PERIOD,
+            'DIV_NUM_SITE' => $DIV_NUM_SITE,
+            'DIV_NUM_BOAT' => $DIV_NUM_BOAT,
+            'DIV_NUM_PREROG' => $DIV_NUM_PREROG,
+            'DIV_NUM_MEMBER_LEAD' => $DIV_NUM_MEMBER_LEAD,
+            'DIV_NUM_MEMBER_PILOTING' => $DIV_NUM_MEMBER_PILOTING,
+            'DIV_NUM_MEMBER_SECURED'=> $DIV_NUM_MEMBER_SECURED,
+            'DIV_MIN_REGISTERED' => $DIV_MIN_REGISTERED,
+            'DIV_MAX_REGISTERED'=> $DIV_MAX_REGISTERED,
+        ]);
+    }
+
+    public static function updateData($numDive, $site, $boat, $lvl_required, $lead, $pilot, $security, $min_divers, $max_divers){
+        DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $numDive)
+            ->update([
+                'DIV_NUM_SITE' => $site,
+                'DIV_NUM_BOAT' => $boat,
+                'DIV_NUM_PREROG' => $lvl_required,
+                'DIV_NUM_MEMBER_LEAD' => $lead,
+                'DIV_NUM_MEMBER_PILOTING' => $pilot,
+                'DIV_NUM_MEMBER_SECURED'=> $security,
+                'DIV_MIN_REGISTERED' => $min_divers,
+                'DIV_MAX_REGISTERED'=> $max_divers,
+            ]);
+    }
+
+    public static function getMonthWithDive() {
+        return DB::table('ACN_DIVES')
+            ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
+            ->orderBy('mois_nb')
+            ->get();
+    }
+
+    public static function getDivesOfAMonth($month) {
+        return DB::table("ACN_DIVES")
+            ->join("ACN_PERIOD","PER_NUM_PERIOD","DIV_NUM_PERIOD")
+            ->join("ACN_SITE","SIT_NUM_SITE","DIV_NUM_SITE")
+            ->join("ACN_PREROGATIVE","PRE_NUM_PREROG","DIV_NUM_PREROG")
+            ->whereRaw("date_format(DIV_DATE, '%m') = ?", $month)
+            ->get();
     }
 
 }
