@@ -184,5 +184,15 @@ class AcnDivesController extends Controller
         return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
     }
 
+    public static function delete($diveId) {
+        $divers = AcnDives::find($diveId)->divers;
+        foreach($divers as $diver) {
+            $diver->MEM_REMAINING_DIVES = $diver->MEM_REMAINING_DIVES +1;
+            $diver->save();
+        }
+        AcnRegistered::deleteDive($diveId);
+        AcnDives::find($diveId)->delete();
+        return redirect()->route('dives');
+    }
 
 }

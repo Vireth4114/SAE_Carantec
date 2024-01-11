@@ -53,13 +53,15 @@
                     </a>
                     <button class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
                         disabled
-                    @endif>{{ $buttonText }}</button>
-                    @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
-                        <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
-                        {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
-                    @endif
+                    @endif>
+                    {{ $buttonText }}</button>
                 </p>
             </form>
+            @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
+                <a href ="{{ route('diveDeletion', $dive->DIV_NUM_DIVE) }}"><button>Supprimer</button></a>
+                <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
+                {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
+            @endif
         </div>
         @endforeach
     @endforeach

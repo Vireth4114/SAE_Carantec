@@ -31,5 +31,15 @@ class AcnRegistered extends Model
             ->where ('NUM_DIVE', $numDive)
             ->delete();
     }
+
+    /**
+     * delete data to remove a dive
+     * @param int $numDive -> the id of the dive
+     */
+    static public function deleteDive($numDive) {
+        DB::table('ACN_REGISTERED')
+            ->where ('NUM_DIVE', $numDive)
+            ->delete();
+    }
 }
                                     

@@ -38,6 +38,10 @@ Route::get('/dives', function () {
     return AcnDivesController::getAllDivesValues();
 })->middleware(['auth'])->name("dives");
 
+Route::get('/diveDeletion/{diveId}', function($diveId) {
+    return AcnDivesController::delete($diveId);
+})->middleware(['auth'])->middleware('isManager')->name("diveDeletion");
+
 Route::get('/dives/informations/{id}', function ($id){
     return AcnDivesController::getAllDiveInformation($id);
 })->name("dives_informations");
