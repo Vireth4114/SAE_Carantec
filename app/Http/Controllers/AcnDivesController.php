@@ -131,10 +131,32 @@ class AcnDivesController extends Controller
         return redirect(route("dives"));
     }
 
-    public static function getAllDivesReport() {
+    public static function getMemberDivesReport() {
 
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
         $dives = AcnMember::find($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
+        $periods = array();
+        foreach($dives as $dive) {
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
+    }
+
+    public static function getAllDivesReport() {
+        $actualMonth = Carbon::now()->month;
+
+        if($actualMonth < 3){
+            $year = Carbon::now()->year-1;
+            $startDate = Carbon::createFromDate($year,3,1);
+            $endDate = Carbon::createFromDate($year,12,1);
+            $dives = AcnDives::all()->where("DIV_DATE",'>',$startDate)->where("DIV_DATE",'<',$endDate);
+        }else{
+            $year = Carbon::now()->year;
+            $startDate = Carbon::createFromDate($year,3,1);
+            $dives = AcnDives::all()->where("DIV_DATE",'>',$startDate)->where("DIV_DATE",'<',Carbon::now());
+        }
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);

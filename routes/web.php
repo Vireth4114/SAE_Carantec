@@ -174,8 +174,12 @@ Route::patch('/update/user/roles/{userId}', function (Request $request, $userId)
 })->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
 
 Route::get('/diveReport', function () {
-    return AcnDivesController::getAllDivesReport();
+    return AcnDivesController::getMemberDivesReport();
 })->name("diveReport");
+
+Route::get('/managerDiveReport', function () {
+    return AcnDivesController::getAllDivesReport();
+})->name("managerDiveReport");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
