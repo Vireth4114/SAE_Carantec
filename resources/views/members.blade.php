@@ -8,16 +8,16 @@ $members = AcnMember::all();
 // AcnMember::checkStatus();    //Need to be finished
 
 @endphp
-    <table>
+    <table id='listMembers'>
         <tr>
-            <td>Numéro d'adhérent</td>
-            <td>Numéro de licence </td>
-            <td>Nom </td>
-            <td>Prénom </td>
-            <td>Date de certification </td>
-            <td>Type d'abonnement </td>
-            <td>Nombre de plongée restante</td>
-            <td>Statut</td>
+            <th>Numéro d'adhérent</th>
+            <th>Numéro de licence </th>
+            <th>Nom </th>
+            <th>Prénom </th>
+            <th>Date de certification </th>
+            <th>Type d'abonnement </th>
+            <th>Nombre de plongée restante</th>
+            <th>Statut</th>
         </tr>
 
         @foreach($members as $member)
@@ -35,9 +35,9 @@ $members = AcnMember::all();
                 <td>{{$member->MEM_PRICING}} </td>
                 <td>{{$member->MEM_REMAINING_DIVES}}</td>
                 <td>@if($member->MEM_STATUS)
-                        <p class="active_member">actif</p>
+                        <span class="active_member">actif</span>
                     @else
-                        <p class="inactive_member">inactif</p>
+                        <span class="inactive_member">inactif</span>
                     @endif
                 </td>
                 <td><a href={{route("member_modification",$member->MEM_NUM_MEMBER)}}>Modifier</a></td>

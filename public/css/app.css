@@ -172,5 +172,50 @@ nav {
 
 #buttonDisplayDives {
     margin: auto;
+    margin-top: 1vh;
     display: block;
+}
+
+.diveForm {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    font-size: 1.2em;
+    margin: auto;
+    margin-top: 5vh;
+    width: fit-content;
+}
+
+.fieldContainer {
+    display: grid;
+    gap: 2vw;
+    grid-template-columns: 1fr 1fr;
+}
+
+.fieldContainer label {
+    text-align: right;
+}
+
+.diveForm button {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+#listMembers {
+    margin: auto;
+    margin-top: 5vh;
+}
+
+#listMembers tr, #listMembers td, #listMembers th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#listMembers td, #listMembers th {
+    padding: 10px;
+    text-align: center;
+}
+
+#listMembers th {
+    font-weight: bold;
 }
