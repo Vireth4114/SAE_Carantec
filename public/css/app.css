@@ -69,8 +69,8 @@ nav {
     right: 40px;
     display: flex;
     flex-direction: row;
-    gap: 5vw;
-    font-size: 2em;
+    gap: 3vw;
+    font-size: 1.5em;
     color: white;
 }
 
