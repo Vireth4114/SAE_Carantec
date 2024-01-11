@@ -7,6 +7,7 @@ use App\Http\Requests\Api\MemberRequest;
 use App\Http\Resources\Api\MemberResource;
 use App\Models\web\AcnFunction;
 use App\Models\web\AcnMember;
+use App\Models\web\AcnPrerogative;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -46,6 +47,34 @@ class AcnMemberController extends Controller
         $functionId = AcnFunction::where("FUN_LABEL", "Adhérent")->first()->FUN_NUM_FUNCTION;
         DB::insert("INSERT INTO ACN_WORKING (NUM_MEMBER, NUM_FUNCTION) values (?, ?)", [$member->MEM_NUM_MEMBER, $functionId]);
         return new MemberResource($member);
+    }
+
+    /**
+     * Store a newly prerogative for a given member in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $memberId
+     * @param  int  $prerogativeId
+     * @return \Illuminate\Http\Response
+     */
+    static public function storeMemberPrerogative($memberId, $prerogativeId)
+    {
+        $member = null;
+        try {
+            $member = AcnMember::findOrFail($memberId);
+        } catch (Exception $e) {
+            return response(["message" => "Member given does not exist."], 404);
+        }
+        try {
+            AcnPrerogative::findOrFail($prerogativeId);
+        } catch (Exception $e) {
+            return response(["message" => "Prerogative given does not exist."], 404);
+        }
+        if($member->prerogatives->contains("PRE_NUM_PREROG", $prerogativeId)) {
+            return response(["message" => "The member has already the prerogative given."], 404);
+        }
+        DB::insert("INSERT INTO ACN_RANKED (NUM_PREROG, NUM_MEMBER) values (?, ?)", [$prerogativeId, $memberId]);
+        return response(["message" => "OK"], 200);
     }
 
     /**
@@ -93,7 +122,7 @@ class AcnMemberController extends Controller
             $member->save();
             return new MemberResource($member);
         } catch (Exception $e) {
-            return response(["message" => "Resource requested does not exist.".$id], 404);
+            return response(["message" => "Resource requested does not exist."], 404);
         }
     }
 
@@ -113,5 +142,33 @@ class AcnMemberController extends Controller
         } catch (Exception $e) {
             return response("Resource requested to delete does not exist.", 404);
         }
+    }
+
+    /**
+     * Remove the specified prerogative for the member given from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $memberId
+     * @param  int  $prerogativeId
+     * @return \Illuminate\Http\Response
+     */
+    static public function deleteMemberPrerogative($memberId, $prerogativeId)
+    {
+        $member = null;
+        try {
+            $member = AcnMember::findOrFail($memberId);
+        } catch (Exception $e) {
+            return response(["message" => "Member given does not exist."], 404);
+        }
+        try {
+            AcnPrerogative::findOrFail($prerogativeId);
+        } catch (Exception $e) {
+            return response(["message" => "Prerogative given does not exist."], 404);
+        }
+        if(!$member->prerogatives->contains("PRE_NUM_PREROG", $prerogativeId)) {
+            return response(["message" => "The member has not the prerogative."], 404);
+        }
+        DB::table("ACN_RANKED")->where("NUM_PREROG", $prerogativeId)->where("NUM_MEMBER", $memberId)->delete();
+        return response(["message" => "OK"], 200);
     }
 }
