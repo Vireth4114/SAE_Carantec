@@ -5,7 +5,7 @@
 use app\Models\web\AcnMember;
 
 $members = AcnMember::all();
-// AcnMember::checkStatus();    //Need to be finished
+ AcnMember::checkStatus();
 
 @endphp
 <a type="button" class="btn btn-success" href={{route('member_registration')}}>Ajouter un adhérent</a>
@@ -39,7 +39,6 @@ $members = AcnMember::all();
                     @endif
                 </td>
                 <td><a href={{route("member_modification",$member->MEM_NUM_MEMBER)}}>Modifier</a></td>
-                <td><a href={{route("member_status",$member->MEM_NUM_MEMBER)}}>Changer son statut</a></td>
             </tr>
 
 @endforeach
