@@ -19,7 +19,7 @@ class AcnDivesController extends Controller
     /**
      * Get all the dive's values
      *
-     * @return \view the dive and his month
+     * @return mixed the dive and his month
      */
     public static function getAllDivesValues() {
     $months = AcnDives::getMonthWithDive();
@@ -45,7 +45,7 @@ class AcnDivesController extends Controller
      * Get all dive's informations
      *
      * @param number $id the identification of the dive
-     * @return \view with all the informations of a dive thanks to his id
+     * @return mixed with all the informations of a dive thanks to his id
      */
     public static function getAllDiveInformation($id){
         $dives = AcnDives::find($id);
@@ -135,7 +135,7 @@ class AcnDivesController extends Controller
      * Unregister a member to a dive
      *
      * @param Request $request a request to unregister a diver in a dive
-     * @return \redirect to the page of dives
+     * @return mixed to the page of dives
      */
     static public function unregister(Request $request){
 
@@ -196,5 +196,15 @@ class AcnDivesController extends Controller
         return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
     }
 
+    public static function delete($diveId) {
+        $divers = AcnDives::find($diveId)->divers;
+        foreach($divers as $diver) {
+            $diver->MEM_REMAINING_DIVES = $diver->MEM_REMAINING_DIVES +1;
+            $diver->save();
+        }
+        AcnRegistered::deleteDive($diveId);
+        AcnDives::find($diveId)->delete();
+        return redirect()->route('dives');
+    }
 
 }
