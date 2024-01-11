@@ -39,13 +39,21 @@ Route::get('/diveCreation', function () {
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
 Route::get('/groupsMaking', function () {
-    return AcnGroupsMakingController::getAll();
+    return AcnGroupsMakingController::getAll("");
 })->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
+
+Route::get('/validateGroup', function () {
+    return AcnGroupsMakingController::validateButton();
+})->middleware(['auth'])->middleware('isDirector')->name("validateGroup");
 
 Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'removeMember'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
 
 Route::post('addMemberToGroup', [AcnGroupsMakingController::class, 'add'])->middleware(['auth'])->middleware('isDirector')->name("addMemberToGroup");
 
 Route::post('addGroup', [AcnGroupsMakingController::class, 'addGroup'])->middleware(['auth'])->middleware('isDirector')->name("addGroup");
+
+Route::get('/automaticGroup', function () {
+    return AcnGroupsMakingController::automatic();
+})->middleware(['auth'])->middleware('isDirector')->name("automaticGroup");
 
 require __DIR__.'/auth.php';
