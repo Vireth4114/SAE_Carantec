@@ -18,11 +18,14 @@ class AcnDirectorController extends Controller
     /**
      * Add a member to a dive
      *
-     * @param $diveId the identification of the dive
-     * @return the view for adding a new dive with his parameters
+     * @param int $diveId ->the identification of the dive
+     * @return view -> the view for adding a new dive with his parameters
      */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
+        if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
+            return redirect()->route('welcome');
+        }
         $members = AcnDives::getMembersNotInDive($diveId);
         $levels = array();
         foreach($members as $member) {
@@ -32,7 +35,7 @@ class AcnDirectorController extends Controller
         $registeredMembers = $dive->divers;
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
         
-        $maxReached = $registeredMembers->count()==$dive['DIV_MAX_REGISTERED'];
+        $maxReached = $registeredMembers->where("MEM_NUM_MEMBER", '!=', $dive['DIV_NUM_MEMBER_LEAD'])->count()==$dive['DIV_MAX_REGISTERED'];
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, 
         "maxReached" => $maxReached, 'levels' => $levels]);
 
