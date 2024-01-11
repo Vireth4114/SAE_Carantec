@@ -17,6 +17,11 @@ use Carbon\Carbon;
 
 class AcnDiveCreationController extends Controller
 {
+    /**
+     * Get all the dive's informations
+     *
+     * @return all the parameters of a dive
+     */
     static public function getAll() {
         $boats = AcnBoat::all();
         $sites = AcnSite::all();
@@ -31,6 +36,12 @@ class AcnDiveCreationController extends Controller
         return view ('diveCreation', ["boats" => $boats, "sites" => $sites, "periods" => $periods, "prerogatives" => $prerogatives, "leads" => $leads,"pilots" => $pilots, "securitys" => $securitys]);
     }
 
+    /**
+     * Create a dive
+     *
+     * @param Request $request the request to create a dive
+     *
+     */
     static public function create(Request $request) {
 
         //creation of the error variable
@@ -98,14 +109,12 @@ class AcnDiveCreationController extends Controller
             $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
         }
 
-        $max = AcnDivesController::getNumMax();
-
         if ($err) {
             echo $strErr;
         }
         else {
-            AcnDives::create($request -> date, $request -> period, $request -> site, $request -> boat, $request -> lvl_required, 
-            $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);           
+            AcnDives::create($request -> date, $request -> period, $request -> site, $request -> boat, $request -> lvl_required,
+            $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);
         }
 
     }

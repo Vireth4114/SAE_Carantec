@@ -13,10 +13,23 @@ use Illuminate\Support\Facades\DB;
 
 class AcnMemberController extends Controller
 {
+    /**
+     *
+     *
+     * @param number $memberNum the identification of a member
+     * @return list of the all members
+     */
     public static function getMember($memberNum) {
         return AcnMember::find($memberNum);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request a request to updating the roles of a member
+     * @param number $memberNum the identification of a member
+     * @return mixed the redirection to the manager's panel page
+     */
     public static function updateRolesMember(Request $request, $memberNum) {
         $checkboxFields = array("security", "secretary", "pilot");
         $fieldsMappingToNameInDatabase = array("security" => "Sécurité de surface",

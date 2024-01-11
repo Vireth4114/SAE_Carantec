@@ -8,6 +8,11 @@ use App\Models\web\AcnSite;
 
 class ManagerPanelController extends Controller
 {
+    /**
+     * Display the manager's panel interface
+     *
+     * @return \view of the manager's panel page
+     */
     static public function displayManagerPanel() {
         return view("manager/panel", ["boats" => AcnBoat::getAllBoats(), "sites" => AcnSite::getAllSites(), "members" => AcnMember::all()]);
     }

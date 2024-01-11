@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\DB;
 
 class AcnDirectorController extends Controller
 {
-
+    /**
+     * Add a member to a dive
+     *
+     * @param $diveId the identification of the dive
+     * @return the view for adding a new dive with his parameters
+     */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
         $members = AcnDives::getMembersNotInDive($diveId);
@@ -27,7 +32,7 @@ class AcnDirectorController extends Controller
         foreach($tempMembers as $member) {
             if ($member->MEM_NUM_MEMBER != $dive['DIV_NUM_MEMBER_LEAD']) array_push($regMembers, $member);
         }
-        
+
         $maxReached = count($regMembers)==$dive['DIV_MAX_REGISTERED'];
         foreach($members as $member) {
             if ($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD']) $directorRegistered=false;
@@ -35,12 +40,18 @@ class AcnDirectorController extends Controller
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, "maxReached" => $maxReached]);
     }
 
+    /**
+     * Get the dive's informations for a director
+     *
+     * @param $diveId the identification of the dive
+     * @return all the information of a dive
+     */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
         foreach($allMembers as $member) {
-            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) array_push($members, $member); 
+            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) array_push($members, $member);
         }
         $nbMembers = count($members);
         $period = AcnPeriod::find($dive['DIV_NUM_PERIOD']);
@@ -73,9 +84,9 @@ class AcnDirectorController extends Controller
 
         $min_divers = $dive['DIV_MIN_REGISTERED'];
         $max_divers = $dive['DIV_MAX_REGISTERED'];
-        
-        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
-        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
+
+        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period,
+        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers,
         'max_divers' => $max_divers, 'nbMembers' => $nbMembers]);
     }
 

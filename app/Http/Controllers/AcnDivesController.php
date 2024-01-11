@@ -15,6 +15,11 @@ use LDAP\Result;
 
 class AcnDivesController extends Controller
 {
+    /**
+     * Get all the dive's values
+     *
+     * @return \view the dive and his month
+     */
     public static function getAllDivesValues() {
         $months = AcnDives::getMonthWithDive();
 
@@ -26,17 +31,6 @@ class AcnDivesController extends Controller
         return view("displayDives",["dives" => $dives, "months" => $months]);
     }
 
-    static public function getNumMax() {
-        $max = DB::table('ACN_DIVES')
-            -> selectRaw('max(DIV_NUM_DIVE)+1 as maxi')
-            -> get();
-
-        $max = (array) $max[0];
-        return $max['maxi'];
-    }
-
-
-
     static public function existDive($date, $numPeriod) {
         return DB::table('ACN_DIVES')
             -> select(DB::raw(1))
@@ -46,6 +40,12 @@ class AcnDivesController extends Controller
 
     }
 
+    /**
+     * Get all dive's informations
+     *
+     * @param number $id the identification of the dive
+     * @return \view with all the informations of a dive thanks to his id
+     */
     public static function getAllDiveInformation($id){
         $dives = AcnDives::find($id);
         $dives_lead = AcnMember::find($dives -> DIV_NUM_MEMBER_LEAD);
@@ -54,13 +54,13 @@ class AcnDivesController extends Controller
         } else {
             $dives_lead = $dives_lead->MEM_NAME." ".$dives_lead->MEM_SURNAME;
         }
-        
+
         $dives_secur = AcnMember::find($dives -> DIV_NUM_MEMBER_SECURED);
         if (is_null($dives_secur)) {
             $dives_secur = "non définit";
         } else {
             $dives_secur = $dives_secur->MEM_NAME." ".$dives_secur->MEM_SURNAME;
-        } 
+        }
 
         $dives_pilot = AcnMember::find($dives -> DIV_NUM_MEMBER_PILOTING);
         if (is_null($dives_pilot)) {
@@ -74,7 +74,7 @@ class AcnDivesController extends Controller
             $site = "non définit";
         } else {
             $site = $site->SIT_NAME." (".$site->SIT_DESCRIPTION.")";
-        } 
+        }
 
         $boat = AcnBoat::find($dives->DIV_NUM_BOAT);
         if (is_null($boat)) {
@@ -93,11 +93,16 @@ class AcnDivesController extends Controller
         $period = AcnPeriod::find($dives->DIV_NUM_PERIOD);
         $dives_register = AcnDives::find($id)->divers;
 
-        return view("divesInformation",["dives" => $dives, "dives_lead" => $dives_lead, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot, "dives_register"=> $dives_register, 
+        return view("divesInformation",["dives" => $dives, "dives_lead" => $dives_lead, "dives_secur" => $dives_secur, "dives_pilot" => $dives_pilot, "dives_register"=> $dives_register,
         "prerogative" => $prerogative, "period" => $period, "site" => $site, "boat" => $boat]);
     }
 
-
+    /**
+     * Register a member to a dive
+     *
+     * @param Request $request the request to register a new diver in a dive
+     * @return mixed the redirection after an attempt of a registering
+     */
     static public function register(Request $request){
         $userPriority = auth()->user()->prerogatives->max("PRE_PRIORITY");
 
@@ -125,6 +130,12 @@ class AcnDivesController extends Controller
         return redirect(route("dives"));
     }
 
+    /**
+     * Unregister a member to a dive
+     *
+     * @param Request $request a request to unregister a diver in a dive
+     * @return \redirect to the page of dives
+     */
     static public function unregister(Request $request){
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
         return redirect(route("dives"));
