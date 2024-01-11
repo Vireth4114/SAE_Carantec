@@ -181,9 +181,9 @@ Route::get('/diveReport', function () {
     return AcnDivesController::getMemberDivesReport();
 })->name("diveReport");
 
-Route::get('/managerDiveReport', function () {
+Route::get('/managerDivesReport', function () {
     return AcnDivesController::getAllDivesReport();
-})->name("managerDiveReport");
+})->name("managerDivesReport");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
