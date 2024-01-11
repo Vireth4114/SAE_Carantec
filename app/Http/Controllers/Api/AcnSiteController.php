@@ -7,6 +7,7 @@ use App\Http\Requests\Api\SiteRequest;
 use App\Http\Resources\Api\SiteResource;
 use App\Models\web\AcnSite;
 use Exception;
+use Illuminate\Http\Request;
 
 class AcnSiteController extends Controller
 {
@@ -21,9 +22,9 @@ class AcnSiteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created site in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Api\SiteRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(SiteRequest $request)
@@ -56,16 +57,30 @@ class AcnSiteController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified site in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SiteRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        // Not using SiteRequest since the check by Laravel for unique doesn't take count of the case of the update
+        // trying to apply the same name to the unique entry which has it
+        $request->validate([
+            "name" => "string|required|max:128",
+            "coord" => "string|required|max:128",
+            "depth" => "integer|numeric|required",
+            "description" => "string|max:256",
+        ]);
         try {
             $site = AcnSite::findOrFail($id);
+            if (AcnSite::where("SIT_NAME", strtoupper($request->name))->where("SIT_NUM_SITE", "!=", $id)->exists()) {
+                $response = array();
+                $response["message"] = "The given data was invalid.";
+                $response["errors"] = array("name" => __("validation.unique", ["attribute" => "name"]));
+                return response()->json($response, 422);
+            }
             if ($site->SIT_DELETED === 1) return response("Resource requested does not exist.", 404);
             $site->SIT_NAME = strtoupper($request->name);
             $site->SIT_COORD = $request->coord;
@@ -79,7 +94,7 @@ class AcnSiteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified site from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

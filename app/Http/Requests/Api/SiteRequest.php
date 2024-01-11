@@ -31,10 +31,10 @@ class SiteRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required|unique:ACN_SITE,SIT_NAME|max:128",
-            "coord" => "required|max:128",
-            "depth" => "required",
-            "description" => "max:256",
+            "name" => "string|required|unique:ACN_SITE,SIT_NAME|max:128",
+            "coord" => "string|required|max:128",
+            "depth" => "integer|numeric|required",
+            "description" => "string|max:256",
         ];
     }
 }
