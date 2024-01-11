@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcnDiveModifyController;
 use App\Http\Controllers\AcnDiveCreationController;
+
 use App\Http\Controllers\AcnBoatController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnSiteController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\AcnRegisteredController;
 use Illuminate\Http\Request;
 
 use App\Models\web\AcnMember;
+
+
+use App\Http\Controllers\AcnGroupsMakingController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view("welcome");
+    return redirect(route('dives'));
 })->middleware(['auth'])->middleware('homePage')->name("welcome");
 
 Route::get('/dives', function () {
@@ -46,14 +50,6 @@ Route::post('/dives/unregister', function (Request $request){
     return AcnDivesController::unregister($request);
 })->name("membersDivesUnregister");
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME]);
-// })->middleware(['auth'])->name('dashboard');
-
-Route::get('/secretary', function () {
-    return view('secretary', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
-})->middleware(['auth'])->middleware('isSecretary')->name("secretary");
-
 Route::get('/diveCreation', function () {
     return AcnDiveCreationController::getAll();
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
@@ -61,7 +57,15 @@ Route::get('/diveCreation', function () {
 
 Route::get('/diveModify/{diveId}', function ($diveId) {
     return AcnDiveModifyController::getAll($diveId);
-})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModifyleware f");
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("diveModify");
+
+Route::get('/panel/director/redirectDiveModify/{diveId}', function($diveId) {
+    if (AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER)) {
+        return redirect(route('dives'));
+    } else {
+        return redirect(route('diveInformation', $diveId));
+    }
+})->middleware(['auth'])->middleware('isDirectorOrManager')->name("redirectDiveModify");
 
 Route::get('/panel/manager', function () {
     return ManagerPanelController::displayManagerPanel();
@@ -154,14 +158,47 @@ Route::get('/members/status/{mem_num_member}', function ($mem_num_member) {
     return AcnMemberController::updateStatus($mem_num_member);
 })->middleware(['auth'])->middleware('isSecretary')->name("member_status");
 
+Route::get('/panel/director/myDirectorDives', function() {
+    return AcnDirectorController::myDirectorDives();
+})->middleware(['auth'])->middleware('isDirector')->name("myDirectorDives");
+
+
 Route::post('member/modification/validation', [AcnMemberController::class, 'modify'])->name('modify_member');
 
 Route::patch('/update/user/roles/{userId}', function (Request $request, $userId) {
     return AcnMemberController::updateRolesMember($request, $userId);
 })->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
 
+Route::get('/diveReport', function () {
+    return AcnDivesController::getMemberDivesReport();
+})->name("diveReport");
+
+Route::get('/managerDivesReport', function () {
+    return AcnDivesController::getAllDivesReport();
+})->name("managerDivesReport");
+
+Route::get('/directorDivesReport', function () {
+    return AcnDivesController::getAllDivesReportIsDirector();
+})->name("DirectorDivesReport");
+
+
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
+
 Route::post('diveModifyForm', [AcnDiveModifyController::class, 'modify'])->name('diveModifyForm');
+
+Route::get('/groupsMaking/{dive}', function ($dive) {
+    return AcnGroupsMakingController::getAll("",$dive);
+})->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
+
+Route::get('validateGroup/{diveId}', [AcnGroupsMakingController::class, 'validateButton'])->middleware(['auth'])->middleware('isDirector')->name("validateGroup");
+
+Route::get('automaticGroup/{diveId}', [AcnGroupsMakingController::class, 'automatic'])->middleware(['auth'])->middleware('isDirector')->name("automaticGroup");
+
+Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'removeMember'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
+
+Route::post('addMemberToGroup', [AcnGroupsMakingController::class, 'add'])->middleware(['auth'])->middleware('isDirector')->name("addMemberToGroup");
+
+Route::post('addGroup', [AcnGroupsMakingController::class, 'addGroup'])->middleware(['auth'])->middleware('isDirector')->name("addGroup");
 
 require __DIR__.'/auth.php';

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\web\AcnMember;
 use Closure;
 
-class homePage
+class HomePage
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,6 @@ class homePage
      */
     public function handle($request, Closure $next)
     {
-        $isAdherent = False;
         $isSecretary = AcnMember::isUserSecretary(auth()->user()->MEM_NUM_MEMBER);
         $isDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
         $isManager = AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER);
@@ -24,13 +23,10 @@ class homePage
         if ($isSecretary) {
             return redirect(route('members'));
         }else if($isDirector){
-            return redirect('/welcome');
+            return redirect(route('myDirectorDives'));
         }else if($isManager){
-            return redirect('/welcome');
-        }else if($isAdherent){
-            return redirect('/welcome');
-        }else{
-            return $next($request);
+            return redirect(route('diveCreation'));
         }
+            return $next($request);
     }
 }

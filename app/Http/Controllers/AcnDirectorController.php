@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\web\AcnMember;
 use App\Models\web\AcnDives;
+use App\Models\web\AcnPrerogative;
 use App\Models\web\AcnSite;
 use App\Models\web\AcnPeriod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -13,34 +15,55 @@ use Illuminate\Support\Facades\DB;
 
 class AcnDirectorController extends Controller
 {
-
+    /**
+     * Add a member to a dive
+     *
+     * @param int $diveId ->the identification of the dive
+     * @return view -> the view for adding a new dive with his parameters
+     */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
+        if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
+            return redirect()->route('welcome');
+        }
         $members = AcnDives::getMembersNotInDive($diveId);
-        $directorRegistered = true;
+        $levels = array();
         foreach($members as $member) {
-            if ($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD']) $directorRegistered=false;
+            $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
+            array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
         }
+        $registeredMembers = $dive->divers;
+        $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
 
-        $tempMembers = AcnDives::find($diveId)->divers;
-        $regMembers = array();
-        foreach($tempMembers as $member) {
-            if ($member->MEM_NUM_MEMBER != $dive['DIV_NUM_MEMBER_LEAD']) array_push($regMembers, $member);
-        }
-        
-        $maxReached = count($regMembers)==$dive['DIV_MAX_REGISTERED'];
-        foreach($members as $member) {
-            if ($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD']) $directorRegistered=false;
-        }
-        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, "maxReached" => $maxReached]);
+        $maxReached = $registeredMembers->where("MEM_NUM_MEMBER", '!=', $dive['DIV_NUM_MEMBER_LEAD'])->count()==$dive['DIV_MAX_REGISTERED'];
+        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered,
+        "maxReached" => $maxReached, 'levels' => $levels]);
+
     }
 
+    /**
+     * Get the dive's informations for a director
+     *
+     * @param $diveId the identification of the dive
+     * @return all the information of a dive
+     */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
+        if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
+            return redirect()->route('welcome');
+        }
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
+        $levels = array();
+        $divDate = Carbon::parse($dive['DIV_DATE']) -> startOfDay();
+        $today = Carbon::now()->startOfDay();
+        $updatable = $divDate->diffInDays($today);
         foreach($allMembers as $member) {
-            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) array_push($members, $member); 
+            if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) {
+                array_push($members, $member);
+                $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
+                array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
+            }
         }
         $nbMembers = count($members);
         $period = AcnPeriod::find($dive['DIV_NUM_PERIOD']);
@@ -73,10 +96,39 @@ class AcnDirectorController extends Controller
 
         $min_divers = $dive['DIV_MIN_REGISTERED'];
         $max_divers = $dive['DIV_MAX_REGISTERED'];
-        
-        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
-        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
-        'max_divers' => $max_divers, 'nbMembers' => $nbMembers]);
+
+        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period,
+        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers,
+        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels, 'updatable' => $updatable]);
+    }
+
+    public static function myDirectorDives() {
+        $dives = AcnDives::getDirectorDives(auth()->user()->MEM_NUM_MEMBER);
+        $sites = array();
+        $prerogatives = array();
+        $periods = array();
+        foreach($dives as $dive) {
+            $site = AcnSite::find($dive->DIV_NUM_SITE);
+            if (is_null($site)) {
+                $site = "non définit";
+            } else {
+                $site = $site->SIT_NAME." (".$site->SIT_DESCRIPTION.")";
+            }
+            array_push($sites, $site);
+
+            $prerogative = AcnPrerogative::find($dive->DIV_NUM_PREROG);
+            if (is_null($prerogative)) {
+                $prerogative = "non définit";
+            } else {
+                $prerogative = $prerogative->PRE_LABEL;
+            }
+            array_push($prerogatives, $prerogative);
+
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view('director/myDirectorDives', ['dives' => $dives, 'sites' => $sites, 'prerogatives' => $prerogatives, 'periods' => $periods]);
     }
 
 

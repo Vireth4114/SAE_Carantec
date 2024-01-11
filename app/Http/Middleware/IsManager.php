@@ -8,7 +8,7 @@ use Closure;
 class IsManager
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request for determinate if the user is a manager or not.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
@@ -19,7 +19,7 @@ class IsManager
         $isManager = AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER);
 
         if (!$isManager) {
-            return redirect('/welcome');
+            return redirect(route("welcome"));
         }
 
         return $next($request);

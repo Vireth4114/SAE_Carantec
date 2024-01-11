@@ -1,5 +1,9 @@
 @extends("template")
 
+@php
+$i=0;
+@endphp
+
 @section("content")
     <h2>Bateaux</h2>
     <a href="{{ route('boatCreate') }}">Créer un bateau</a>
@@ -53,25 +57,26 @@
         <form action="{{ route('userRolesUpdate', ['userId' => $member->MEM_NUM_MEMBER]) }}" method="POST">
             @csrf
             @method("patch")
-            <label for="security">Sécurité de surface</label>
-            <input type="checkbox" id="security" name="security"
+            <label for="security{{$i}}">Sécurité de surface</label>
+            <input type="checkbox" id="security{{$i}}" name="security"
             @if (!$memberFunction->where("FUN_LABEL", "=", "Sécurité de surface")->isEmpty())
                 checked
             @endif
             />
-            <label for="pilot">Pilote</label>
-            <input type="checkbox" id="pilot" name="pilot"
+            <label for="pilot{{$i}}">Pilote</label>
+            <input type="checkbox" id="pilot{{$i}}" name="pilot"
             @if (!$memberFunction->where("FUN_LABEL", "=", "Pilote")->isEmpty())
                 checked
             @endif
             />
-            <label for="secretary">Secrétaire</label>
-            <input type="checkbox" id="secretary" name="secretary"
+            <label for="secretary{{$i}}">Secrétaire</label>
+            <input type="checkbox" id="secretary{{$i}}" name="secretary"
             @if (!$memberFunction->where("FUN_LABEL", "=", "Secrétaire")->isEmpty())
                 checked
             @endif
             />
             <input type="submit" value="Mettre à jour le membre" />
         </form>
+        {{ $i = $i + 1 }}
     @endforeach
 @endsection

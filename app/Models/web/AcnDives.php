@@ -5,6 +5,7 @@ namespace App\Models\web;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isEmpty;
@@ -72,7 +73,7 @@ class AcnDives extends Model
      */
     public function surfaceSecurity(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_SECURED');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_SECURED');
     }
 
     /**
@@ -80,7 +81,7 @@ class AcnDives extends Model
      */
     public function leader(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_LEAD');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_LEAD');
     }
 
     /**
@@ -88,7 +89,7 @@ class AcnDives extends Model
      */
     public function pilot(): HasOne
     {
-        return $this->hasOne(AcnMember::class, 'MEM_NUM_LICENCE', 'DIV_NUM_LICENCE_PILOTING');
+        return $this->hasOne(AcnMember::class, 'MEM_NUM_MEMBER', 'DIV_NUM_MEMBER_PILOTING');
     }
 
     /**
@@ -145,7 +146,7 @@ class AcnDives extends Model
 
 
         $members = DB::table('ACN_MEMBER')
-            -> where ('MEM_NUM_MEMBER', '>', 0)
+            -> where ('MEM_REMAINING_DIVES', '>', 0)
             -> whereNotIn('MEM_NUM_MEMBER', $memNums)
             -> get();
 
@@ -156,7 +157,9 @@ class AcnDives extends Model
                     array_push($eligibleMembers, $member);
                 }
             } else {
-                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 ) {
+                if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY) 
+                && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4 
+                || AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) > 12) {
                     array_push($eligibleMembers, $member);
                 }
             }
@@ -259,4 +262,17 @@ class AcnDives extends Model
             ->get();
     }
 
+    /**
+     * return the dives where the specified member is the dive's director
+     * @param int $numMember -> the specified user
+     * 
+     * @return [list[data_Dives]] -> the dives 
+     */
+    public static function getDirectorDives($numMember) {
+        return DB::table('ACN_DIVES')
+            -> where('DIV_NUM_MEMBER_LEAD', $numMember)
+            -> where('DIV_DATE', '>', Carbon::now())
+            -> orderBy('DIV_DATE')
+            -> get();
+    }
 }

@@ -35,30 +35,35 @@
             <th>Numéro de licence</th>
             <th>Prénom</th>
             <th>Nom</th>
+            <th>Niveau</th>
             <th>Ajouter</th>
         </tr>
     </thead>
     <tbody>
-@foreach($members as $member)
-        <tr>
-            <th>{{$member->MEM_NUM_LICENCE}}</th>
-            <th>{{$member->MEM_NAME}}</th>
-            <th>{{$member->MEM_SURNAME}}</th>
-            <th>
-                <form action="{{ route('addMemberToDiveForm') }}" method="POST">
-                    @csrf
-                    @method('post')
-                    <input type="hidden" name="numMember" value="{{ $member->MEM_NUM_MEMBER }}">
-                    <input type="hidden" name="numDive" value="{{ $dive['DIV_NUM_DIVE'] }}">
-                    @if ($maxReached)
-                        <button disabled type="submit">ajouter</button>
-                    @else
-                        <button type="submit">ajouter</button>
-                    @endif
-                </form>
-            </th>
-        </tr>
-@endforeach
+        @php
+            $increment = 0;
+        @endphp
+        @foreach($members as $member)
+            <tr>
+                <th>{{$member->MEM_NUM_LICENCE}}</th>
+                <th>{{$member->MEM_NAME}}</th>
+                <th>{{$member->MEM_SURNAME}}</th>
+                <th>{{$levels[$increment++]}}
+                <th>
+                    <form action="{{ route('addMemberToDiveForm') }}" method="POST">
+                        @csrf
+                        @method('post')
+                        <input type="hidden" name="numMember" value="{{ $member->MEM_NUM_MEMBER }}">
+                        <input type="hidden" name="numDive" value="{{ $dive['DIV_NUM_DIVE'] }}">
+                        @if ($maxReached)
+                            <button disabled type="submit">ajouter</button>
+                        @else
+                            <button type="submit">ajouter</button>
+                        @endif
+                    </form>
+                </th>
+            </tr>
+        @endforeach
     </tbody>
 </table>
 @endsection

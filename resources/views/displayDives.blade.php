@@ -1,5 +1,5 @@
 @extends("template")
-
+@php use App\Models\web\AcnMember; @endphp
 
 @section("content")
 @php
@@ -14,11 +14,11 @@
         @endforeach
     @endif
     @foreach($months as $month)
-        <h2>{{ ucfirst(Carbon::parse($month->mois_nb."/01/2000")->locale('fr_FR')->translatedFormat('F')) }}</h2>
-
+    @if($dives[$month->mois_mot]->count() > 0)
+        <h2>{{ucfirst(Carbon::parse($month->mois_nb."/01/2000")->locale('fr_FR')->translatedFormat('F')) }}</h2>
+    @endif
         @foreach($dives[$month->mois_mot] as $dive)
             @php
-                //$newDate = new Carbon($dive->DIV_DATE);
                 $date = Carbon::parse($dive->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y');
                 $heureStart = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_START_TIME), 'G');
                 $heureFin = date_Format(DateTime::createFromFormat('H:i:s',$dive->PER_END_TIME), 'G');
@@ -54,6 +54,10 @@
                     <button id="buttonDisplayDives" class="btn btn-primary" type="submit" value="" @if ($dive->PRE_PRIORITY > $user->prerogatives->max("PRE_PRIORITY"))
                         disabled
                     @endif>{{ $buttonText }}</button>
+                    @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
+                        <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
+                        {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
+                    @endif
                 </p>
             </form>
         </div>
