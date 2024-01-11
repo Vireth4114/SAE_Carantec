@@ -16,27 +16,21 @@ use Carbon\Carbon;
 
 class AcnDivesController extends Controller
 {
+    /**
+     * Get all the dive's values
+     *
+     * @return \view the dive and his month
+     */
     public static function getAllDivesValues() {
-        $months = AcnDives::getMonthWithDive();
+    $months = AcnDives::getMonthWithDive();
 
         $dives = array();
         foreach ($months as $month) {
-            $dive = AcnDives::getDivesOfAMonth($month->mois_nb);
+        $dive = AcnDives::getDivesOfAMonth($month->mois_nb)->where('DIV_DATE', '>', Carbon::now());
             $dives[$month->mois_mot] = $dive;
         }
         return view("displayDives",["dives" => $dives, "months" => $months]);
     }
-
-    static public function getNumMax() {
-        $max = DB::table('ACN_DIVES')
-            -> selectRaw('max(DIV_NUM_DIVE)+1 as maxi')
-            -> get();
-
-        $max = (array) $max[0];
-        return $max['maxi'];
-    }
-
-
 
     static public function existDive($date, $numPeriod) {
         return DB::table('ACN_DIVES')
@@ -47,6 +41,12 @@ class AcnDivesController extends Controller
 
     }
 
+    /**
+     * Get all dive's informations
+     *
+     * @param number $id the identification of the dive
+     * @return \view with all the informations of a dive thanks to his id
+     */
     public static function getAllDiveInformation($id){
         $dives = AcnDives::find($id);
         $dives_lead = AcnMember::find($dives -> DIV_NUM_MEMBER_LEAD);
@@ -98,7 +98,12 @@ class AcnDivesController extends Controller
         "prerogative" => $prerogative, "period" => $period, "site" => $site, "boat" => $boat]);
     }
 
-
+    /**
+     * Register a member to a dive
+     *
+     * @param Request $request the request to register a new diver in a dive
+     * @return mixed the redirection after an attempt of a registering
+     */
     static public function register(Request $request){
         $userPriority = auth()->user()->prerogatives->max("PRE_PRIORITY");
 
@@ -126,15 +131,43 @@ class AcnDivesController extends Controller
         return redirect(route("dives"));
     }
 
+    /**
+     * Unregister a member to a dive
+     *
+     * @param Request $request a request to unregister a diver in a dive
+     * @return \redirect to the page of dives
+     */
     static public function unregister(Request $request){
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
         return redirect(route("dives"));
     }
 
-    public static function getAllDivesReport() {
+    public static function getMemberDivesReport() {
 
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
         $dives = AcnMember::find($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
+        $periods = array();
+        foreach($dives as $dive) {
+            $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
+            array_push($periods, $period);
+        }
+
+        return view("diveReport", ["dives"=> $dives, "periods"=> $periods]);
+    }
+
+    public static function getAllDivesReport() {
+        $actualMonth = Carbon::now()->month;
+
+        if($actualMonth < 3){
+            $year = Carbon::now()->year-1;
+            $startDate = Carbon::createFromDate($year,3,1);
+            $endDate = Carbon::createFromDate($year,12,1);
+            $dives = AcnDives::all()->where("DIV_DATE",'>',$startDate)->where("DIV_DATE",'<',$endDate);
+        }else{
+            $year = Carbon::now()->year;
+            $startDate = Carbon::createFromDate($year,3,1);
+            $dives = AcnDives::all()->where("DIV_DATE",'>',$startDate)->where("DIV_DATE",'<',Carbon::now());
+        }
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);

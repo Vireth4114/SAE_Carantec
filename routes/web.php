@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcnDiveModifyController;
 use App\Http\Controllers\AcnDiveCreationController;
+
 use App\Http\Controllers\AcnBoatController;
 use App\Http\Controllers\AcnDivesController;
 use App\Http\Controllers\AcnSiteController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\AcnRegisteredController;
 use Illuminate\Http\Request;
 
 use App\Models\web\AcnMember;
+
+
+use App\Http\Controllers\AcnGroupsMakingController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -174,12 +178,31 @@ Route::patch('/update/user/roles/{userId}', function (Request $request, $userId)
 })->middleware(['auth'])->middleware('isManager')->name("userRolesUpdate");
 
 Route::get('/diveReport', function () {
-    return AcnDivesController::getAllDivesReport();
+    return AcnDivesController::getMemberDivesReport();
 })->name("diveReport");
+
+Route::get('/managerDivesReport', function () {
+    return AcnDivesController::getAllDivesReport();
+})->name("managerDivesReport");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
+
 Route::post('diveModifyForm', [AcnDiveModifyController::class, 'modify'])->name('diveModifyForm');
+
+Route::get('/groupsMaking', function () {
+    return AcnGroupsMakingController::getAll("");
+})->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
+
+Route::get('validateGroup/{diveId}', [AcnGroupsMakingController::class, 'validateButton'])->middleware(['auth'])->middleware('isDirector')->name("validateGroup");
+
+Route::get('automaticGroup/{diveId}', [AcnGroupsMakingController::class, 'automatic'])->middleware(['auth'])->middleware('isDirector')->name("automaticGroup");
+
+Route::get('removeFromGroup', [AcnGroupsMakingController::class, 'removeMember'])->middleware(['auth'])->middleware('isDirector')->name("removeFromGroup");
+
+Route::post('addMemberToGroup', [AcnGroupsMakingController::class, 'add'])->middleware(['auth'])->middleware('isDirector')->name("addMemberToGroup");
+
+Route::post('addGroup', [AcnGroupsMakingController::class, 'addGroup'])->middleware(['auth'])->middleware('isDirector')->name("addGroup");
 
 require __DIR__.'/auth.php';

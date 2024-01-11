@@ -18,6 +18,12 @@ use League\CommonMark\Extension\Attributes\Node\Attributes;
 
 class AcnDiveModifyController extends Controller
 {
+    /**
+     * Get all the dive's informations
+     *
+     * @param $diveId the identification of the dive
+     * @return \view the datas of a dive to modify
+     */
     static public function getAll($diveId) {
 
         $dive = AcnDives::getDive($diveId);
@@ -59,9 +65,9 @@ class AcnDiveModifyController extends Controller
             $security = $security[0]->MEM_NAME.$security[0]->MEM_SURNAME;
         }
 
-        
+
         $isDirector = AcnMember::isUserDirector(auth()->user()->MEM_NUM_MEMBER);
-        
+
         $boats = AcnBoat::all();
         $sites = AcnSite::all();
         $prerogatives = DB::table('ACN_PREROGATIVE') -> where('PRE_LEVEL', 'not like', 'E%') -> get();
@@ -74,10 +80,15 @@ class AcnDiveModifyController extends Controller
          "dive" => $dive[0], "site" => $site,
          "boat" => $boat, "prerogative" => $prerogative,
         "lead" => $lead, "pilot" => $pilot,
-        "security" => $security, 
+        "security" => $security,
         'isDirector' => $isDirector]);
     }
 
+    /**
+     * Modifying dive's informations
+     * @param Request $request the request for modifying a boat
+     *
+     */
     static public function modify(Request $request) {
 
         //creation of the error variable
@@ -160,8 +171,6 @@ class AcnDiveModifyController extends Controller
             $err = true;
             $strErr .= "-Le niveau saisi est trop élevé <br>";
         }
-
-        $max = AcnDivesController::getNumMax();
 
         if ($err) {
             echo $strErr;

@@ -7,6 +7,7 @@ use App\Models\web\AcnDives;
 use App\Models\web\AcnPrerogative;
 use App\Models\web\AcnSite;
 use App\Models\web\AcnPeriod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -14,7 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class AcnDirectorController extends Controller
 {
-
+    /**
+     * Add a member to a dive
+     *
+     * @param $diveId the identification of the dive
+     * @return the view for adding a new dive with his parameters
+     */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
         $members = AcnDives::getMembersNotInDive($diveId);
@@ -24,19 +30,28 @@ class AcnDirectorController extends Controller
             array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
         }
         $registeredMembers = $dive->divers;
-
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
         
         $maxReached = $registeredMembers->count()==$dive['DIV_MAX_REGISTERED'];
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, 
         "maxReached" => $maxReached, 'levels' => $levels]);
+
     }
 
+    /**
+     * Get the dive's informations for a director
+     *
+     * @param $diveId the identification of the dive
+     * @return all the information of a dive
+     */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);
         $allMembers = AcnDives::find($diveId)->divers;
         $members = array();
         $levels = array();
+        $divDate = Carbon::parse($dive['DIV_DATE']) -> startOfDay();
+        $today = Carbon::now()->startOfDay();
+        $updatable = $divDate->diffInDays($today);
         foreach($allMembers as $member) {
             if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) {
                 array_push($members, $member);
@@ -78,7 +93,7 @@ class AcnDirectorController extends Controller
         
         return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
         'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
-        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels]);
+        'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels, 'updatable' => $updatable]);
     }
 
     public static function myDirectorDives() {
