@@ -115,79 +115,24 @@ class AcnDives extends Model
         return $this->belongsToMany(AcnGroups::class, "ACN_REGISTERED", "NUM_DIVE", "NUM_GROUPS");
     }
 
-    public static function getDive($num_dive){
+    /**
+     * returns the Dive
+     * @param int $diveId -> the specified dive
+     * 
+     * @return [data_Dives] -> the dive
+     */
+    public static function getDive($diveId){
 
-        $dive = DB::table('acn_dives')->select('acn_dives.*')->where('div_num_dive','=',$num_dive)->get();
-        //array_push($dive, $dive_info[0]);
-        /*
-        $period = DB::table('ACN_PERIOD')
-        -> select('PER_LABEL')
-        -> where('PER_NUM_PERIOD','=',$dive_info[0]-> DIV_NUM_PERIOD) ->get();
-        array_push($dive,  $period[0]);
-
-        $site = DB::table('acn_site')
-        ->select('sit_name')
-        ->where('sit_num_site','=',$dive_info[0]->DIV_NUM_SITE)->get();
-
-        if(!$site->isEmpty()){
-            array_push($dive,  $site[0]);
-        }else{
-            $site = collect("sit_name","");
-            array_push($dive, $site[0]);
-        }
-
-
-
-        $boat = DB::table('acn_boat')
-        ->select('BOA_NAME')
-        ->where('BOA_NUM_BOAT','=',$dive_info[0]->DIV_NUM_BOAT)->get();
-        if(!$boat->isEmpty()){
-            array_push($dive,  $boat[0]);
-        }else{
-            array_push($dive,  "");
-        }
-
-        $securedMem = DB::table('acn_member')
-        ->select('MEM_NAME','MEM_SURNAME')
-        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_SECURED)->get();
-        if(!$securedMem->isEmpty()){
-            array_push($dive,  $securedMem[0]);
-        }else{
-            array_push($dive,  "");
-        }
-
-        $leadMem = DB::table('acn_member')
-        ->select('MEM_NAME','MEM_SURNAME')
-        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_LEAD)->get();
-        if(!$leadMem->isEmpty()){
-            array_push($dive,  $leadMem[0]);
-        }else{
-            array_push($dive,  "");
-        }
-
-        $piloteMem = DB::table('acn_member')
-        ->select('MEM_NAME','MEM_SURNAME')
-        ->where('MEM_NUM_MEMBER','=',$dive_info[0]->DIV_NUM_MEMBER_PILOTING)->get();
-        if(!$piloteMem->isEmpty()){
-            array_push($dive,  $piloteMem[0]);
-        }else{
-            array_push($dive,  "");
-        }
-
-
-        $prero = DB::table('acn_prerogative')
-        ->select('PRE_LABEL')
-        ->where('PRE_NUM_PREROG','=',$dive_info[0]->DIV_NUM_PREROG)->get();
-        if(!$prero->isEmpty()){
-            array_push($dive,  $prero[0]);
-        }else{
-            array_push($dive,  "");
-        }
-        dd($dive);
-        */
+        $dive = DB::table('acn_dives')->select('acn_dives.*')->where('div_num_dive','=',$diveId)->get();
         return $dive;
     }
 
+    /**
+     * returns all the members that aren't registered and that are eligible for the dive
+     * @param int $diveId -> the specified dive
+     * 
+     * @return [list[data_Member]] -> a list of member
+     */
     static public function getMembersNotInDive($diveId) {
 
         $members = AcnDives::find($diveId)->divers;
@@ -219,6 +164,12 @@ class AcnDives extends Model
         return $eligibleMembers;
     }
 
+    /**
+     * retuns the prerogative's priority of the dive's prerogative
+     * @param int $diveId -> the specified dive
+     * 
+     * @return [int] -> the perogative's priority
+     */
     static public function getPrerogPriority($diveId) {
         return DB::table('ACN_DIVES')
             -> select ('PRE_PRIORITY')
@@ -227,6 +178,19 @@ class AcnDives extends Model
             -> get();
     }
     
+    /**
+     * creates a new Dive, the ID (DIV_NUM_DIVE) isn't specified because it is auto-incremented in the database
+     * @param [date] $DIV_DATE -> the date of the dive
+     * @param int $DIV_NUM_PERIOD -> the id of period of the day for the dive
+     * @param int $DIV_NUM_SITE -> the id of the site for the dive
+     * @param int $DIV_NUM_BOAT -> the id of boat for the dive
+     * @param int $DIV_NUM_PREROG -> the id of the prerogation of the dive
+     * @param int $DIV_NUM_MEMBER_LEAD -> the id of the leader of the dive
+     * @param int $DIV_NUM_MEMBER_PILOTING -> the id of the pilot of the dive
+     * @param int $DIV_NUM_MEMBER_SECURED -> the id of the surface security of the dive
+     * @param int $DIV_MIN_REGISTERED -> the minimum of divers required for the dive
+     * @param int $DIV_MAX_REGISTERED -> the maximum of divers for the dive
+     */
     public static function create($DIV_DATE, $DIV_NUM_PERIOD, $DIV_NUM_SITE, $DIV_NUM_BOAT, $DIV_NUM_PREROG, $DIV_NUM_MEMBER_LEAD, $DIV_NUM_MEMBER_PILOTING, $DIV_NUM_MEMBER_SECURED, $DIV_MIN_REGISTERED, $DIV_MAX_REGISTERED) {
         DB::table('ACN_DIVES')->insert([
             'DIV_DATE' => DB::raw("str_to_date('".$DIV_DATE."','%Y-%m-%d')"),
@@ -242,20 +206,37 @@ class AcnDives extends Model
         ]);
     }
 
-    public static function updateData($numDive, $site, $boat, $lvl_required, $lead, $pilot, $security, $min_divers, $max_divers){
-        DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $numDive)
+    /**
+     * updates the data of the specified dive
+     * @param int $diveId -> the id of the modified Dive
+     * @param int $DIV_NUM_SITE -> the id of the site for the dive
+     * @param int $DIV_NUM_BOAT -> the id of boat for the dive
+     * @param int $DIV_NUM_PREROG -> the id of the prerogation of the dive
+     * @param int $DIV_NUM_MEMBER_LEAD -> the id of the leader of the dive
+     * @param int $DIV_NUM_MEMBER_PILOTING -> the id of the pilot of the dive
+     * @param int $DIV_NUM_MEMBER_SECURED -> the id of the surface security of the dive
+     * @param int $DIV_MIN_REGISTERED -> the minimum of divers required for the dive
+     * @param int $DIV_MAX_REGISTERED -> the maximum of divers for the dive
+     */
+    public static function updateData($diveId, $DIV_NUM_SITE, $DIV_NUM_BOAT, $DIV_NUM_PREROG, $DIV_NUM_MEMBER_LEAD, $DIV_NUM_MEMBER_PILOTING, $DIV_NUM_MEMBER_SECURED, $DIV_MIN_REGISTERED, $DIV_MAX_REGISTERED){
+        DB::table('ACN_DIVES')->where('DIV_NUM_DIVE', '=', $diveId)
             ->update([
-                'DIV_NUM_SITE' => $site,
-                'DIV_NUM_BOAT' => $boat,
-                'DIV_NUM_PREROG' => $lvl_required,
-                'DIV_NUM_MEMBER_LEAD' => $lead,
-                'DIV_NUM_MEMBER_PILOTING' => $pilot,
-                'DIV_NUM_MEMBER_SECURED'=> $security,
-                'DIV_MIN_REGISTERED' => $min_divers,
-                'DIV_MAX_REGISTERED'=> $max_divers,
+                'DIV_NUM_SITE' => $DIV_NUM_SITE,
+                'DIV_NUM_BOAT' => $DIV_NUM_BOAT,
+                'DIV_NUM_PREROG' => $DIV_NUM_PREROG,
+                'DIV_NUM_MEMBER_LEAD' => $DIV_NUM_MEMBER_LEAD,
+                'DIV_NUM_MEMBER_PILOTING' => $DIV_NUM_MEMBER_PILOTING,
+                'DIV_NUM_MEMBER_SECURED'=> $DIV_NUM_MEMBER_SECURED,
+                'DIV_MIN_REGISTERED' => $DIV_MIN_REGISTERED,
+                'DIV_MAX_REGISTERED'=> $DIV_MAX_REGISTERED,
             ]);
     }
 
+    /**
+     * return all the months during which there is at a least one dive
+     * 
+     * @return [list[month]] -> the months are in date_format
+     */
     public static function getMonthWithDive() {
         return DB::table('ACN_DIVES')
             ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
@@ -263,6 +244,12 @@ class AcnDives extends Model
             ->get();
     }
 
+    /**
+     * get all the dives happening in a specified month
+     * @param [date] $month -> a date with the month of the dive you want to retrieve, only the month will be retrieved.
+     * 
+     * @return [list[data_Dives]]
+     */
     public static function getDivesOfAMonth($month) {
         return DB::table("ACN_DIVES")
             ->join("ACN_PERIOD","PER_NUM_PERIOD","DIV_NUM_PERIOD")

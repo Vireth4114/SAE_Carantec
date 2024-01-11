@@ -41,6 +41,12 @@ class AcnPeriod extends Model
      */
     public $timestamps = false;
 
+    /**
+     * returns the period
+     * @param int $num_per -> the id of the specified period
+     * 
+     * @return [data_period] -> a period
+     */
     public static function getPeriod($num_per){
         $period = DB::table('ACN_PERIOD')
         -> select('PER_LABEL')

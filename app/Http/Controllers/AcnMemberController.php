@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\web\AcnMember;
+use App\Models\web\AcnRanked;
+use App\Models\web\AcnWorking;
+use App\Models\web\AcnPrerogative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -22,9 +25,9 @@ class AcnMemberController extends Controller
         foreach($checkboxFields as $field) {
             $nameInDatabase = $fieldsMappingToNameInDatabase[$field];
             if ($request->exists($field)) {
-                AcnMember::createUserRole($memberNum, $nameInDatabase);
+                AcnWorking::createUserRole($memberNum, $nameInDatabase);
             } else {
-                AcnMember::deleteUserRole($memberNum, $nameInDatabase);
+                AcnWorking::deleteUserRole($memberNum, $nameInDatabase);
             }
         }
         return redirect(route("managerPanel"));
@@ -34,14 +37,14 @@ class AcnMemberController extends Controller
      * Return a view to modify the profile of a member
      *
      * @param [int] $mem_num_member
-     * @return void
+     * @return view
      */
     public static function modifyForm($mem_num_member){
 
         $member = AcnMember::getMemberInfo($mem_num_member);
         $pricing = AcnMember::getPrincing();
-        $prerog = AcnMember::getPrerog();
-        $prerogMemLvl = AcnMember::getMemberPrerog($mem_num_member);
+        $prerog = AcnPrerogative::getPrerog();
+        $prerogMemLvl = AcnPrerogative::getMemberPrerog($mem_num_member);
 
         return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
     }
@@ -50,7 +53,7 @@ class AcnMemberController extends Controller
      * Check if the modifications are legal and update the data if they are, else go on an Exception page
      *
      * @param Request $request
-     * @return void
+     * @return mixed
      */
     static public function modify(Request $request) {
 
@@ -60,8 +63,8 @@ class AcnMemberController extends Controller
         $strErr = "";
 
         $member = AcnMember::getMemberInfo($request->member_num);
-        $prerogMemLvl = AcnMember::getMemberPrerog($request->member_num);
-        $preroglabel = AcnMember::getPrerogLabel($request->member_prerog);
+        $prerogMemLvl = AcnPrerogative::getMemberPrerog($request->member_num);
+        $preroglabel = AcnPrerogative::getPrerogLabel($request->member_prerog);
 
 
         //Checks if the secretary attempt to dicrease the number of remaining dive.
@@ -94,18 +97,18 @@ class AcnMemberController extends Controller
             //search for every prerogation a member don't have and are below the prerogation selected, meant to add them later (for the 3 request below)
         if($request->pricing_type == 'adulte'){
             if($request->member_prerog  == 13){
-                $pre = AcnMember::getAllPRevPrerogativeButE1($request->member_num,$request->member_prerog);
+                $pre = AcnRanked::getAllPRevPrerogativeButE1($request->member_num,$request->member_prerog);
 
             }else{
-                $pre = AcnMember::getAllPRevPrerogativeNotE1($request->member_num,$request->member_prerog);
+                $pre = AcnRanked::getAllPRevPrerogativeNotE1($request->member_num,$request->member_prerog);
             }
         }else{
             //same but for children
-            $pre = AcnMember::getAllPRevPrerogativeChildren($request -> member_num,$request->member_prerog);
+            $pre = AcnRanked::getAllPRevPrerogativeChildren($request -> member_num,$request->member_prerog);
         }
 
         //insert All the prerogative selected
-        AcnMember::insertAllPrerogative($pre,$request->member_num);
+        AcnRanked::insertAllPrerogative($pre,$request->member_num);
 
             return redirect('members');
         }

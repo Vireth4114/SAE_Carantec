@@ -31,7 +31,12 @@ class AcnSite extends Model
      */
     public $timestamps = false;
 
-
+    /**
+     * return the site
+     * @param int $num_site -> the id of the specified site
+     * 
+     * @return [data_Site] -> the site
+     */
     public static function getSite($num_site){
         $site = DB::table('ACN_SITE')
         -> select('SIT_NAME')

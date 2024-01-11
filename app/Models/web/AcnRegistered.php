@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class AcnRegistered extends Model
 {
+    /**
+     * insert data in to add a member to a dive
+     * @param int $numMember -> the id of the member
+     * @param int $numDive -> the id of the dive
+     */
     static public function insert($numMember, $numDive) {
         DB::table('ACN_REGISTERED')->insert([
             'NUM_DIVE' => $numDive,
@@ -15,6 +20,11 @@ class AcnRegistered extends Model
         ]);
     }
 
+    /**
+     * delete data to remove a member from a dive
+     * @param int $numMember -> the id of the member
+     * @param int $numDive -> the id of the dive
+     */
     static public function deleteData($numMember, $numDive) {
         DB::table('ACN_REGISTERED')
             ->where ('NUM_MEMBER', $numMember)

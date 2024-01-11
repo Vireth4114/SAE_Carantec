@@ -31,6 +31,12 @@ class AcnBoat extends Model
      */
     public $timestamps = false;
 
+    /**
+     * return the specified Boat
+     * @param int $num_boat
+     * 
+     * @return [data_Boat]
+     */
     public static function getBoat($num_boat){
         $boat = DB::table('ACN_BOAT')
         -> select('BOA_NAME')
@@ -39,6 +45,11 @@ class AcnBoat extends Model
         return $boat;
     }
 
+    /**
+     * return all the boats that aren't deleted
+     * 
+     * @return [list[data_Boat]] -> a list of boat
+     */
     static public function getAllBoats() {
         return AcnBoat::where("BOA_DELETED", "=", 0)->get();
     }

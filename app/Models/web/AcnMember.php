@@ -65,36 +65,42 @@ class AcnMember extends Authenticatable
         return $this->belongsToMany(AcnDives::class, "ACN_REGISTERED", "NUM_MEMBER", "NUM_DIVE");
     }
 
+    /**
+     * Return the hashed password of the member
+     * 
+     * @return [String] -> hashed Password
+     */
     public function getAuthPassword()
     {
         return $this->MEM_PASSWORD;
 
     }
 
+    /**
+     * return the member
+     * @param int $mem_num -> the specified member's id
+     * 
+     * @return [data_Member] -> the member
+     */
     public static function getMemberInfo($mem_num){
         return DB::table("ACN_MEMBER")->selectRaw('*')->where('MEM_NUM_MEMBER','=',$mem_num)->get();
     }
 
+    /**
+     * returns all the pricings
+     * 
+     * @return [list[String]] -> the pricings
+     */
     public static function getPrincing(){
         return DB::table("ACN_MEMBER")->select('MEM_PRICING')->distinct()->get();
     }
 
-    public static function getPrerog(){
-        return DB::table('ACN_PREROGATIVE')->select('ACN_PREROGATIVE.*')->get();
-    }
-
-    public static function getPrerogLabel($prerogative){
-        return DB::table('ACN_PREROGATIVE')->select('PRE_LEVEL')->where('PRE_PRIORITY','=',$prerogative)->get();
-    }
-
-    public static function getMemberPrerog($member_num){
-        return DB::table('ACN_PREROGATIVE')
-        ->select('ACN_PREROGATIVE.*')
-        ->join('ACN_RANKED', 'ACN_PREROGATIVE.PRE_NUM_PREROG','=','ACN_RANKED.NUM_PREROG')
-        ->where('NUM_MEMBER','=',$member_num)
-        ->max('ACN_RANKED.NUM_PREROG');
-    }
-
+    /**
+     * check is the user is a Secretary
+     * @param int $memberNum -> the specified user
+     * 
+     * @return boolean -> True if the user is a Secretary, false otherwise
+     */
     static public function isUserSecretary($memberNum) {
         $isSecretary = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
@@ -104,6 +110,12 @@ class AcnMember extends Authenticatable
         return $isSecretary;
     }
 
+    /**
+     * check is the user is a Manager
+     * @param int $memberNum -> the specified user
+     * 
+     * @return boolean -> True if the user is a Manager, false otherwise
+     */
     static public function isUserManager($memberNum) {
         $isUserManager = DB::table("ACN_MEMBER")->join("ACN_WORKING", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_WORKING.NUM_MEMBER")
         ->join("ACN_FUNCTION", "ACN_FUNCTION.FUN_NUM_FUNCTION", "=", "ACN_WORKING.NUM_FUNCTION")
@@ -113,6 +125,12 @@ class AcnMember extends Authenticatable
         return $isUserManager;
     }
 
+    /**
+     * check is the user is a Director
+     * @param int $memberNum -> the specified user
+     * 
+     * @return boolean -> True if the user is a Director, false otherwise
+     */
     static public function isUserDirector($memberNum) {
         $isUserDirector = DB::table("ACN_MEMBER")->join("ACN_RANKED", "ACN_MEMBER.MEM_NUM_MEMBER", "=", "ACN_RANKED.NUM_MEMBER")
         ->join("ACN_PREROGATIVE", "ACN_PREROGATIVE.PRE_NUM_PREROG", "=", "ACN_RANKED.NUM_PREROG")
@@ -122,6 +140,11 @@ class AcnMember extends Authenticatable
         return $isUserDirector;
     }
 
+    /**
+     * return all the users that are eligible to be director
+     * 
+     * @return [list[data_Member]] -> all the members that can be director
+     */
     static public function getAllLeader(){
        return DB::table('ACN_MEMBER')
             -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
@@ -133,6 +156,11 @@ class AcnMember extends Authenticatable
             -> get();
     }
 
+    /**
+     * return all the users that are pilots
+     * 
+     * @return [list[data_Member]] -> all the members that are pilots
+     */
     static public function getAllPilots(){
         return DB::table('ACN_MEMBER')
         -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
@@ -143,14 +171,25 @@ class AcnMember extends Authenticatable
         -> get();
     }
 
-    static public function getMember($num_member){
+    /**
+     * return the member
+     * @param int $memberNum -> the id of the specified member
+     * 
+     * @return [data_Member] -> the specified members
+     */
+    static public function getMember($memberNum){
         return DB::table('ACN_MEMBER')
              -> select('MEM_NAME', 'MEM_SURNAME')
-             -> where('MEM_NUM_MEMBER', '=' , $num_member)
+             -> where('MEM_NUM_MEMBER', '=' , $memberNum)
              -> get();
 
     }
 
+    /**
+     * return all the users that are security
+     * 
+     * @return [list[data_Member]] -> all the members that are surface security
+     */
     static public function getAllSecurity() {
         return DB::table('ACN_MEMBER')
         -> select('MEM_NUM_MEMBER', 'MEM_NAME', 'MEM_SURNAME')
@@ -161,54 +200,25 @@ class AcnMember extends Authenticatable
         -> get();
     }
 
-    static public function getMemberMaxPriority($numMember) {
+    /**
+     * return the max priority of the member's prerogatives
+     * @param int $memberNum -> the id of the specified member
+     * 
+     * @return int -> the maximum pre_priority of the member
+     */
+    static public function getMemberMaxPriority($memberNum) {
         return DB::table('ACN_MEMBER')
             -> select('PRE_PRIORITY')
             -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
             -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('MEM_NUM_MEMBER', $numMember)
+            -> where('MEM_NUM_MEMBER', $memberNum)
             -> max('PRE_PRIORITY');
     }
 
-    static public function getAllPRevPrerogativeNotE1($member_num,$member_prerogative){
-        return DB::table('ACN_RANKED')
-                ->select('NUM_PREROG')->distinct()
-                ->where('NUM_PREROG', '<=' , $member_prerogative)
-                ->where('NUM_PREROG', '>' , 4)
-                ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
-                ->select('NUM_PREROG')
-                ->where('NUM_MEMBER', '=', $member_num))
-                ->get();
-    }
-
-    static public function getAllPRevPrerogativeButE1($member_num,$member_prerogative){
-        return DB::table('ACN_RANKED')
-        ->select('NUM_PREROG')->distinct()
-        ->where('NUM_PREROG', '<=' , 8)
-        ->where('NUM_PREROG', '>' , 4)
-        ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
-        ->select('NUM_PREROG')
-        ->where('NUM_MEMBER', '=', $member_num))
-        ->get();
-    }
-
-    static public function getAllPRevPrerogativeChildren($member_num,$member_prerogative){
-        return DB::table('ACN_RANKED')
-        ->select('NUM_PREROG')->distinct()
-        ->where('NUM_PREROG', '<=' , $member_prerogative)
-        ->where('NUM_PREROG', '<' , 4)
-        ->whereNotIn('NUM_PREROG',DB::table('ACN_RANKED')
-        ->select('NUM_PREROG')
-        ->where('NUM_MEMBER', '=', $member_num))
-        ->get();
-    }
-
-    static public function insertAllPrerogative($pre,$member_num){
-        foreach($pre as $prerogative){
-            DB::table('ACN_RANKED')->where('NUM_MEMBER','=',$member_num)->insert(['NUM_MEMBER'=>$member_num,'NUM_PREROG'=>$prerogative->NUM_PREROG]);
-        }
-    }
-
+    /**
+     * update the data of a user
+     * @param mixed $request -> the request with all the data to update a member
+     */
     static public function updateMemberInfos($request){
         DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $request -> member_num)
             ->update([
@@ -218,15 +228,5 @@ class AcnMember extends Authenticatable
                 'MEM_PRICING' => $request -> pricing_type,
                 'MEM_REMAINING_DIVES' => $request -> remaining_dive,
             ]);
-    }
-
-    static public function deleteUserRole($memberNum, $roleName) {
-        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
-        DB::table("ACN_WORKING")->where("NUM_FUNCTION", $roleId)->where("NUM_MEMBER", $memberNum)->delete();
-    }
-
-    static public function createUserRole($memberNum, $roleName) {
-        $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
-        DB::table("ACN_WORKING")->insert(["NUM_FUNCTIOn" =>$roleId, "NUM_MEMBER" => $memberNum]);
     }
 }
