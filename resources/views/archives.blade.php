@@ -17,18 +17,15 @@
         <td>Diecteur de plongée </td>
         <td>Sécurité de surface</td>
         <td>Pilote </td>
-        <td>Niveau </td>
     </tr>
-    {{dd($archives)}}
     @foreach($archives as $archive)<tr>
-        <td>{{$archive->MEM_NUM_MEMBER}}</td>
-        <td>{{$archive->MEM_NUM_LICENCE}} </td>
-        <td>{{$archive->MEM_SURNAME}} </td>
-        <td>{{$archive->MEM_NAME}} </td>
-        <td>{{$archive->PRE_LEVEL }}</td>
-        <td>{{$archive->MEM_DATE_CERTIF}} </td>
-        <td>{{$archive->MEM_PRICING}} </td>
-        <td>{{$archive->MEM_REMAINING_DIVES}}</td>
+        <td>{{$archive->DIV_NUM_DIVE}}</td>
+        <td>{{Carbon::parse($archive->DIV_DATE)->locale('fr_FR')->translatedFormat('l j F Y')}} </td>
+        <td>{{$archive->BOAT_NAME}} </td>
+        <td>{{$archive->LEVEL}} </td>
+        <td>{{$archive->LEADER }}</td>
+        <td>{{$archive->SECURITY}} </td>
+        <td>{{$archive->PILOT}} </td>
     </tr>
     @endforeach
 </table>
