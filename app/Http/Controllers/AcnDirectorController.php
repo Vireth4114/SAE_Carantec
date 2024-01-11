@@ -34,9 +34,9 @@ class AcnDirectorController extends Controller
         }
         $registeredMembers = $dive->divers;
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
-        
+
         $maxReached = $registeredMembers->where("MEM_NUM_MEMBER", '!=', $dive['DIV_NUM_MEMBER_LEAD'])->count()==$dive['DIV_MAX_REGISTERED'];
-        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered, 
+        return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered,
         "maxReached" => $maxReached, 'levels' => $levels]);
 
     }
@@ -96,9 +96,9 @@ class AcnDirectorController extends Controller
 
         $min_divers = $dive['DIV_MIN_REGISTERED'];
         $max_divers = $dive['DIV_MAX_REGISTERED'];
-        
-        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period, 
-        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers, 
+
+        return view('director/diveInformation', ['members' => $members, 'dive' => $dive, 'site' => $site, 'period' => $period,
+        'security' => $selectedSecurity, 'lead' => $selectedLead, 'pilot' => $selectedPilot, 'min_divers' => $min_divers,
         'max_divers' => $max_divers, 'nbMembers' => $nbMembers, 'levels' => $levels, 'updatable' => $updatable]);
     }
 

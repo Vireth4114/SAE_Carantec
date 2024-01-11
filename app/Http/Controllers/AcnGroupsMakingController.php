@@ -161,7 +161,7 @@ class AcnGroupsMakingController extends Controller
                                 DB::update('update ACN_REGISTERED set NUM_GROUPS='.$group->NUM_GROUPS.' where NUM_DIVE='.$dive.' and NUM_MEMBER='.$member);
                                 if ($rank <= 2) {
                                     if (sizeof($supervisors) == 0) {
-                                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits");
+                                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits",$dive);
                                     }
                                     $supervisor = array_pop($supervisors);
                                     if (($key = array_search($supervisor, $supervisors2)) !== false) {
@@ -169,7 +169,7 @@ class AcnGroupsMakingController extends Controller
                                     }
                                 } else {
                                     if (sizeof($supervisors2) == 0) {
-                                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits");
+                                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits",$dive);
                                     }
                                     $supervisor = array_pop($supervisors2);
                                     if (($key = array_search($supervisor, $supervisors)) !== false) {
@@ -205,7 +205,7 @@ class AcnGroupsMakingController extends Controller
                 if ($rank <= 4 || $rank == 5 || $rank == 7 || $rank == 10) {
                     if ($rank <= 2) {
                         if (sizeof($supervisors) == 0) {
-                            return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits");
+                            return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits",$dive);
                         }
                         $supervisor = array_pop($supervisors);
                         if (($key = array_search($supervisor, $supervisors2)) !== false) {
@@ -213,7 +213,7 @@ class AcnGroupsMakingController extends Controller
                         }
                     } else {
                         if (sizeof($supervisors2) == 0) {
-                            return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits");
+                            return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits",$dive);
                         }
                         $supervisor = array_pop($supervisors2);
                         if (($key = array_search($supervisor, $supervisors)) !== false) {
@@ -246,7 +246,7 @@ class AcnGroupsMakingController extends Controller
                 -> get()[0]->COUNT_MEMBER;
                 if ($count_member == 1) {
                     if (sizeof($supervisors2) == 0) {
-                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits");
+                        return AcnGroupsMakingController::getAll("Il n'y a pas assez d'encadrants inscrits",$dive);
                     }
                     $supervisor = array_pop($supervisors2);
                     if (($key = array_search($supervisor, $supervisors)) !== false) {
@@ -261,11 +261,10 @@ class AcnGroupsMakingController extends Controller
                 }
             }
         }
-        return AcnGroupsMakingController::getAll("");
+        return AcnGroupsMakingController::getAll("",$dive);
     }
 
-    static public function getAll($message) {
-        $dive = 3;
+    static public function getAll($message,$dive) {
 
         $groups = DB::table('ACN_REGISTERED')
         -> select('NUM_GROUPS')
@@ -337,7 +336,7 @@ class AcnGroupsMakingController extends Controller
         }
         DB::update('update ACN_REGISTERED set NUM_GROUPS='.$request->group.' where NUM_DIVE='.$request->dive.' and NUM_MEMBER='.$request->member);
 
-        return AcnGroupsMakingController::getAll("");
+        return AcnGroupsMakingController::getAll("",$request -> dive);
     }
 
     static public function addGroup(Request $request) {
@@ -354,7 +353,7 @@ class AcnGroupsMakingController extends Controller
 
     static public function removeMember(Request $request) {
         DB::update('update ACN_REGISTERED set NUM_GROUPS=null where NUM_DIVE='.$request->dive.' and NUM_MEMBER='.$request->member);
-        return AcnGroupsMakingController::getAll("");
+        return AcnGroupsMakingController::getAll("",$request -> dive);
     }
 
     static public function validateButton($dive) {
@@ -420,6 +419,6 @@ class AcnGroupsMakingController extends Controller
             $numGroup++;
         }
 
-        return AcnGroupsMakingController::getAll($message);
+        return AcnGroupsMakingController::getAll($message,$dive);
     }
 }

@@ -191,8 +191,8 @@ Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->n
 
 Route::post('diveModifyForm', [AcnDiveModifyController::class, 'modify'])->name('diveModifyForm');
 
-Route::get('/groupsMaking', function () {
-    return AcnGroupsMakingController::getAll("");
+Route::get('/groupsMaking/{dive}', function ($dive) {
+    return AcnGroupsMakingController::getAll("",$dive);
 })->middleware(['auth'])->middleware('isDirector')->name("groupsMaking");
 
 Route::get('validateGroup/{diveId}', [AcnGroupsMakingController::class, 'validateButton'])->middleware(['auth'])->middleware('isDirector')->name("validateGroup");

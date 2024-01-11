@@ -15,7 +15,7 @@
 </div>
 
 <div>
-    @if(!$updatable) 
+    @if(!$updatable)
         <a href={{ route('diveModify', $dive['DIV_NUM_DIVE'] ) }}><button>Modifier la plongée</button></a>
     @else
         <p>Vous ne pourrez modifier la plongée que le jour où elle aura lieu.</p>
@@ -62,5 +62,6 @@
 <div>
     <p>Ajouter un adhérent ou vous inscrire : </p>
     <a href="{{ route('addMember', $dive['DIV_NUM_DIVE'] ) }}"><img id="logoAddMember" src="{{URL::asset('images/plus.png')}}" alt="Logo plus"></a>
+    <a href={{route('groupsMaking',$dive)}}>Voir les palanquées</a>
 </div>
 @endsection
