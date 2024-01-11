@@ -37,7 +37,7 @@ Route::get('/diveCreation', function () {
 })->middleware(['auth'])->middleware('isManager')->name("diveCreation");
 
 Route::get('/safetyDataSheet', function () {
-     return AcnSafetyDataSheetController::getSafetySheetGroups(3);
+     return AcnSafetyDataSheetController::getSafetySheetDives(1);
 })->middleware(['auth'])->middleware('isDirector')->name("safetyDataSheet");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");

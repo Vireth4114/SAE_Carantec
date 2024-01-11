@@ -3,16 +3,12 @@
 @section('content')
     @php
         setlocale(LC_TIME, ['fr', 'fra', 'fr_FR']);
-        $timestamp = strtotime(date_Format($dives->DIV_DATE, 'l j F Y'));
+        $timestamp = strtotime($dives->DIV_DATE);
         $date = strftime('%A %d %B %Y', $timestamp);
         $startTimestamp = strtotime($period->PER_START_TIME);
         $startTime = strftime('%H', $startTimestamp);
         $endTimestamp = strtotime($period->PER_END_TIME);
         $endTime = strftime('%H', $endTimestamp);
-        $immertionTimestamp = strtotime($palanquing->GRP_TIME_OF_IMMERSION);
-        $immertionTime = strftime('%H:%M', $immertionTimestamp);
-        $emertionTimestamp = strtotime($palanquing->GRP_TIME_OF_EMERSION);
-        $emertionTime = strftime('%H:%M', $emertionTimestamp);
     @endphp
 
 <div id="safetySheet">
@@ -35,10 +31,7 @@
             <td colspan="1">Site de plongée</td>
             <td colspan="1">{{$site->SIT_NAME}}</td>
         </tr>
-        <tr>
-            <td class="firstRow">Effectif</td>
-            <td class="secondRow">{{$registered->REGISTERED}}</td>
-        </tr>
+        
     </table>
 
     <table id="secondTable">
@@ -59,49 +52,68 @@
             <td class="secondRow"></td>
         </tr>
     </table>
-
-    <table id="palanquing">
-        <thead>
-            <tr>
-                <th class="headerText" colspan="6">PALANQUEE N° {{$palanquing->GRP_NUM_GROUPS}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="bold">
-                <td>Heure de départ</td>
-                <td>{{$immertionTime}}</td>
-                <td>Heure de retour</td>
-                <td colspan="3">{{$emertionTime}}</td>
-            </tr>
-            <tr>
-                <td>Temps Prévu</td>
-                <td>{{$palanquing->GRP_EXPECTED_DURATION}} min</td>
-                <td>Profondeur Prévu</td>
-                <td colspan="3">{{$palanquing->GRP_EXPECTED_DEPTH}} m</td>
-            </tr>
-            <tr>
-                <td>Temps Réalisé</td>
-                <td>{{$palanquing->GRP_DIVING_TIME}} min</td>
-                <td>Profondeur Réalisé</td>
-                <td colspan="3">{{$palanquing->GRP_REACHED_DEPTH}} m</td>
-            </tr>
-            <tr>
-                <td class="headerText bold" colspan="3">Nom Prénom</td>
-                <td>Aptitudes</td>
-                <td class="bold">Formation vers</td>
-                <td class="bold">Fonction</td>
-            </tr>
-            @foreach ($members as $member)
-            <tr>
-                <td colspan="3">
-                    {{$member->MEM_SURNAME.' '.$member->MEM_NAME}}
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-@endsection
+    @php
+        $id = 1;
+        $increment = 0;
+    @endphp
+    @foreach ($groups as $group)
+        
+    
+        
+        <table class="palanquing">
+            <thead>
+                <tr>
+                    <th class="headerText" colspan="6">PALANQUEE N° {{$id++}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @php
+                    $info = $groupInfo[$increment];
+                    $immertionTimestamp = strtotime($info->GRP_TIME_OF_IMMERSION);
+                    $immertionTime = strftime('%H:%M', $immertionTimestamp);
+                    $emertionTimestamp = strtotime($info->GRP_TIME_OF_EMERSION);
+                    $emertionTime = strftime('%H:%M', $emertionTimestamp);  
+                    @endphp   
+                        <tr class="bold">
+                            <td>Heure de départ</td>
+                            <td>{{$immertionTime}}</td>
+                            <td>Heure de retour</td>
+                            <td colspan="3">{{$emertionTime}}</td>
+                        </tr>
+                        <tr>
+                            <td>Temps Prévu</td>
+                            <td>{{$info->GRP_EXPECTED_DURATION}} min</td>
+                            <td>Profondeur Prévu</td>
+                            <td colspan="3">{{$info->GRP_EXPECTED_DEPTH}} m</td>
+                        </tr>
+                        <tr>
+                            <td>Temps Réalisé</td>
+                            <td>{{$info->GRP_DIVING_TIME}} min</td>
+                            <td>Profondeur Réalisé</td>
+                            <td colspan="3">{{$info->GRP_REACHED_DEPTH}} m</td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="headerText bold" colspan="3">Nom Prénom</td>
+                            <td>Aptitudes</td>
+                            <td class="bold">Formation vers</td>
+                            <td class="bold">Fonction</td>
+                        </tr>
+                        @foreach ($group as $member)
+                        <tr>
+                            <td colspan="3">
+                                {{$member->MEM_SURNAME.' '.$member->MEM_NAME}}
+                            </td>
+                            <td>{{$member->level}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @php
+                    $increment++;
+                @endphp
+        @endforeach
+    </div>
+    @endsection

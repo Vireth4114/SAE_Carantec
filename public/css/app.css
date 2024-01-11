@@ -32,7 +32,7 @@ a {
     color: white;
 }
 
-.center-title{
+.center-title {
     text-align: center;
     margin-top: 50px;
 }
@@ -55,22 +55,24 @@ a {
     margin: 10px;
 }
 
-#palanquing {
+.palanquing {
     border-collapse: collapse;
     width: 1000px;
     margin: 10px;
 }
 
-#firstTable td, #secondTable td, #palanquing td {
+#firstTable td,
+#secondTable td,
+.palanquing td {
     border: solid black 1px;
     padding: 3px;
 }
 
-#palanquing thead {
+.palanquing thead {
     background-color: rgb(181, 178, 178);
 }
 
-#palanquing th {
+.palanquing th {
     text-align: left;
 }
 
