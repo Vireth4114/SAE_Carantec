@@ -216,5 +216,13 @@ class AcnMemberController extends Controller
 
     }
 
+    static public function secretary() {
+        $members = AcnMember::all();
+        foreach($members as $member) {
+            $member -> PRE_LEVEL = AcnPrerogative::find(AcnPrerogative::getMemberPrerog($member -> MEM_NUM_MEMBER)) -> PRE_LEVEL;
+        }
+        return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL, "members" => $members]);
+    }
+
 
 }

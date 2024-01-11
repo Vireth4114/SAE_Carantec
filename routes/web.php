@@ -141,7 +141,7 @@ Route::post('/panel/director/removeMemberFromDiveForm', function (Request $reque
 })->name("removeMemberFromDiveForm");
 
 Route::get('/members', function () {
-    return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL]);
+    return AcnMemberController::secretary();
 })->middleware(['auth'])->middleware('isManagerOrSecretary')->name("members");
 
 Route::get('/members/registration', function () {
