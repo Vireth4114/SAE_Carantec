@@ -21,4 +21,5 @@ $members = AcnMember::all();
             <p>Type d'abonnement : {{$member->MEM_PRICING}}</p>
             <p>Nombre de plongée restante : {{$member->MEM_REMAINING_DIVES}}</p>
             <p>Statut : {{$member->MEM_STATUS}}</p>
+            <a href={{route('profil_modification')}}>Modifier mes informations</a>
 @endsection

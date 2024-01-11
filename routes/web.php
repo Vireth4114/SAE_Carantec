@@ -144,11 +144,17 @@ Route::get('/members/registration', function () {
     return AcnMemberController::registerForm();
 })->middleware(['auth'])->middleware('isSecretary')->name("member_registration");
 
+Route::post('member/registration/validation', [AcnMemberController::class, 'register'])->name('register_member');
+
 Route::get('/profil', function () {
     return AcnMemberController::getProfilePage();
 })->middleware(['auth'])->name("profil_page");
 
-Route::post('member/registration/validation', [AcnMemberController::class, 'register'])->name('register_member');
+Route::get('/profil/modification', function () {
+    return AcnMemberController::modifyProfil();
+})->name("profil_modification");
+
+Route::post('/profil/modification/validation', [AcnMemberController::class, 'profilUpdate'])->name('modify_profil');
 
 Route::get('/members/modification/{mem_num_member}', function ($mem_num_member) {
     return AcnMemberController::modifyForm($mem_num_member);
