@@ -38,7 +38,7 @@
                 </div>
 
                 <button id='buttonLogIn' class="btn btn-primary ml-3">
-                    Log in
+                    Se connecter
                 </button>
             </form>
         </x-auth-card>

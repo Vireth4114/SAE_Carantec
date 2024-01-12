@@ -140,10 +140,9 @@ nav {
 
 #buttonLogIn {
     margin: auto;
-    font-size: 1em;
-    width: 20%;
-    border-radius: 100px;
+    width: 40%;
     padding: 15px;
+    border-radius: 20px;
 }
 
 .profilePicture {
