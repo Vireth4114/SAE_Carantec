@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\web\AcnMember;
 
 
+use App\Http\Controllers\AcnSafetyDataSheetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -193,6 +194,9 @@ Route::get('/panel/manager/managerArchives', function () {
     return AcnDivesController::getAllArchives();
 })->middleware(['auth'])->middleware('isManager')->name("archives");
 
+Route::get('/safetyDataSheet', function () {
+     return AcnSafetyDataSheetController::getSafetySheetDives(1);
+})->middleware(['auth'])->middleware('isDirector')->name("safetyDataSheet");
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
