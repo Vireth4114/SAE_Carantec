@@ -92,9 +92,9 @@ class AcnMemberController extends Controller
     public static function registerForm(){
 
         $pricing = AcnMember::getPrincing();
-        $prerog = AcnPrerogative::getPrerog();
+        $prerogations = AcnPrerogative::all();
 
-        return view('members_registration',["pricing" => $pricing,"prerogation"=>$prerog]);
+        return view('members_registration',["pricing" => $pricing,"prerogations"=>$prerogations]);
     }
 
     /**
@@ -176,11 +176,11 @@ class AcnMemberController extends Controller
 
         if ($request->pricing_type == 'enfant' && $request->member_prerog > 4) {
             $err = true;
-            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel.";";
         }
         if ($request->pricing_type == 'adulte' && $request->member_prerog <= 4 ) {
             $err = true;
-            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel.";";
         }
 
         if ($err) {

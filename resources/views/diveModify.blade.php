@@ -42,7 +42,7 @@
                 @endif
                 @foreach ($boats as $boat)
                     @if($boat->BOA_NUM_BOAT == $dive->DIV_NUM_BOAT)
-                        <option selected value='{{$boat->BOA_NUM_BOAT}}'>{{$boat->BOA_NAME}}</option>
+                        <option selected value='{{$boat->BOA_NUM_BOAT}}'>{{$boat->BOA_NAME." (".$boat->BOA_CAPACITY.")"}}</option>
                     @else
                         <option value='{{$boat->BOA_NUM_BOAT}}'>{{$boat->BOA_NAME}}</option>
                     @endif

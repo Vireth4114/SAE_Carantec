@@ -31,7 +31,7 @@
             <select name="boat" id="boat">
             <option value="">--Choisir un bateau--</option>
             @foreach ($boats as $boat)
-                <option value='{{$boat->BOA_NUM_BOAT}}'>{{$boat->BOA_NAME}}</option>
+                <option value='{{$boat->BOA_NUM_BOAT}}'>{{$boat->BOA_NAME." (".$boat->BOA_CAPACITY.")"}}</option>
             @endforeach
             </select>
         </div>

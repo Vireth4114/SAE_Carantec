@@ -46,8 +46,8 @@
             <div class='createFields'>
                 <label>Prérogative :</label>
                     <select name="member_prerog" id="member_prerog">
-                    @foreach ($prerogation as $prerog)
-                            <option value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
+                    @foreach ($prerogations as $prerogation)
+                            <option value='{{$prerogation->PRE_PRIORITY}}'>{{$prerogation->PRE_LEVEL}}</option>
                     @endforeach
                     </select>
             </div>
