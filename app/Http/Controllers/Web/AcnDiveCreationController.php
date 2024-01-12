@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+use App\Http\Controllers\Controller;
 
 use App\Models\web\AcnBoat;
 use App\Models\web\AcnDives;
@@ -11,8 +12,8 @@ use App\Models\web\AcnFunction;
 use App\Models\web\AcnPrerogative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\AcnDivesController;
-use App\Http\Controllers\AcnBoatController;
+use App\Http\Controllers\Web\AcnDivesController;
+use App\Http\Controllers\Web\AcnBoatController;
 use Carbon\Carbon;
 
 class AcnDiveCreationController extends Controller
