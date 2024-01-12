@@ -283,4 +283,11 @@ class AcnDives extends Model
             ->orderBy('DIV_DATE', 'desc')
             ->get();
     }
+    
+    public static function getArchives() {
+        return DB::table('ACN_DIVES')
+            -> where('DIV_DATE', '<', Carbon::now()->subYear())
+            -> orderBy('DIV_DATE')
+            -> get();
+    }
 }

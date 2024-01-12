@@ -207,5 +207,19 @@ class AcnDivesController extends Controller
         AcnDives::find($diveId)->delete();
         return redirect()->route('dives');
     }
-
+    
+    public static function getAllArchives() {
+        $archives = AcnDives::getArchives();
+        foreach($archives as $archive) {
+            $archive -> BOAT_NAME = AcnBoat::find($archive -> DIV_NUM_BOAT)->BOA_NAME;
+            $archive -> LEVEL = AcnPrerogative::find($archive -> DIV_NUM_BOAT) -> PRE_LEVEL;
+            $lead = AcnMember::find($archive -> DIV_NUM_MEMBER_LEAD);
+            $security = AcnMember::find($archive -> DIV_NUM_MEMBER_SECURED);
+            $pilot = AcnMember::find($archive -> DIV_NUM_MEMBER_PILOTING);
+            $archive -> LEADER = ($lead -> MEM_NAME." ". $lead -> MEM_SURNAME);
+            $archive -> PILOT = ($security -> MEM_NAME." ". $security -> MEM_SURNAME);
+            $archive -> SECURITY = ($pilot -> MEM_NAME." ". $pilot -> MEM_SURNAME);
+        }
+        return view('archives', ['archives' => $archives]);
+    }
 }
