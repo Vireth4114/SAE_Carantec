@@ -8,15 +8,15 @@
 
 <div id='directorDivesSection' class='mainSection'>
     @if ($dives->count()==0)
-        <p>Vous n'êtes le directeur pour aucune plongée</p>
+        <p>Vous êtes le directeur d'aucune plongée</p>
     @else
         <h3>Vos plongées :</h3>
         <table id='directorDives'>
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>heure de début</th>
-                    <th>heure de fin</th>
+                    <th>Heure de début</th>
+                    <th>Heure de fin</th>
                     <th>Site</th>
                     <th>Niveau</th>
                 </tr>

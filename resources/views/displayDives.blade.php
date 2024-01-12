@@ -46,7 +46,7 @@
                             >
                             {{ $date }}
                             de {{ $heureStart }}h à {{ $heureFin }}h <br/>
-                            Site prevu : {{ $dive->SIT_NAME }}
+                            Site prévu : {{ $dive->SIT_NAME }}
                             ({{ $dive->SIT_DESCRIPTION }}) <br/>
                             Niveau : {{$dive->PRE_LABEL}}
                             <i class="fa-solid fa-magnifying-glass"></i>

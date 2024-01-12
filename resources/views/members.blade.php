@@ -13,7 +13,7 @@
                 <td>Date de certification </td>
                 <td>Type d'abonnement </td>
                 <td>Date de dernier renouvellement d'abonnement </td>
-                <td>Nombre de plongée restante </td>
+                <td>Nombre de plongées restantes </td>
                 <td>Statut </td>
             </tr>
 

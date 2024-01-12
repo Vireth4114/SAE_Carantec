@@ -14,7 +14,7 @@
         <td>Date de la plongée</td>
         <td>Nom du bateau </td>
         <td>Niveau de la plongée </td>
-        <td>Diecteur de plongée </td>
+        <td>Directeur de plongée </td>
         <td>Sécurité de surface</td>
         <td>Pilote </td>
     </tr>

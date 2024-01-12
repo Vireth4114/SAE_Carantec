@@ -1,7 +1,7 @@
 @extends('template')
 @section('content')
 
-<title>Modification d'un créneau</title>
+<title>Modification d'un adhérent</title>
 </head>
 <body>
     <form id='profilModifForm' action="{{route("modify_profil")}}" method="POST">

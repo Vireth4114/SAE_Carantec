@@ -28,7 +28,7 @@
         </form>
     @endif
     @if ($maxReached)
-        <p class="userError">Le nombre d'inscrit maximum a été atteint</p>
+        <p class="userError">Le nombre d'inscrits maximum a été atteint</p>
     @endif
     <table id='directorDives'>
         <thead>

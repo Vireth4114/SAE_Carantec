@@ -2,7 +2,7 @@
 @section('content')
 <section class='createSection'>
 
-<title>Modification d'un créneau</title>
+<title>Création d'un adhérent</title>
 </head>
     <body>
         <form class='createForm' action="{{route("register_member")}}" method="POST">

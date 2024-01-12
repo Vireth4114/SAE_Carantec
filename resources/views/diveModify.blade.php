@@ -13,7 +13,7 @@
             </div>
 
             <div class='fieldContainer'>
-                <label> Periode prévue (non modifiable) :</label>
+                <label> Période prévue (non modifiable) :</label>
                 <input  disabled name="period" required id="period" value={{$period->PER_LABEL}} >
             </div>
 

@@ -42,7 +42,7 @@
             </div>
 
             <div class='createFields'>
-                <label>Nombre de plongée restante :</label>
+                <label>Nombre de plongées restantes :</label>
                 <input type="number" required id="remainingDive" name="remainingDive" value={{$member->MEM_REMAINING_DIVES}} />
             </div>
 
