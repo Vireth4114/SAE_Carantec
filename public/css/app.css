@@ -378,3 +378,54 @@ nav {
     margin: auto;
     margin-top: 3vh;
 }
+
+#reportTable {
+    margin: auto;
+    margin-top: 20px;
+}
+
+#reportTable td {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#profilModifForm {
+    margin: auto;
+    margin-top: 20px;
+    width: fit-content;
+    font-size: 1.2em;
+}
+
+.profilModifField {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin-bottom: 2vh;
+}
+
+.mainSection {
+    margin: auto;
+    margin-top: 20px;
+    width: fit-content;
+    font-size: 1.2em;
+}
+
+.createSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.createFields {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 1vw;
+    margin-bottom: 2vh;
+}
+
+.createForm {
+    display: flex;
+    flex-direction: column;
+    margin: 5vh;
+}

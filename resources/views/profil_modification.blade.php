@@ -4,32 +4,37 @@
 <title>Modification d'un créneau</title>
 </head>
 <body>
-    <form action="{{route("modify_profil")}}" method="POST">
+    <form id='profilModifForm' action="{{route("modify_profil")}}" method="POST">
         @csrf
 
-        <label>Nom du membre :</label>
-        <input type="text" required id="member_name" name="member_name" value={{$member->MEM_NAME}} /><br>
+        <div class='profilModifField'>
+            <label>Prénom du membre :</label>
+            <input type="text" required id="member_name" name="member_name" value={{$member->MEM_NAME}} />
+        </div>
 
-        <label>Prénom du membre :</label>
-        <input type="text" required id="member_surname" name="member_surname" value={{$member->MEM_SURNAME}} /><br>
+        <div class='profilModifField'>
+            <label>Nom du membre :</label>
+            <input type="text" required id="member_surname" name="member_surname" value={{$member->MEM_SURNAME}} />
+        </div>
 
-        <p>Numéro de licence : {{$member->MEM_NUM_LICENCE}}</p>
+        <p>Numéro de licence : <b>{{$member->MEM_NUM_LICENCE}}</b></p>
 
-        <p>Date de certification : {{$member->MEM_DATE_CERTIF}}</p>
+        <p>Date de certification : <b>{{$member->MEM_DATE_CERTIF}}</b></p>
 
-        <p>Type d'abonnement : {{$member->MEM_PRICING}}</p>
+        <p>Type d'abonnement : <b>{{$member->MEM_PRICING}}</b></p>
 
-        <p>Nombre de plongée restante : {{$member->MEM_REMAINING_DIVES}}</p>
+        <p><b>{{$member->MEM_REMAINING_DIVES}}</b> plongées restantes</p>
 
-        <p>Prérogative :
+        <p>Prérogatives :<b>
             @foreach($prerogation as $prerog)
                 @if($prerog->PRE_NUM_PREROG <= $prerogation_member_level)
                     {{$prerog->PRE_LEVEL}},
                 @endif
             @endforeach
+            </b>
         </p>
 
-        <button type="submit">Modifier les informations</button>
+        <button class='btn btn-secondary' type="submit">Modifier les informations</button>
 
     </form>
 </body>
