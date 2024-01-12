@@ -194,7 +194,7 @@ Route::get('/panel/manager/managerArchives', function () {
     return AcnDivesController::getAllArchives();
 })->middleware(['auth'])->middleware('isManager')->name("archives");
 
-Route::get('/safetyDataSheet/{}', function ($div_num) {
+Route::get('/safetyDataSheet/{div_num}', function ($div_num) {
      return AcnSafetyDataSheetController::getSafetySheetDives($div_num);
 })->middleware(['auth'])->middleware('isDirector')->name("safetyDataSheet");
 
