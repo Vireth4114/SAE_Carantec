@@ -11,8 +11,7 @@
         $endTime = strftime('%H', $endTimestamp);
     @endphp
 <div>
-    <button name='emptySheet'>Imprimer le squelette</button>
-    <button name='dataSheet'>Imprimer la fiche de sécurité</button>
+    <button name='dataSheet' onclick="window.location.href = '/test.php'">Imprimer la fiche de sécurité</button>
 </div>
 <div id='safetySheet'>
     <table id='firstTable' class='bold'>
@@ -24,7 +23,7 @@
         <tr>
             <td colspan='1'>Date</td>
             <td colspan='1'>{{$date}} <br> {{$startTime.'h - '.$endTime.'h'}}</td>
-            <td id='imageTD' colspan='2' rowspan='4'><img id='logoSafetySheet' src='/images/logoSafetySheet.png' alt='carantec nautism' width='600px'></td>
+            <td colspan='2' rowspan='4'><img id='logoSafetySheet' src='/images/logoSafetySheet.png' alt='carantec nautism' width='600px'></td>
         </tr>
         <tr>
             <td colspan='1'>Directeur de plongée</td>
@@ -60,9 +59,6 @@
         $increment = 0;
     @endphp
     @foreach ($groups as $group)
-        
-    
-        
         <table class='palanquing'>
             <thead>
                 <tr>

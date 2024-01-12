@@ -1,25 +1,10 @@
 <?php
-require '../vendor/autoload.php';
-include 'htmlContent.php';
+$source_code = file('https://dev-sae301grp5.users.info.unicaen.fr/safetyDataSheet');
 
-// reference the Dompdf namespace
-use Dompdf\Dompdf;
-use Dompdf\Options;
-
-// instantiate and use the dompdf class
-$options = new Options();
-$options->set('isRemoteEnabled', true);
-
-$dompdf = new Dompdf($options);
-$dompdf->loadHtml($htmlContent);
-
-// (Optional) Setup the paper size and orientation
-$dompdf->setPaper('A4', 'portrait');
-
-// Render the HTML as PDF
-$dompdf->render();
-
-// Output the generated PDF to Browser
-$dompdf->stream();
+// 1. traversing through each element of the array 
+// 2.printing their subsequent HTML entities 
+foreach ($source_code as $line_number => $last_line) {
+    echo nl2br(htmlspecialchars($last_line) . "\n");
+}
 
 ?>
