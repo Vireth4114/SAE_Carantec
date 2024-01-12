@@ -182,11 +182,7 @@ class AcnMember extends Authenticatable
      * @return [data_Member] -> the specified members
      */
     static public function getMember($memberNum){
-        return DB::table('ACN_MEMBER')
-             -> select('MEM_NAME', 'MEM_SURNAME')
-             -> where('MEM_NUM_MEMBER', '=' , $memberNum)
-             -> get();
-
+        return AcnMember::find($memberNum);
     }
 
     /**

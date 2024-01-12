@@ -15,15 +15,10 @@ use Illuminate\Support\Facades\DB;
 class AcnMemberController extends Controller
 {
     /**
-     *
-     *
-     * @param number $memberNum the identification of a member
-     * @return list of the all members
+     * view of the member's pofile
+     * 
+     * @return mixed view of the member's pofile
      */
-    public static function getMember($memberNum) {
-        return AcnMember::find($memberNum);
-    }
-
     public static function getProfilePage(){
         return view("profile",["member"=>auth()->user()]);
     }

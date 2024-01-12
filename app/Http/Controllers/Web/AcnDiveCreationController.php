@@ -95,19 +95,19 @@ class AcnDiveCreationController extends Controller
 
         //Checks if the leader, the pilot and the surface security are different person.
         if (!is_null($request -> lead) && !is_null($request -> pilot) && ($request -> lead == $request -> pilot) ) {
-            $member = AcnMemberController::getMember($request -> lead);
+            $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
         }
         if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
-            $member = AcnMemberController::getMember($request -> lead);
+            $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
         }
         if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
-            $member = AcnMemberController::getMember($request -> pilot);
+            $member = AcnMember::getMember($request -> pilot);
             $err = true;
-            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
         }
 
         if ($err) {

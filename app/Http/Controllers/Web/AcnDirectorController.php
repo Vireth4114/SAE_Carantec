@@ -82,19 +82,19 @@ class AcnDirectorController extends Controller
         if (is_null($dive['DIV_NUM_MEMBER_SECURED'])) {
             $selectedSecurity = "non définit";
         } else {
-            $selectedSecurity = AcnMember::find($dive['DIV_NUM_MEMBER_SECURED']);
+            $selectedSecurity = AcnMember::getMember($dive['DIV_NUM_MEMBER_SECURED']);
             $selectedSecurity = $selectedSecurity->MEM_NAME." ".$selectedSecurity->MEM_SURNAME;
         }
         if (is_null($dive['DIV_NUM_MEMBER_LEAD'])) {
             $selectedLead = "non définit";
         } else {
-            $selectedLead = AcnMember::find($dive['DIV_NUM_MEMBER_LEAD']);
+            $selectedLead = AcnMember::getMember($dive['DIV_NUM_MEMBER_LEAD']);
             $selectedLead = $selectedLead->MEM_NAME." ".$selectedLead->MEM_SURNAME;
         }
         if (is_null($dive['DIV_NUM_MEMBER_PILOT'])) {
             $selectedPilot = "non définit";
         } else {
-            $selectedPilot = AcnMember::find($dive['DIV_NUM_MEMBER_PILOT']);
+            $selectedPilot = AcnMember::getMember($dive['DIV_NUM_MEMBER_PILOT']);
             $selectedPilot = $selectedPilot->MEM_NAME." ".$selectedPilot->MEM_SURNAME;
         }
 
