@@ -99,7 +99,7 @@ $i=0;
                                     />
                                 </div>
                             </div>
-                            <input type="submit" value="Mettre à jour le membre" />
+                            <input class='btn btn-secondary' type="submit" value="Mettre à jour le membre" />
                         </form>
                         {{ $i = $i + 1 }}
                     </div>

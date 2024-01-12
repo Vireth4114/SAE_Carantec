@@ -59,41 +59,36 @@
                             <a class='btn btn-secondary' href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
                             {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
                         @endif
+                        @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
+                        <button class='btn btn-danger' type="button" onclick="document.getElementById('confirm').style.display='inline-block'">Supprimer</button>
                     </div>
                 </p>
             </form>
-            @if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER))
-                <button onclick="document.getElementById('id01').style.display='block'">Supprimer</button>
-                <div id="id01" class="modal">
-                    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                    <form class="modal-content" action="/action_page.php">
-                        <div class="container">
-                            <h1>Surpprimer la plongée</h1>
-                            <p>êtes vous sure de vouloir supprimer cette plongée ?</p>
-                    
-                            <div class="clearfix">
-                                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn" >Annuler</button>
-                                <a href ="{{ route('diveDeletion', $dive->DIV_NUM_DIVE) }}"><button type="button" class="deletebtn">Supprimer</button></a>
-                            </div>
-                         </div>
-                    </form>
-                </div>
-                <script>
-                    // Get the modal
-                    var modal = document.getElementById('id01');
-                    
-                    // When the user clicks anywhere outside of the modal, close it
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                        }
-                    }
-                </script>
-                <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a>
-                {{-- <a href="{{route('diveModify',$dive->DIV_NUM_DIVE)}}">Modifier</a> //TO DO to delete a dive --}}
             @endif
         </div>
         @endforeach
     @endforeach
     </div>
+    <div id="confirm" class="modal">
+        <form class="modal-content" action="/action_page.php">
+            <div class="container">
+                <h1>Supprimer la plongée</h1>
+                <p>Êtes-vous sûr de vouloir supprimer cette plongée ?</p>
+
+                <div class="clearfix">
+                    <button class='btn btn-secondary' type="button" onclick="document.getElementById('confirm').style.display='none'" class="cancelbtn" >Annuler</button>
+                    <a class='btn btn-danger' href ="{{ route('diveDeletion', $dive->DIV_NUM_DIVE) }}">Supprimer</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        var modal = document.getElementById('confirm');
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 @endsection
