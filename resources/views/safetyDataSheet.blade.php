@@ -10,46 +10,49 @@
         $endTimestamp = strtotime($period->PER_END_TIME);
         $endTime = strftime('%H', $endTimestamp);
     @endphp
-
-<div id="safetySheet">
-    <table id="firstTable" class="bold">
+<div>
+    <button name='emptySheet'>Imprimer le squelette</button>
+    <button name='dataSheet'>Imprimer la fiche de sécurité</button>
+</div>
+<div id='safetySheet'>
+    <table id='firstTable' class='bold'>
         <thead>
             <tr>
-                <th colspan="4">Fiche de sécurité</th>
+                <th colspan='4'>Fiche de sécurité</th>
             </tr>
         </thead>
         <tr>
-            <td colspan="1">Date</td>
-            <td colspan="1">{{$date}} / {{$startTime.'h - '.$endTime.'h'}}</td>
-            <td id="imageTD" colspan="2" rowspan="4"><img src="/images/logoSafetySheet.png" alt="carantec nautism" width="600px"></td>
+            <td colspan='1'>Date</td>
+            <td colspan='1'>{{$date}} <br> {{$startTime.'h - '.$endTime.'h'}}</td>
+            <td id='imageTD' colspan='2' rowspan='4'><img id='logoSafetySheet' src='/images/logoSafetySheet.png' alt='carantec nautism' width='600px'></td>
         </tr>
         <tr>
-            <td colspan="1">Directeur de plongée</td>
-            <td colspan="1">{{$lead->MEM_SURNAME.' '.$lead->MEM_NAME}}</td>
+            <td colspan='1'>Directeur de plongée</td>
+            <td colspan='1'>{{$lead->MEM_SURNAME.' '.$lead->MEM_NAME}}</td>
         </tr>
         <tr>
-            <td colspan="1">Site de plongée</td>
-            <td colspan="1">{{$site->SIT_NAME}}</td>
+            <td colspan='1'>Site de plongée</td>
+            <td colspan='1'>{{$site->SIT_NAME}}</td>
         </tr>
         
     </table>
 
-    <table id="secondTable">
+    <table id='secondTable'>
         <tr>
-            <td class="firstRow">Embarcation</td>
-            <td class="secondRow">{{$boat->BOA_NAME}}</td>
+            <td class='firstRow'>Embarcation</td>
+            <td class='secondRow'>{{$boat->BOA_NAME}}</td>
         </tr>
         <tr>
-            <td class="firstRow">Sécurité de surface</td>
-            <td class="secondRow">{{$secure->MEM_SURNAME.' '.$secure->MEM_NAME}}</td>
+            <td class='firstRow'>Sécurité de surface</td>
+            <td class='secondRow'>{{$secure->MEM_SURNAME.' '.$secure->MEM_NAME}}</td>
         </tr>
         <tr>
-            <td class="firstRow">Pilote</td>
-            <td class="secondRow">{{$pilote->MEM_SURNAME.' '.$pilote->MEM_NAME}}</td>
+            <td class='firstRow'>Pilote</td>
+            <td class='secondRow'>{{$pilote->MEM_SURNAME.' '.$pilote->MEM_NAME}}</td>
         </tr>
         <tr>
-            <td class="firstRow">Observation <br> > météo et marée</td>
-            <td class="secondRow"></td>
+            <td class='firstRow'>Observation <br> > météo et marée</td>
+            <td class='secondRow'></td>
         </tr>
     </table>
     @php
@@ -60,10 +63,10 @@
         
     
         
-        <table class="palanquing">
+        <table class='palanquing'>
             <thead>
                 <tr>
-                    <th class="headerText" colspan="6">PALANQUEE N° {{$id++}}</th>
+                    <th class='headerText' colspan='6'>PALANQUEE N° {{$id++}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,34 +77,34 @@
                     $emertionTimestamp = strtotime($info->GRP_TIME_OF_EMERSION);
                     $emertionTime = strftime('%H:%M', $emertionTimestamp);  
                     @endphp   
-                        <tr class="bold">
+                        <tr class='bold'>
                             <td>Heure de départ</td>
                             <td>{{$immertionTime}}</td>
                             <td>Heure de retour</td>
-                            <td colspan="3">{{$emertionTime}}</td>
+                            <td colspan='3'>{{$emertionTime}}</td>
                         </tr>
                         <tr>
                             <td>Temps Prévu</td>
                             <td>{{$info->GRP_EXPECTED_DURATION}} min</td>
                             <td>Profondeur Prévu</td>
-                            <td colspan="3">{{$info->GRP_EXPECTED_DEPTH}} m</td>
+                            <td colspan='3'>{{$info->GRP_EXPECTED_DEPTH}} m</td>
                         </tr>
                         <tr>
                             <td>Temps Réalisé</td>
                             <td>{{$info->GRP_DIVING_TIME}} min</td>
                             <td>Profondeur Réalisé</td>
-                            <td colspan="3">{{$info->GRP_REACHED_DEPTH}} m</td>
+                            <td colspan='3'>{{$info->GRP_REACHED_DEPTH}} m</td>
                         </tr>
                         
                         <tr>
-                            <td class="headerText bold" colspan="3">Nom Prénom</td>
+                            <td class='headerText bold' colspan='3'>Nom Prénom</td>
                             <td>Aptitudes</td>
-                            <td class="bold">Formation vers</td>
-                            <td class="bold">Fonction</td>
+                            <td class='bold'>Formation vers</td>
+                            <td class='bold'>Fonction</td>
                         </tr>
                         @foreach ($group as $member)
                         <tr>
-                            <td colspan="3">
+                            <td colspan='3'>
                                 {{$member->MEM_SURNAME.' '.$member->MEM_NAME}}
                             </td>
                             <td>{{$member->level}}</td>
