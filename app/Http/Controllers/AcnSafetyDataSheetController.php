@@ -50,6 +50,49 @@ class AcnSafetyDataSheetController extends Controller {
         "boat" => $boat, "site" => $site, "period" => $period, "registered" => $registered, 
         "groups" => $groups, "groupInfo" => $groupInfo, "levels" => $levels]);
     }
+
+    static public function getSafetySheet($diveNum) {
+        $dive = AcnDives::find($diveNum);
+
+        $pilot = $dive->pilot;
+
+        $secure = $dive->surfaceSecurity;
+
+        $lead = $dive->leader;
+
+        $registered = $dive->divers;
+
+        $boat = $dive->boat;
+
+        $site = $dive->site;
+
+        $period = $dive->period;
+
+        $groupsNums = DB::table('ACN_REGISTERED')
+            ->select('NUM_GROUPS')
+            ->distinct('NUM_GROUPS')
+            ->where('NUM_DIVE', $diveNum)
+            ->get();
+
+        $groupInfo = array();    
+        $groups = array();
+        $levels = AcnPrerogative::all();
+        foreach($groupsNums as $group) {
+            $members = AcnGroups::find($group->NUM_GROUPS)->divers;
+            $palanquing = AcnGroups::find($group->NUM_GROUPS);
+            foreach($members as $member) {
+                $member->level = AcnPrerogative::getPrerogLabel($member->prerogatives->max('PRE_PRIORITY'))[0]->PRE_LABEL;
+            }
+            array_push($groups, $members);
+            array_push($groupInfo, $palanquing);
+        }
+        
+
+        return view('safetySheet', ["dives" => $dive, "pilote" => $pilot,
+        "secure" => $secure, "lead" => $lead, "diveNum" => $diveNum,
+        "boat" => $boat, "site" => $site, "period" => $period, "registered" => $registered, 
+        "groups" => $groups, "groupInfo" => $groupInfo, "levels" => $levels]);
+    }
 }
 
 ?>

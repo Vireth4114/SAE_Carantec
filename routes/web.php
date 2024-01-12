@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcnDivesController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AcnDiveCreationController;
 use App\Http\Controllers\AcnSafetyDataSheetController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,15 @@ Route::get('/diveCreation', function () {
 Route::get('/safetyDataSheet', function () {
      return AcnSafetyDataSheetController::getSafetySheetDives(1);
 })->middleware(['auth'])->middleware('isDirector')->name("safetyDataSheet");
+
+Route::get('/pdfConverter', function() {
+    return PDFController::generatePDF();
+})->middleware(['auth'])->middleware('isDirector')->name("pdfConverter");
+
+Route::get('/safetySheet', function () {
+     return AcnSafetyDataSheetController::getSafetySheet(1);
+})->middleware(['auth'])->middleware('isDirector')->name("safetySheet");
+
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
 
