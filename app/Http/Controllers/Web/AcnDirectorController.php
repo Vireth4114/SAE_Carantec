@@ -17,25 +17,28 @@ use Illuminate\Support\Facades\DB;
 class AcnDirectorController extends Controller
 {
     /**
-     * Add a member to a dive
+     * retuns the view addMember to add members to a dive
      *
-     * @param int $diveId ->the identification of the dive
+     * @param int $diveNum ->the identification of the dive
      * @return mixed -> the view for adding a new dive with his parameters
      */
-    public static function addDiveMember($diveId) {
-        $dive = AcnDives::find($diveId);
+    public static function addDiveMemberView($diveNum) {
+        $dive = AcnDives::find($diveNum);
         if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
             return redirect()->route('welcome');
         }
-        $members = AcnDives::getMembersNotInDive($diveId);
+        $members = AcnDives::getMembersNotInDive($diveNum);
         $levels = array();
         foreach($members as $member) {
             $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
             array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
         }
         $registeredMembers = $dive->divers;
+
+        //is the director register
         $directorRegistered = $registeredMembers->contains("MEM_NUM_MEMBER", $dive['DIV_NUM_MEMBER_LEAD']);
 
+        //does the dive still have remaining places
         $maxReached = $registeredMembers->where("MEM_NUM_MEMBER", '!=', $dive['DIV_NUM_MEMBER_LEAD'])->count()==$dive['DIV_MAX_REGISTERED'];
         return view('director/addDiveMember', ["members" => $members, "dive" => $dive, "directorRegistered" => $directorRegistered,
         "maxReached" => $maxReached, 'levels' => $levels]);
@@ -43,17 +46,17 @@ class AcnDirectorController extends Controller
     }
 
     /**
-     * Get the dive's informations for a director
+     * Get the dive's informations to a director
      *
-     * @param $diveId the identification of the dive
+     * @param $diveNum the identification of the dive
      * @return mixed -> view with all the information of a dive
      */
-    public static function diveInformation($diveId) {
-        $dive = AcnDives::find($diveId);
+    public static function diveInformation($diveNum) {
+        $dive = AcnDives::find($diveNum);
         if ($dive->leader->MEM_NUM_MEMBER != auth()->user()->MEM_NUM_MEMBER) {
             return redirect()->route('welcome');
         }
-        $allMembers = AcnDives::find($diveId)->divers;
+        $allMembers = AcnDives::find($diveNum)->divers;
         $members = array();
         $levels = array();
         $divDate = Carbon::parse($dive['DIV_DATE']) -> startOfDay();
@@ -73,7 +76,7 @@ class AcnDirectorController extends Controller
         if (is_null($dive['DIV_NUM_SITE'])) {
             $site = "non définit";
         } else {
-            $site = AcnSite::find($dive['DIV_NUM_SITE'])->SIT_NAME;
+            $site = AcnSite::getSite($dive['DIV_NUM_SITE'])->SIT_NAME;
         }
 
         if (is_null($dive['DIV_NUM_MEMBER_SECURED'])) {

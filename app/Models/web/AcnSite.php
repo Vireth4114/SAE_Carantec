@@ -35,16 +35,14 @@ class AcnSite extends Model
 
     /**
      * return the site
-     * @param int $num_site -> the id of the specified site
+     * @param int $numSite -> the id of the specified site
      *
      * @return [data_Site] -> the site
      */
-    public static function getSite($num_site){
-        $site = DB::table('ACN_SITE')
-        -> select('SIT_NAME')
-        -> where('SIT_NUM_SITE','=',$num_site) ->get();
-        return $site;
+    public static function getSite($numSite){
+        return AcnSite::find($numSite);
     }
+    
     static public function getAllSites() {
         return AcnSite::where("SIT_DELETED", "=", 0)->get();
     }

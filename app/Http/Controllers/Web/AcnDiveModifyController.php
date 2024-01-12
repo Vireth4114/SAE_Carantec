@@ -22,18 +22,18 @@ class AcnDiveModifyController extends Controller
     /**
      * Get all the dive's informations
      *
-     * @param $diveId the identification of the dive
+     * @param $diveNum the identification of the dive
      * @return mixed the datas of a dive to modify
      */
-    static public function getAll($diveId) {
+    static public function getAll($diveNum) {
 
-        $dive = AcnDives::getDive($diveId);
+        $dive = AcnDives::getDive($diveNum);
         $period = AcnPeriod::getPeriod($dive[0]->DIV_NUM_PERIOD);
         $site = AcnSite::getSite($dive[0]->DIV_NUM_SITE);
-        if($site->isEmpty()){
+        if(is_null($site)){
             $site = "";
         }else{
-            $site = $site[0]->SIT_NAME;
+            $site = $site->SIT_NAME;
         }
         $boat = AcnBoat::getBoat($dive[0]->DIV_NUM_BOAT);
         if($boat->isEmpty()){

@@ -116,7 +116,7 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
 
 Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
-    return AcnDirectorController::addDiveMember($diveId);
+    return AcnDirectorController::addDiveMemberView($diveId);
 })->name("addMember");
 
 Route::post('/panel/director/addMemberToDiveForm', function (Request $request) {
