@@ -86,3 +86,4 @@ class AcnPrerogative extends Model
         return AcnPrerogative::all();
     }
 }
+
