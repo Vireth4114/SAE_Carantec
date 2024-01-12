@@ -67,6 +67,19 @@ class AcnBoat extends Model
     }
 
     /**
+     * Get the capacity of divers of a boat
+     * 
+     * @param $BoatNum if not specified return the capacity of the biggest boat
+     * @return int of the capacity of the boat
+     */
+    static public function getBoatDiversCapacity($boatNum=null) {
+        if (!is_null($boatNum)){
+            return AcnBoat::find($boatNum)->BOA_CAPACITY-3;
+        }
+        return AcnBoat::all()->max('BOA_CAPACITY');
+    }
+
+    /**
      * Get the max capacity of all the boat
      * 
      * @return int the max capacity of all the boat

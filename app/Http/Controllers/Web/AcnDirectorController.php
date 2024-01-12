@@ -31,7 +31,7 @@ class AcnDirectorController extends Controller
         $levels = array();
         foreach($members as $member) {
             $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
-            array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
+            array_push($levels, AcnPrerogative::getPrerogLabel($memberPriority));
         }
         $registeredMembers = $dive->divers;
 
@@ -66,7 +66,7 @@ class AcnDirectorController extends Controller
             if (!($member->MEM_NUM_MEMBER == $dive['DIV_NUM_MEMBER_LEAD'])) {
                 array_push($members, $member);
                 $memberPriority = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
-                array_push($levels, AcnPrerogative::find($memberPriority)->PRE_LABEL);
+                array_push($levels, AcnPrerogative::getPrerogLabel($memberPriority));
             }
         }
         $nbMembers = count($members);

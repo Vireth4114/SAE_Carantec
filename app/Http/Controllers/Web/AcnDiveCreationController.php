@@ -61,10 +61,10 @@ class AcnDiveCreationController extends Controller
 
         //if the boat exists, check if the max_divers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
         if (!is_null($request->boat)) {
-            $capacity = AcnBoat::getBoatCapacity($request->boat)-3;
+            $capacity = AcnBoat::getBoatDiversCapacity($request->boat);
             //if the max_divers is not specified, it is set at the maximum of divers the boat can carry
             if ($request -> max_divers == 0) {
-                $request -> max_divers = AcnBoat::getBoatCapacity($request -> boat)-3;
+                $request -> max_divers = AcnBoat::getBoatDiversCapacity($request -> boat);
             }
             else if ($capacity < ($request -> max_divers) ) {
                 //if the max_divers is superior to the capacity, sets the erro variable to true and add a message to the error message
@@ -75,7 +75,7 @@ class AcnDiveCreationController extends Controller
         }
         else {
             //If the boat isn't specified, the capacity of divers of the biggest boat is retrieved
-            $capacity = AcnBoat::getMaxCapacity()-3;
+            $capacity = AcnBoat::getBoatDiversCapacity();
             //if the max_divers is not specified, it is set at the maximum of divers the biggest boat can carry
             if ($request -> max_divers == 0) {
                 $request -> max_divers = $capacity;

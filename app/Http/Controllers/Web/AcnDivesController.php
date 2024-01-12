@@ -187,7 +187,7 @@ class AcnDivesController extends Controller
 
     public static function getAllDivesReportIsDirector() {
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
-        $dives = AcnMember::getMember($numMember)->dives->where('DIV_NUM_MEMBER_LEAD','=',$numMember);
+        $dives = AcnDives::getDirectorReport($numMember);
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);

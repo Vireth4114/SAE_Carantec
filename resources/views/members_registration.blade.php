@@ -1,7 +1,7 @@
 @extends('template')
 @section('content')
 
-<title>Modification d'un créneau</title>
+
 </head>
 <body>
     <form action="{{route("register_member")}}" method="POST">
@@ -32,9 +32,9 @@
 
         <label>Prérogative :</label>
             <select name="member_prerog" id="member_prerog">
-            @foreach ($prerogation as $prerog)
+                @foreach ($prerogation as $prerog)
                     <option value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
-            @endforeach
+                @endforeach
             </select><br>
 
         <button type="submit">Inscrire l'adhérent</button>

@@ -275,4 +275,12 @@ class AcnDives extends Model
             -> orderBy('DIV_DATE')
             -> get();
     }
+
+    public static function getDirectorReport($numMember) {
+        return DB::table('ACN_DIVES')
+            ->where('DIV_NUM_MEMBER_LEAD', $numMember)
+            ->where("DIV_DATE",'<',Carbon::now())
+            ->orderBy('DIV_DATE', 'desc')
+            ->get();
+    }
 }

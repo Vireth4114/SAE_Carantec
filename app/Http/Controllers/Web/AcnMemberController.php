@@ -61,10 +61,9 @@ class AcnMemberController extends Controller
 
         $member = AcnMember::getMemberInfo($mem_num_member);
         $pricing = AcnMember::getPrincing();
-        $prerog = AcnPrerogative::getPrerog();
-        $prerogMemLvl = AcnPrerogative::getMemberPrerog($mem_num_member);
-
-        return view('members_modification',["member" => $member[0],"pricing" => $pricing,"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
+        $prerogatives = AcnPrerogative::getAllPrerogatives();
+        $memberPrerogative = AcnPrerogative::getPrerogLabel(AcnMember::getMemberMaxPriority($mem_num_member));
+        return view('members_modification',["member" => $member[0],"pricing" => $pricing ,"memberPrerogative" => $memberPrerogative ,"prerogatives" => $prerogatives]);
     }
 
     /**
@@ -77,17 +76,17 @@ class AcnMemberController extends Controller
 
         $mem_num_member = auth()->user()->MEM_NUM_MEMBER;
         $member = AcnMember::getMemberInfo($mem_num_member);
-        $prerog = AcnPrerogative::getPrerog();
-        $prerogMemLvl = AcnPrerogative::getMemberPrerog($mem_num_member);
 
-        return view('profil_modification',["member" => $member[0],"prerogation"=>$prerog,"prerogation_member_level" =>$prerogMemLvl]);
+        $prerogative = AcnPrerogative::getPrerogLabel(AcnPrerogative::getPriority($mem_num_member));
+
+        return view('profil_modification',["member" => $member[0],"prerogative"=>$prerogative]);
     }
 
     public static function profilUpdate(Request $request){
 
-        AcnMember::updateMemberProfil($request,auth()->user()->MEM_NUM_MEMBER);
+        AcnMember::updateMemberProfil(auth()->user()->MEM_NUM_MEMBER, $request -> memberName, $request -> memberSurname);
 
-        return redirect(route('welcome'));
+        return redirect(route('profil_page'));
     }
 
     public static function registerForm(){
@@ -110,54 +109,55 @@ class AcnMemberController extends Controller
         $err = false;
         //ceation of the error message
         $strErr = "";
+        
 
-        $member = AcnMember::getMemberInfo($request->member_num);
-        $prerogMemLvl = AcnPrerogative::getMemberPrerog($request->member_num);
-        $preroglabel = AcnPrerogative::getPrerogLabel($request->member_prerog);
-
+        $member = AcnMember::getMemberInfo($request->memberNum);
+        $prerogMemLvl = AcnMember::getMemberMaxPriority($request->memberNum);
+        $preroglabel = AcnPrerogative::getPrerogLabel($request->memberPrerogPriority);
 
         //Checks if the secretary attempt to dicrease the number of remaining dive.
-        if ($request -> remaining_dive < $member[0]->MEM_REMAINING_DIVES) {
+        if ($request -> remainingDive < $member[0]->MEM_REMAINING_DIVES) {
             $err = true;
             $strErr .= "- Vous ne pouvez pas retirer des plongées à un adhérent, ne descendez pas en dessous de ".$member[0]->MEM_REMAINING_DIVES." plongées restante.;";
         }
-        if ($request->pricing_type == 'enfant' && $request->member_prerog > 4) {
+        if ($request->pricingType == 'enfant' && $request->memberPrerogPriority > 4) {
             $err = true;
-            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
+            $strErr .= "- Pour un abonnement enfant les prérogatives disponibles sont uniquement : PB, PA, PO-12, PO-20 et vous avez choisis : ".$preroglabel.";";
         }
-        if ($request->pricing_type == 'adulte' && $request->member_prerog <= 4 ) {
+        if ($request->pricingType == 'adulte' && $request->memberPrerogPriority <= 4 ) {
             $err = true;
-            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel[0]->PRE_LEVEL.";";
-        }if ($request->member_prerog < $prerogMemLvl && $prerogMemLvl != 13) {
+            $strErr .= "- Les prérogatives : PB, PA, PO-12, PO-20 sont disponible uniquement pour les enfants et vous avez choisis : ".$preroglabel.";";
+        }if ($request->memberPrerogPriority < $prerogMemLvl && $prerogMemLvl != 13) {
             $err = true;
             $strErr .= "- Vous ne pouvez pas retirer des prérogatives à un adhérents, vous avez saisi un niveau de prérogative inférieur au dernier qu'il possède;";
-        }if ($request->member_prerog < 8 && $prerogMemLvl == 13) {
+        }if ($request->memberPrerogPriority < 8 && $prerogMemLvl == 13) {
             $err = true;
             $strErr .= "- Vous ne pouvez pas retirer des prérogatives à un adhérents, vous avez saisi un niveau de prérogative inférieur au dernier qu'il possède;";
         }
 
+
         if ($err) {
             $arrayErr = explode(";",$strErr);
-            return view('memberException',['member_num'=>$request->member_num,'error_msg'=>$arrayErr,'actionType'=>'Modification']);
+            return view('memberException',['member_num'=>$request->memberNum,'error_msg'=>$arrayErr,'actionType'=>'Modification']);
         }
         else {
             AcnMember::updateMemberInfos($request);
 
-            //search for every prerogation a member don't have and are below the prerogation selected, meant to add them later (for the 3 request below)
-        if($request->pricing_type == 'adulte'){
-            if($request->member_prerog  == 13){
-                $pre = AcnRanked::getAllPRevPrerogativeButE1($request->member_num,$request->member_prerog);
+                //search for every prerogation a member don't have and are below the prerogation selected, meant to add them later (for the 3 request below)
+            if($request->pricingType == 'adulte'){
+                if($request->memberPrerogPriority  == 13){
+                    $pre = AcnRanked::getAllPRevPrerogativeButE1($request->memberNum,$request->memberPrerogPriority);
 
+                }else{
+                    $pre = AcnRanked::getAllPRevPrerogativeNotE1($request->memberNum,$request->memberPrerogPriority);
+                }
             }else{
-                $pre = AcnRanked::getAllPRevPrerogativeNotE1($request->member_num,$request->member_prerog);
+                //same but for children
+                $pre = AcnRanked::getAllPRevPrerogativeChildren($request -> memberNum,$request->memberPrerogPriority);
             }
-        }else{
-            //same but for children
-            $pre = AcnRanked::getAllPRevPrerogativeChildren($request -> member_num,$request->member_prerog);
-        }
 
         //insert All the prerogative selected
-        AcnRanked::insertAllPrerogative($pre,$request->member_num);
+        AcnRanked::insertAllPrerogative($pre,$request->memberNum);
 
             return redirect('members');
         }
@@ -215,7 +215,7 @@ class AcnMemberController extends Controller
     static public function secretary() {
         $members = AcnMember::all();
         foreach($members as $member) {
-            $member -> PRE_LEVEL = AcnPrerogative::find(AcnPrerogative::getMemberPrerog($member -> MEM_NUM_MEMBER)) -> PRE_LEVEL;
+            $member -> PRE_LABEL = AcnPrerogative::getPrerogLabel(AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER));
         }
         return view('members', ["name" => auth()->user()->MEM_NAME, "surname" => auth()->user()->MEM_SURNAME, "function" => auth()->user()->FUN_LABEL, "members" => $members]);
     }

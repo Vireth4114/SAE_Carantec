@@ -41,12 +41,11 @@ class AcnDiveModifyController extends Controller
         }else{
             $boat = $boat[0]->BOA_NAME;
         }
-        $prerogative = AcnPrerogative::getPrerogative($dive[0]->DIV_NUM_PREROG);
-        if($prerogative->isEmpty()){
+        $prerogative = AcnPrerogative::getPrerogative($dive[0]->DIV_NUM_PREROG)->PRE_LEVEL;
+        if(is_null($prerogative)){
             $prerogative = "";
-        }else{
-            $prerogative = $prerogative[0]->PRE_LEVEL;
         }
+
         $lead = AcnMember::getMember($dive[0]->DIV_NUM_MEMBER_LEAD);
         if(is_null($lead)){
             $lead = "";
@@ -99,7 +98,7 @@ class AcnDiveModifyController extends Controller
 
         //check if the level has been changed from an adult dive to a child dive, if there are members that can't participate, the modifications are cancelled
         $dive = AcnDives::find($request -> numDive);
-        if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY < 5 && $request -> lvl_required >=5) {
+        if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY < 5 && $request -> lvlRequired >=5) {
             foreach($dive->divers as $member) {
                 if (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBE) < 5) {
                     $err=true;
@@ -110,10 +109,10 @@ class AcnDiveModifyController extends Controller
             }
         }
         //check if the level has been changed from a child dive to an adult dive, if there are members that can't participate, the modifications are cancelled
-        else if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY > 4 && $request -> lvl_required <= 4 ) {
+        else if (AcnPrerogative::find($dive -> DIV_NUM_PREROG)->PRE_PRIORITY > 4 && $request -> lvlRequired <= 4 ) {
             foreach($dive->divers as $member) {
-                $memPri = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBE);
-                if ($request -> lvl_required <= 2) {
+                $memPri = AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER);
+                if ($request -> lvlRequired <= 2) {
                     if ($memPri > 5 && $memPri < 13 ) {
                         $err=true;
                     }
@@ -129,15 +128,15 @@ class AcnDiveModifyController extends Controller
             }
         }
 
-        //if the boat exists, check if the max_divers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
+        //if the boat exists, check if the maxDivers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
         if (!is_null($request->boat)) {
-            $capacity = AcnBoat::getBoatCapacity($request->boat)-3;
-            //if the max_divers is not specified, it is set at the maximum of divers the boat can carry
-            if ($request -> max_divers == 0) {
-                $request -> max_divers = AcnBoat::getBoatCapacity($request -> boat)-3;
+            $capacity = AcnBoat::getBoatDiversCapacity($request->boat);
+            //if the maxDivers is not specified, it is set at the maximum of divers the boat can carry
+            if ($request -> maxDivers == 0) {
+                $request -> maxDivers = AcnBoat::getBoatDiversCapacity($request -> boat);
             }
-            else if ($capacity < ($request -> max_divers) ) {
-                //if the max_divers is superior to the capacity, sets the erro variable to true and add a message to the error message
+            else if ($capacity < ($request -> maxDivers) ) {
+                //if the maxDivers is superior to the capacity, sets the erro variable to true and add a message to the error message
                 $boatName = AcnBoat::getBoatName($request -> boat);
                 $err = true;
                 $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité <strong>en plongeur</strong> du bateau ".$boatName." (".$capacity." plongeur max).<br>";
@@ -145,20 +144,20 @@ class AcnDiveModifyController extends Controller
         }
         else {
             //If the boat isn't specified, the capacity of divers of the biggest boat is retrieved
-            $capacity = AcnBoat::getMaxCapacity()-3;
-            //if the max_divers is not specified, it is set at the maximum of divers the biggest boat can carry
-            if ($request -> max_divers == 0) {
-                $request -> max_divers = $capacity;
+            $capacity = AcnBoat::getBoatDiversCapacity();
+            //if the maxDivers is not specified, it is set at the maximum of divers the biggest boat can carry
+            if ($request -> maxDivers == 0) {
+                $request -> maxDivers = $capacity;
             }
-            //If it is specified, check if the max_divers is lower than the capacity of the biggest boat
-            else if ($capacity < $request -> max_divers) {
+            //If it is specified, check if the maxDivers is lower than the capacity of the biggest boat
+            else if ($capacity < $request -> maxDivers) {
                 $err = true;
                 $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité <strong>en plongeur</strong> du bateau le plus gros (".$capacity.").<br>";
             }
         }
 
-        //Check if the min_divers is lower than the max_divers
-        if ($request -> min_divers > $request -> max_divers) {
+        //Check if the minDivers is lower than the maxDivers
+        if ($request -> minDivers > $request -> maxDivers) {
             $err = true;
             $strErr .="- Le nombe minimum de nageurs ne peut être supérieur au nombre maximum.<br>";
         }
@@ -182,25 +181,25 @@ class AcnDiveModifyController extends Controller
 
         $dive=AcnDives::getDive($request -> numDive);
 
-        if ($dive[0] -> DIV_MIN_REGISTERED < $request -> min_divers) {
+        if ($dive[0] -> DIV_MIN_REGISTERED < $request -> minDivers) {
             $err = true;
             $strErr .= "-L'effectif minimum ne peut qu'être diminué<br>";
         }
 
-        if ($dive[0] -> DIV_MAX_REGISTERED > $request -> max_divers) {
+        if ($dive[0] -> DIV_MAX_REGISTERED > $request -> maxDivers) {
             $err = true;
             $strErr .= "-L'effectif maximum ne peut qu'être augmenté<br>";
         }
 
-        $divers_lvl = AcnDives::find($request -> numDive)->divers;
+        $divers = AcnDives::find($request -> numDive)->divers;
         $minAllDivers = AcnPrerogative::all()->max('PRE_PRIORITY');
-        foreach($divers_lvl as $diver) {
+        foreach($divers as $diver) {
             $maxLocalDiver = $diver->prerogatives->max("PRE_PRIORITY");
             if ($maxLocalDiver < $minAllDivers) {
                 $minAllDivers = $maxLocalDiver;
             }
         }
-        if($minAllDivers < AcnPrerogative::find($request -> lvl_required)->PRE_PRIORITY) {
+        if($minAllDivers < AcnPrerogative::getPriority($request -> lvlRequired)) {
             $err = true;
             $strErr .= "-Le niveau saisi est trop élevé <br>";
         }
@@ -210,7 +209,7 @@ class AcnDiveModifyController extends Controller
         }
         else {
 
-            AcnDives::updateData($request -> numDive, $request -> site, $request -> boat, $request -> lvl_required, $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);
+            AcnDives::updateData($request -> numDive, $request -> site, $request -> boat, $request -> lvlRequired, $request -> lead, $request -> pilot, $request -> security, $request -> minDivers, $request -> maxDivers);
 
             if(AcnMember::isUserManager(auth()->user()->MEM_NUM_MEMBER)){
                 return redirect(route('dives'));

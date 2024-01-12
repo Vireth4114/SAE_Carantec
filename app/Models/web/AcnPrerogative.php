@@ -41,46 +41,48 @@ class AcnPrerogative extends Model
 
     /**
      * return the prerogative
-     * @param int $num_pre -> the id of the specified prerogative
+     * @param int $numPre -> the id of the specified prerogative
      * 
      * @return [data_prerogative] -> the prerogative
      */
-    public static function getPrerogative($num_pre){
-        $prerogative = DB::table('ACN_PREROGATIVE')
-        ->select('PRE_LEVEL')
-        ->where('PRE_NUM_PREROG' ,'=', $num_pre)
-        -> get();
-        return $prerogative;
-    }
-
-    /**
-     * return all the prerogatives
-     * 
-     * @return [list[data_Prerogative]] -> all prerogatives
-     */
-    public static function getPrerog(){
-        return DB::table('ACN_PREROGATIVE')->select('ACN_PREROGATIVE.*')->get();
+    public static function getPrerogative($prerogativeNum){
+        return AcnPrerogative::find($prerogativeNum);
     }
 
     /**
      * return the label of a prerogative
-     * @param int $num_pre -> the id of the specified prerogative
+     * @param string $numPre -> the id of the specified prerogative
      */
-    public static function getPrerogLabel($num_pre){
-        return DB::table('ACN_PREROGATIVE')->select('PRE_LEVEL')->where('PRE_PRIORITY','=',$num_pre)->get();
+    public static function getPrerogLabel($prePriority){
+        return AcnPrerogative::find(AcnPrerogative::getNumPrerog($prePriority))->PRE_LABEL;
     }
 
     /**
-     * return the highest prerogative of the member
-     * @param int $member_num
+     * return the prioity of a prerogative
      * 
-     * @return int -> the highest priority
+     * @param string $prerogativeNum -> the id of the specified prerogative
      */
-    public static function getMemberPrerog($member_num){
+    public static function getPriority($prerogativeNum){
+        return AcnPrerogative::find($prerogativeNum)->PRE_PRIORITY;
+    }
+
+    /**
+     * return the level of a prerogative
+     * @param int $numPre -> the id of the specified prerogative
+     */
+    public static function getPrerogLevel($prePriority){
+        return AcnPrerogative::find(AcnPrerogative::getNumPrerog($prePriority))->PRE_LEVEL;
+    }
+
+    private static function getNumPrerog($prePriority) {
         return DB::table('ACN_PREROGATIVE')
-        ->select('ACN_PREROGATIVE.*')
-        ->join('ACN_RANKED', 'ACN_PREROGATIVE.PRE_NUM_PREROG','=','ACN_RANKED.NUM_PREROG')
-        ->where('NUM_MEMBER','=',$member_num)
-        ->max('ACN_RANKED.NUM_PREROG');
+            ->where('PRE_PRIORITY', '=', $prePriority) 
+            ->first()
+            ->PRE_NUM_PREROG;
+    }
+    
+
+    public static function getAllPrerogatives() {
+        return AcnPrerogative::all();
     }
 }
