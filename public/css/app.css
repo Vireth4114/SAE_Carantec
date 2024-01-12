@@ -429,3 +429,13 @@ nav {
     flex-direction: column;
     margin: 5vh;
 }
+
+#confirm {
+    top: 40vh;
+    font-size: 1.2em;
+}
+
+#confirm form {
+    background-color: #ff8080;
+    padding: 20px;
+}

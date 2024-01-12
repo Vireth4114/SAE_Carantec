@@ -145,7 +145,7 @@
             <button type="submit">Valider les modifications</button>
 
         </form>
-        <a id='goBackDives' class='hyperlink-no_style' href="{{ route("redirectDiveModify", $dive->DIV_NUM_DIVE) }}"><button>Revenir aux plongées</button></a>
+        <a id='goBackDives' class='hyperlink-no_style' href="{{ route("redirectDiveModify", $dive->DIV_NUM_DIVE) }}">Revenir aux plongées</a>
     </div>
 </body>
 @endsection
