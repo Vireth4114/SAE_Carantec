@@ -6,31 +6,31 @@
     <body>
         <form class='createForm' action="{{route("modify_member")}}" method="POST">
             @csrf
-            <input type="number" hidden name="member_num" value={{$member->MEM_NUM_MEMBER}}>
+            <input type="number" hidden name="memberNum" value={{$member->MEM_NUM_MEMBER}}>
 
             <div class='createFields'>
                 <label>Nom du membre :</label>
-                <input type="text" required id="member_name" name="member_name" value={{$member->MEM_NAME}} />
+                <input type="text" required id="memberName" name="memberName" value={{$member->MEM_NAME}} />
             </div>
 
             <div class='createFields'>
                 <label>Prénom du membre :</label>
-                <input type="text" required id="member_surname" name="member_surname" value={{$member->MEM_SURNAME}} />
+                <input type="text" required id="memberSurname" name="memberSurname" value={{$member->MEM_SURNAME}} />
             </div>
 
             <div class='createFields'>
                 <label>Numéro de licence :</label>
-                <input type="text" required disabled id="member_licence" name="member_licence" value={{$member->MEM_NUM_LICENCE}} />
+                <input type="text" required disabled id="memberLicence" name="memberLicence" value={{$member->MEM_NUM_LICENCE}} />
             </div>
 
             <div class='createFields'>
                 <label>Date de certification :</label>
-                <input type="date" required id="certif_date" name="certif_date" value={{$member->MEM_DATE_CERTIF}} />
+                <input type="date" required id="certifDate" name="certifDate" value={{$member->MEM_DATE_CERTIF}} />
             </div>
 
             <div class='createFields'>
                 <label>Type d'abonnement :</label>
-                    <select name="pricing_type" id="pricing_type">
+                    <select name="pricingType" id="pricingType">
                     @foreach ($pricing as $price)
                         @if($price->MEM_PRICING == $member->MEM_PRICING)
                             <option selected value='{{$member->MEM_PRICING}}'>{{$member->MEM_PRICING}}</option>
@@ -43,24 +43,23 @@
 
             <div class='createFields'>
                 <label>Nombre de plongée restante :</label>
-                <input type="number" required id="remaining_dive" name="remaining_dive" value={{$member->MEM_REMAINING_DIVES}} />
+                <input type="number" required id="remainingDive" name="remainingDive" value={{$member->MEM_REMAINING_DIVES}} />
             </div>
 
             <div class='createFields'>
                 <label>Prérogative :</label>
-                    <select name="member_prerog" id="member_prerog">
-                    @foreach ($prerogation as $prerog)
-                        @if($prerogation_member_level == $prerog->PRE_PRIORITY)
-                            <option selected value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
+                <select name="memberPrerogPriority" id="memberPrerogPriority">
+                    @foreach ($prerogatives as $prerogative)
+                        @if($memberPrerogative == $prerogative->PRE_LABEL)
+                            <option selected value='{{$prerogative->PRE_PRIORITY}}'>{{$prerogative->PRE_LABEL}}</option>
                         @else
-                            <option value='{{$prerog->PRE_PRIORITY}}'>{{$prerog->PRE_LEVEL}}</option>
+                            <option value='{{$prerogative->PRE_PRIORITY}}'>{{$prerogative->PRE_LABEL}}</option>
                         @endif
                     @endforeach
-                    </select>
+                </select>
             </div>
 
             <button class='btn btn-secondary' type="submit">Modifier les informations</button>
-
         </form>
     </body>
 </section>

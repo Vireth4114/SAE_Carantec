@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+use App\Http\Controllers\Controller;
 
 use App\Models\web\AcnDives;
 use App\Models\web\AcnMember;
@@ -49,21 +50,21 @@ class AcnDivesController extends Controller
      */
     public static function getAllDiveInformation($id){
         $dives = AcnDives::find($id);
-        $dives_lead = AcnMember::find($dives -> DIV_NUM_MEMBER_LEAD);
+        $dives_lead = AcnMember::getMember($dives -> DIV_NUM_MEMBER_LEAD);
         if (is_null($dives_lead)) {
             $dives_lead = "non définit";
         } else {
             $dives_lead = $dives_lead->MEM_NAME." ".$dives_lead->MEM_SURNAME;
         }
 
-        $dives_secur = AcnMember::find($dives -> DIV_NUM_MEMBER_SECURED);
+        $dives_secur = AcnMember::getMember($dives -> DIV_NUM_MEMBER_SECURED);
         if (is_null($dives_secur)) {
             $dives_secur = "non définit";
         } else {
             $dives_secur = $dives_secur->MEM_NAME." ".$dives_secur->MEM_SURNAME;
         }
 
-        $dives_pilot = AcnMember::find($dives -> DIV_NUM_MEMBER_PILOTING);
+        $dives_pilot = AcnMember::getMember($dives -> DIV_NUM_MEMBER_PILOTING);
         if (is_null($dives_pilot)) {
             $dives_pilot = "non définit";
         } else {
@@ -124,7 +125,7 @@ class AcnDivesController extends Controller
         $userId = auth()->user()->MEM_NUM_MEMBER;
         AcnRegistered::insert($userId, $request->dive);
 
-        $user = AcnMember::find($userId);
+        $user = AcnMember::getMember($userId);
         $user->MEM_REMAINING_DIVES = $user->MEM_REMAINING_DIVES - 1;
         $user->save();
 
@@ -142,7 +143,7 @@ class AcnDivesController extends Controller
         $userId = auth()->user()->MEM_NUM_MEMBER;
         AcnRegistered::deleteData(auth()->user()->MEM_NUM_MEMBER, $request->dive);
 
-        $user = AcnMember::find($userId);
+        $user = AcnMember::getMember($userId);
         $user->MEM_REMAINING_DIVES = $user->MEM_REMAINING_DIVES + 1;
         $user->save();
 
@@ -152,7 +153,7 @@ class AcnDivesController extends Controller
     public static function getMemberDivesReport() {
 
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
-        $dives = AcnMember::find($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
+        $dives = AcnMember::getMember($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
@@ -186,7 +187,7 @@ class AcnDivesController extends Controller
 
     public static function getAllDivesReportIsDirector() {
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
-        $dives = AcnMember::find($numMember)->dives->where('DIV_NUM_MEMBER_LEAD','=',$numMember);
+        $dives = AcnDives::getDirectorReport($numMember);
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
@@ -206,5 +207,19 @@ class AcnDivesController extends Controller
         AcnDives::find($diveId)->delete();
         return redirect()->route('dives');
     }
-
+    
+    public static function getAllArchives() {
+        $archives = AcnDives::getArchives();
+        foreach($archives as $archive) {
+            $archive -> BOAT_NAME = AcnBoat::find($archive -> DIV_NUM_BOAT)->BOA_NAME;
+            $archive -> LEVEL = AcnPrerogative::find($archive -> DIV_NUM_BOAT) -> PRE_LEVEL;
+            $lead = AcnMember::find($archive -> DIV_NUM_MEMBER_LEAD);
+            $security = AcnMember::find($archive -> DIV_NUM_MEMBER_SECURED);
+            $pilot = AcnMember::find($archive -> DIV_NUM_MEMBER_PILOTING);
+            $archive -> LEADER = ($lead -> MEM_NAME." ". $lead -> MEM_SURNAME);
+            $archive -> PILOT = ($security -> MEM_NAME." ". $security -> MEM_SURNAME);
+            $archive -> SECURITY = ($pilot -> MEM_NAME." ". $pilot -> MEM_SURNAME);
+        }
+        return view('archives', ['archives' => $archives]);
+    }
 }

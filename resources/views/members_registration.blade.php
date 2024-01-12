@@ -2,8 +2,8 @@
 @section('content')
 <section class='createSection'>
 
-    <title>Modification d'un créneau</title>
-    </head>
+<title>Modification d'un créneau</title>
+</head>
     <body>
         <form class='createForm' action="{{route("register_member")}}" method="POST">
             @csrf

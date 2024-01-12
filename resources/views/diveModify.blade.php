@@ -53,15 +53,15 @@
 
             <div class='fieldContainer'>
                 <label>Choisir le niveau requis :</label>
-                <select name="lvl_required" id="lvl_required">
+                <select name="lvlRequired" id="lvlRequired">
                 @if($prerogative == "")
                     <option selected value="">--Choisir un niveau--</option>
                 @endif
                 @foreach ($prerogatives as $prerogative)
                     @if($prerogative->PRE_NUM_PREROG == $dive->DIV_NUM_PREROG)
-                        <option selected value='{{$prerogative->PRE_NUM_PREROG}}'>{{$prerogative->PRE_LEVEL}}</option>
+                        <option selected value='{{$prerogative->PRE_NUM_PREROG}}'>{{$prerogative->PRE_LABEL}}</option>
                     @else
-                        <option value='{{$prerogative->PRE_NUM_PREROG}}'>{{$prerogative->PRE_LEVEL}}</option>
+                        <option value='{{$prerogative->PRE_NUM_PREROG}}'>{{$prerogative->PRE_LABEL}}</option>
                     @endif
                 @endforeach
                 <option value="">--Choisir un niveau--</option>
@@ -132,12 +132,12 @@
 
             <div class='fieldContainer'>
                 <label>Effectif minimum :</label>
-                <input type=number name="min_divers" id="min_divers" value={{$dive->DIV_MIN_REGISTERED}}>
+                <input type=number name="minDivers" id="minDivers" value={{$dive->DIV_MIN_REGISTERED}}>
             </div>
 
             <div class='fieldContainer'>
                 <label>Effectif maximum :</label>
-                <input type=number name="max_divers" id="max_divers" value={{$dive->DIV_MAX_REGISTERED}}>
+                <input type=number name="maxDivers" id="maxDivers" value={{$dive->DIV_MAX_REGISTERED}}>
             </div>
 
             <input type="hidden" name="numDive" value="{{ $dive->DIV_NUM_DIVE }}">

@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+use App\Http\Controllers\Controller;
 
 use App\Models\web\AcnBoat;
 use App\Models\web\AcnDives;
@@ -11,8 +12,8 @@ use App\Models\web\AcnFunction;
 use App\Models\web\AcnPrerogative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\AcnDivesController;
-use App\Http\Controllers\AcnBoatController;
+use App\Http\Controllers\Web\AcnDivesController;
+use App\Http\Controllers\Web\AcnBoatController;
 use Carbon\Carbon;
 
 class AcnDiveCreationController extends Controller
@@ -20,7 +21,7 @@ class AcnDiveCreationController extends Controller
     /**
      * Get all the dive's informations
      *
-     * @return all the parameters of a dive
+     * @return mixed view with all the parameters of a dive
      */
     static public function getAll() {
         $boats = AcnBoat::all();
@@ -60,21 +61,21 @@ class AcnDiveCreationController extends Controller
 
         //if the boat exists, check if the max_divers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
         if (!is_null($request->boat)) {
-            $capacity = AcnBoatController::getBoatCapacity($request->boat)-3;
+            $capacity = AcnBoat::getBoatDiversCapacity($request->boat);
             //if the max_divers is not specified, it is set at the maximum of divers the boat can carry
             if ($request -> max_divers == 0) {
-                $request -> max_divers = AcnBoatController::getBoatCapacity($request -> boat)-3;
+                $request -> max_divers = AcnBoat::getBoatDiversCapacity($request -> boat);
             }
             else if ($capacity < ($request -> max_divers) ) {
                 //if the max_divers is superior to the capacity, sets the erro variable to true and add a message to the error message
-                $boatName = AcnBoatController::getBoatName($request -> boat);
+                $boatName = AcnBoat::getBoatName($request -> boat);
                 $err = true;
                 $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité <strong>en plongeur</strong> du bateau ".$boatName." (".$capacity." plongeur max).<br>";
             }
         }
         else {
             //If the boat isn't specified, the capacity of divers of the biggest boat is retrieved
-            $capacity = AcnBoatController::getMaxCapacity()-3;
+            $capacity = AcnBoat::getBoatDiversCapacity();
             //if the max_divers is not specified, it is set at the maximum of divers the biggest boat can carry
             if ($request -> max_divers == 0) {
                 $request -> max_divers = $capacity;
@@ -94,19 +95,23 @@ class AcnDiveCreationController extends Controller
 
         //Checks if the leader, the pilot and the surface security are different person.
         if (!is_null($request -> lead) && !is_null($request -> pilot) && ($request -> lead == $request -> pilot) ) {
-            $member = AcnMemberController::getMember($request -> lead);
+            $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
         }
         if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
-            $member = AcnMemberController::getMember($request -> lead);
+            $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
         }
         if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
-            $member = AcnMemberController::getMember($request -> pilot);
+            $member = AcnMember::getMember($request -> pilot);
             $err = true;
-            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member['MEM_NAME']." ".$member['MEM_SURNAME'].").<br>";
+            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
+        }
+        if(Carbon::createFromFormat('Y-m-d' , $request -> date)->dayOfWeekIso == 7 &&  $request -> period != 1 ){
+            $err = true;
+            $strErr .= "- Vous ne pouvez pas créer de plongée l'après midi ou le soir un dimanche;";
         }
 
         if ($err) {

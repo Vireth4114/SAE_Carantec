@@ -24,7 +24,7 @@
                     <td>{{$member->MEM_NUM_LICENCE}} </td>
                     <td>{{$member->MEM_SURNAME}} </td>
                     <td>{{$member->MEM_NAME}} </td>
-                    <td>{{$member->PRE_LEVEL }}</td>
+                    <td>{{$member->PRE_LABEL }}</td>
                     <td>{{$member->MEM_DATE_CERTIF}} </td>
                     <td>{{$member->MEM_PRICING}} </td>
                     <td>{{$member->MEM_SUBDATE}} </td>

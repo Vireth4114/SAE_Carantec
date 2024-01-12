@@ -1,21 +1,19 @@
 <?php
 
-use App\Http\Controllers\AcnDiveModifyController;
-use App\Http\Controllers\AcnDiveCreationController;
-
-use App\Http\Controllers\AcnBoatController;
-use App\Http\Controllers\AcnDivesController;
-use App\Http\Controllers\AcnSiteController;
-use App\Http\Controllers\ManagerPanelController;
-use App\Http\Controllers\AcnDirectorController;
-use App\Http\Controllers\AcnMemberController;
-use App\Http\Controllers\AcnRegisteredController;
+use App\Http\Controllers\Web\AcnDiveModifyController;
+use App\Http\Controllers\Web\AcnDiveCreationController;
+use App\Http\Controllers\Web\AcnBoatController;
+use App\Http\Controllers\Web\AcnDivesController;
+use App\Http\Controllers\Web\AcnSiteController;
+use App\Http\Controllers\Web\ManagerPanelController;
+use App\Http\Controllers\Web\AcnDirectorController;
+use App\Http\Controllers\Web\AcnMemberController;
+use App\Http\Controllers\Web\AcnRegisteredController;
+use App\Http\Controllers\Web\AcnGroupsMakingController;
 use Illuminate\Http\Request;
 
 use App\Models\web\AcnMember;
 
-
-use App\Http\Controllers\AcnGroupsMakingController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -118,7 +116,7 @@ Route::delete('/delete/site/{siteId}', function ($siteId) {
 })->middleware(['auth'])->middleware('isManager')->name("siteDelete");
 
 Route::get('/panel/director/addMember/{diveId}', function ($diveId)  {
-    return AcnDirectorController::addDiveMember($diveId);
+    return AcnDirectorController::addDiveMemberView($diveId);
 })->name("addMember");
 
 Route::post('/panel/director/addMemberToDiveForm', function (Request $request) {
@@ -190,6 +188,10 @@ Route::get('/managerDivesReport', function () {
 Route::get('/directorDivesReport', function () {
     return AcnDivesController::getAllDivesReportIsDirector();
 })->name("DirectorDivesReport");
+
+Route::get('/managerArchives', function () {
+    return AcnDivesController::getAllArchives();
+})->middleware(['auth'])->middleware('isManager')->name("archives");
 
 
 Route::post('diveCreationForm', [AcnDiveCreationController::class, 'create'])->name("diveCreationForm");
