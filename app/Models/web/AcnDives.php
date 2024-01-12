@@ -280,6 +280,7 @@ class AcnDives extends Model
         return DB::table('ACN_DIVES')
             ->where('DIV_NUM_MEMBER_LEAD', $numMember)
             ->where("DIV_DATE",'<',Carbon::now())
+            ->where("DIV_DATE",'>',Carbon::now()->subYear())
             ->orderBy('DIV_DATE', 'desc')
             ->get();
     }

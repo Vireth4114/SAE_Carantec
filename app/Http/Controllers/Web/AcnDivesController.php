@@ -153,7 +153,9 @@ class AcnDivesController extends Controller
     public static function getMemberDivesReport() {
 
         $numMember = auth()->user()->MEM_NUM_MEMBER ;
-        $dives = AcnMember::getMember($numMember)->dives->where("DIV_DATE",'<',Carbon::now());
+        $dives = AcnMember::getMember($numMember)
+            ->dives->where("DIV_DATE",'<',Carbon::now())
+            ->where("DIV_DATE",'>',Carbon::now()->subYear());
         $periods = array();
         foreach($dives as $dive) {
             $period = AcnPeriod::find($dive->DIV_NUM_PERIOD);
