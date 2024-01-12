@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
+use App\Http\Controllers\Controller;
 
 use App\Models\web\AcnSite;
 use Illuminate\Http\Request;
@@ -86,7 +87,7 @@ class AcnSiteController extends Controller
      * Get the update interface of a site
      *
      * @param number $siteId the identification of the site
-     * @return \view of the manager'panel page
+     * @return mixed view of the manager's panel page
      */
     static public function getSiteUpdateView($siteId) {
         $site = AcnSite::find($siteId);

@@ -182,11 +182,7 @@ class AcnMember extends Authenticatable
      * @return [data_Member] -> the specified members
      */
     static public function getMember($memberNum){
-        return DB::table('ACN_MEMBER')
-             -> select('MEM_NAME', 'MEM_SURNAME')
-             -> where('MEM_NUM_MEMBER', '=' , $memberNum)
-             -> get();
-
+        return AcnMember::find($memberNum);
     }
 
     /**
@@ -211,12 +207,7 @@ class AcnMember extends Authenticatable
      * @return int -> the maximum pre_priority of the member
      */
     static public function getMemberMaxPriority($memberNum) {
-        return DB::table('ACN_MEMBER')
-            -> select('PRE_PRIORITY')
-            -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
-            -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('MEM_NUM_MEMBER', $memberNum)
-            -> max('PRE_PRIORITY');
+        return AcnMember::getMember($memberNum)->prerogatives->max("PRE_PRIORITY");
     }
 
     /**
@@ -224,25 +215,23 @@ class AcnMember extends Authenticatable
      * @param mixed $request -> the request with all the data to update a member
      */
     static public function updateMemberInfos($request){
-        DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $request -> member_num)
-            ->update([
-                'MEM_NAME' => $request -> member_name,
-                'MEM_SURNAME' => $request -> member_surname,
-                'MEM_DATE_CERTIF' => $request -> certif_date,
-                'MEM_PRICING' => $request -> pricing_type,
-                'MEM_REMAINING_DIVES' => $request -> remaining_dive,
-            ]);
+        $member = AcnMember::find($request -> memberNum);
+        $member -> MEM_NAME = $request -> memberName;
+        $member -> MEM_SURNAME = $request -> memberSurname;
+        $member -> MEM_DATE_CERTIF = $request -> certifDate;
+        $member -> MEM_PRICING = $request -> pricingType;
+        $member -> MEM_REMAINING_DIVES =$request -> remainingDive;
+        $member -> save();
     }
 
     /**
      * update the data of a user by a user but very few options
      */
-    static public function updateMemberProfil($request,$member_num){
-        DB::table('ACN_MEMBER')->where('MEM_NUM_MEMBER', '=', $member_num)
-            ->update([
-                'MEM_NAME' => $request -> member_name,
-                'MEM_SURNAME' => $request -> member_surname,
-            ]);
+    static public function updateMemberProfil($memberNum, $memberName, $memberSurname){
+        $member = AcnMember::find($memberNum);
+        $member -> MEM_NAME = $memberName;
+        $member -> MEM_SURNAME = $memberSurname;
+        $member -> save();
     }
 
     static public function getNewNumMember(){
@@ -295,5 +284,4 @@ class AcnMember extends Authenticatable
         $roleId = AcnFunction::where("FUN_LABEL", $roleName)->first()->FUN_NUM_FUNCTION;
         DB::table("ACN_WORKING")->insert(["NUM_FUNCTIOn" =>$roleId, "NUM_MEMBER" => $memberNum]);
     }
-
 }
