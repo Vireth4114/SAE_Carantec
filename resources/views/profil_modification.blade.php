@@ -24,8 +24,8 @@
 
         <p><b>{{$member->MEM_REMAINING_DIVES}}</b> plongées restantes</p>
 
-        <p>Prérogative : {{$prerogative}}</p>
-
+        <p>Prérogative : <b>{{$prerogative}}</b></p>
+    
         <button class='btn btn-secondary' type="submit">Modifier les informations</button>
 
     </form>
