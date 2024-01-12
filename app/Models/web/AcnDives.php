@@ -124,7 +124,7 @@ class AcnDives extends Model
      */
     public static function getDive($diveId){
 
-        $dive = DB::table('acn_dives')->select('acn_dives.*')->where('div_num_dive','=',$diveId)->get();
+        $dive = DB::table('ACN_DIVES')->select('ACN_DIVES.*')->where('DIV_NUM_DIVE','=',$diveId)->get();
         return $dive;
     }
 
@@ -242,7 +242,7 @@ class AcnDives extends Model
      */
     public static function getMonthWithDive() {
         return DB::table('ACN_DIVES')
-            ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(div_date,'%M') as mois_mot")
+            ->selectRaw("DISTINCT date_format(DIV_DATE, '%m') as mois_nb, date_format(DIV_DATE,'%M') as mois_mot")
             ->orderBy('mois_nb')
             ->get();
     }
