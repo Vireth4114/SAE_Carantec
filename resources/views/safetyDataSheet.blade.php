@@ -11,7 +11,6 @@
         $endTime = strftime('%H', $endTimestamp);
     @endphp
 <div>
-    <button name='dataSheet' onclick="window.location.href = '/test.php'">Imprimer la fiche de sécurité</button>
 </div>
 <div id='safetySheet'>
     <table id='firstTable' class='bold'>
