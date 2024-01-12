@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\Controller;
 use App\Http\Requests\Api\GroupsRequest;
 use App\Http\Resources\Api\GroupsResource;
 use App\Models\web\AcnGroups;
@@ -26,7 +26,7 @@ class AcnGroupsController extends Controller
     /**
      * Store a newly created group in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Api\GroupsRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(GroupsRequest $request)
@@ -61,11 +61,11 @@ class AcnGroupsController extends Controller
     /**
      * Update the specified group in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Api\GroupsRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GroupsRequest $request, $id)
     {
         $group = null;
         try {

@@ -1,5 +1,7 @@
 @extends('template')
 @section('content')
+@php
+@endphp
     <form class='diveForm' action="{{ route("diveCreationForm") }}" method="POST">
         @csrf
         <div class='fieldContainer'>
