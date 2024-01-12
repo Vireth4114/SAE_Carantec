@@ -63,7 +63,7 @@
     <div>
         <p>Ajouter un adhérent ou vous inscrire :
         <a class='btn btn-primary mt-1' href="{{ route('addMember', $dive['DIV_NUM_DIVE'] ) }}">+</a></p>
-        <a class='btn btn-secondary' href={{route('groupsMaking',$dive)}}>Voir les palanquées</a>
+        <a class='btn btn-secondary' id="palanqueButton" href={{route('groupsMaking',$dive)}}>Voir les palanquées</a>
     </div>
 </section>
 @endsection
