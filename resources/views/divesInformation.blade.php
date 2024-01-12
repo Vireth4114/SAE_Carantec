@@ -24,6 +24,7 @@
                 <p>{{$member->MEM_NAME}} {{$member->MEM_SURNAME}}</p>
             @endforeach
         </div>
+        <a class="btn btn-secondary" href="{{route('dives')}}" >Retourner à la liste des plongées</a>
     </section>
 @endsection
 

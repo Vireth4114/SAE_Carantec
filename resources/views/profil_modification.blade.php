@@ -27,7 +27,7 @@
         <p>Prérogative : {{$prerogative}}</p>
 
         <button class='btn btn-secondary' type="submit">Modifier les informations</button>
-
+        <a class="btn btn-secondary" href="{{route('profil_page')}}" >Retourner à mon profil</a>
     </form>
 </body>
 @endsection
