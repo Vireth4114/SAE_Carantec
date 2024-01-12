@@ -6,12 +6,12 @@
     $increment = 0;
 @endphp
 
-<div>
+<div id='directorDivesSection' class='mainSection'>
     @if ($dives->count()==0)
         <p>Vous n'êtes le directeur pour aucune plongée</p>
     @else
         <h3>Vos plongées :</h3>
-        <table>
+        <table id='directorDives'>
             <thead>
                 <tr>
                     <th>Date</th>
@@ -29,14 +29,14 @@
                         $endTime = $periods[$increment]->PER_END_TIME->format('H');
                     @endphp
                     <tr>
-                        <th>{{$date}}</th>
-                        <th>{{$startTime}}</th>
-                        <th>{{$endTime}}</th>
-                        <th>{{$sites[$increment]}}</th>
-                        <th>{{$prerogatives[$increment++]}}</th>
-                        <th>
-                            <a href="{{route('diveInformation', $dive->DIV_NUM_DIVE)}}"><button>Gérer la plongée</button></a>
-                        </th>
+                        <td>{{$date}}</td>
+                        <td>{{$startTime}}</td>
+                        <td>{{$endTime}}</td>
+                        <td>{{$sites[$increment]}}</td>
+                        <td>{{$prerogatives[$increment++]}}</td>
+                        <td>
+                            <a class='btn btn-secondary'href="{{route('diveInformation', $dive->DIV_NUM_DIVE)}}">Gérer la plongée</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

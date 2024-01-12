@@ -81,7 +81,8 @@ nav {
 }
 
 #logoAddMember {
-    width: 1%;
+    max-width: 1em;
+    min-width: 1em;
 }
 
 .userError {
@@ -247,14 +248,6 @@ nav {
     gap: 30px;
 }
 
-.memberInGroup a {
-    text-decoration: none;
-    color: red;
-    padding: 5px;
-    border: 1px solid red;
-    border-radius: 100px;
-}
-
 #groupTitle {
     text-align: center;
     margin: 10px;
@@ -279,9 +272,6 @@ nav {
     margin: auto;
 }
 
-.addElement, .addButton {
-    font-size: inherit;
-}
 
 .addBox {
     margin-top: 50px;
@@ -291,11 +281,6 @@ nav {
     font-size: 1.5em;
 }
 
-#addToNew {
-    margin: 30px auto;
-    width: fit-content;
-}
-
 #bottomGroups {
     display: flex;
     flex-direction: row;
@@ -303,17 +288,6 @@ nav {
     margin: auto;
     width: fit-content;
     margin-top: 40px;
-}
-
-#bottomGroups a {
-    text-decoration: none;
-    color: black;
-    border: solid 1px black;
-    padding: 10px;
-}
-
-#bottomGroups a:hover {
-    background-color: #f0f0f0;
 }
 
 #remainingDives {
@@ -438,4 +412,17 @@ nav {
 #confirm form {
     background-color: #ff8080;
     padding: 20px;
+}
+
+#membersSection {
+    text-align: center;
+}
+
+#directorDives td, #directorDives th {
+    border: solid 1px black;
+    padding: 10px;
+}
+
+#directorDivesSection {
+    text-align: center;
 }
