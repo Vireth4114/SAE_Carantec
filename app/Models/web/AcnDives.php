@@ -159,7 +159,7 @@ class AcnDives extends Model
             } else {
                 if ( (AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= $divePriority[0] -> PRE_PRIORITY)
                 && AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) <=4
-                || AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) > 12) {
+                || AcnMember::getMemberMaxPriority($member -> MEM_NUM_MEMBER) >= 14) {
                     array_push($eligibleMembers, $member);
                 }
             }

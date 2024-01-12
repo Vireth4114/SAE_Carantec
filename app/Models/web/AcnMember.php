@@ -155,7 +155,7 @@ class AcnMember extends Authenticatable
             -> distinct()
             -> join('ACN_RANKED', 'ACN_MEMBER.MEM_NUM_MEMBER', '=', 'ACN_RANKED.NUM_MEMBER')
             -> join('ACN_PREROGATIVE', 'ACN_RANKED.NUM_PREROG', '=', 'ACN_PREROGATIVE.PRE_NUM_PREROG')
-            -> where('PRE_PRIORITY', '>', '12')
+            -> where('PRE_PRIORITY', '>=', '14')
             -> where('MEM_STATUS','=','1')
             -> get();
     }
