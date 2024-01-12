@@ -111,7 +111,7 @@ class AcnDiveCreationController extends Controller
         }
         if(Carbon::createFromFormat('Y-m-d' , $request -> date)->dayOfWeekIso == 7 &&  $request -> period != 1 ){
             $err = true;
-            $strErr .= "- Vous ne pouvez pas créer de plongée l'après midi ou le soir un dimanche";
+            $strErr .= "- Vous ne pouvez pas créer de plongée l'après midi ou le soir un dimanche;";
         }
 
         if ($err) {
