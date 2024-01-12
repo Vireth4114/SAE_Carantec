@@ -38,7 +38,7 @@ class AcnSafetyDataSheetController extends Controller {
             $members = AcnGroups::find($group->NUM_GROUPS)->divers;
             $palanquing = AcnGroups::find($group->NUM_GROUPS);
             foreach($members as $member) {
-                $member->level = AcnPrerogative::getPrerogLabel($member->prerogatives->max('PRE_PRIORITY'))[0]->PRE_LABEL;
+                $member->level = AcnPrerogative::getPrerogLabel($member->prerogatives->max('PRE_PRIORITY'));
             }
             array_push($groups, $members);
             array_push($groupInfo, $palanquing);

@@ -114,5 +114,6 @@
                     $increment++;
                 @endphp
         @endforeach
+        <a class='btn btn-secondary' id="palanqueButton" href={{route('diveInformation', $dives->DIV_NUM_DIVE)}}>Retourner à la modification</a>
     </div>
     @endsection
