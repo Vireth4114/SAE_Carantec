@@ -20,7 +20,7 @@ class AcnDirectorController extends Controller
      * Add a member to a dive
      *
      * @param int $diveId ->the identification of the dive
-     * @return view -> the view for adding a new dive with his parameters
+     * @return mixed -> the view for adding a new dive with his parameters
      */
     public static function addDiveMember($diveId) {
         $dive = AcnDives::find($diveId);
@@ -46,7 +46,7 @@ class AcnDirectorController extends Controller
      * Get the dive's informations for a director
      *
      * @param $diveId the identification of the dive
-     * @return all the information of a dive
+     * @return mixed -> view with all the information of a dive
      */
     public static function diveInformation($diveId) {
         $dive = AcnDives::find($diveId);

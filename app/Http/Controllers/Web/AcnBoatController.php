@@ -12,7 +12,7 @@ class AcnBoatController extends Controller
     /**
      *
      * Get all the boats existing
-     * @return \view with all the boats in parameter of the view
+     * @return mixed view with all the boats in parameter of the view
      */
     static public function getAllBoat() {
         return view ('propose_slot', ["boats" => AcnBoat::all() ]);
@@ -131,7 +131,7 @@ class AcnBoatController extends Controller
      * Get the view of the updating boat
      *
      * @param $boatId the identification of the boat
-     * @return \view with the new boats inserted
+     * @return mixed view with the new boats inserted
      */
     static public function getBoatUpdateView($boatId) {
         $boat = AcnBoat::find($boatId);

@@ -21,7 +21,7 @@ class AcnDiveCreationController extends Controller
     /**
      * Get all the dive's informations
      *
-     * @return all the parameters of a dive
+     * @return mixed view with all the parameters of a dive
      */
     static public function getAll() {
         $boats = AcnBoat::all();
