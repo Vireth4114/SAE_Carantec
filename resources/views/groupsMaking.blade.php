@@ -24,7 +24,9 @@
                                     <label class='addLabel' for='member'>Membre : </label>
                                     <select class='addElement' name='member'>
                                         @foreach ($members[null][0] as $member)
-                                            <option value='{{$member->MEM_NUM_MEMBER}}'>{{$member->MEM_NAME.' '.$member->MEM_SURNAME.' '.$member->PRE_LABEL}}</option>
+                                            @if ($member->PRE_LABEL != 'PB' || sizeof($group[0]) != 2)
+                                                <option value='{{$member->MEM_NUM_MEMBER}}'>{{$member->MEM_NAME.' '.$member->MEM_SURNAME.' '.$member->PRE_LABEL}}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
