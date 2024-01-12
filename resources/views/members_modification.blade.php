@@ -61,6 +61,7 @@
 
             <button class='btn btn-secondary' type="submit">Modifier les informations</button>
         </form>
+        <a class="btn btn-secondary" href="{{route('members')}}" >Retourner à la liste des members</a>
     </body>
 </section>
 @endsection

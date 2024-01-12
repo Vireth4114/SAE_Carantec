@@ -3,10 +3,13 @@
     padding: 0;
 }
 
-
 #headerLinks {
     position: absolute;
     float: right;
+}
+
+#palanqueButton{
+    margin-bottom: 2%;
 }
 
 #headerLinks > a {

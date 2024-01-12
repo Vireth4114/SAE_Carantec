@@ -56,7 +56,7 @@ class AcnDiveCreationController extends Controller
             //if it exists sets the error variable to true and add a message to the error message
             $err = true;
             $periodName = AcnPeriodController::getPeriodName($request -> period);
-            $strErr .= "- Une plongée existe déjà le ".Carbon::parse($request -> date)->locale('fr_FR')->translatedFormat('l j F Y')." à ce moment "."(".$periodName.").<br>";
+            $strErr .= "- Une plongée existe déjà le ".Carbon::parse($request -> date)->locale('fr_FR')->translatedFormat('l j F Y')." à ce moment "."(".$periodName.").;";
         }
 
         //if the boat exists, check if the max_divers is lower than the capacity -3 (-3 for the pilot, the surface security and the dive's diector)
@@ -70,7 +70,7 @@ class AcnDiveCreationController extends Controller
                 //if the max_divers is superior to the capacity, sets the erro variable to true and add a message to the error message
                 $boatName = AcnBoat::getBoatName($request -> boat);
                 $err = true;
-                $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité <strong>en plongeur</strong> du bateau ".$boatName." (".$capacity." plongeur max).<br>";
+                $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité en plongeur du bateau ".$boatName." (".$capacity." plongeur max).;";
             }
         }
         else {
@@ -83,31 +83,31 @@ class AcnDiveCreationController extends Controller
             //If it is specified, check if the max_divers is lower than the capacity of the biggest boat
             else if ($capacity < $request -> max_divers) {
                 $err = true;
-                $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité <strong>en plongeur</strong> du bateau le plus gros (".$capacity.").<br>";
+                $strErr .= "- Le nombre de nageurs maximal renseigné est supérieur à la capacité en plongeur du bateau le plus gros (".$capacity.").;";
             }
         }
 
         //Check if the min_divers is lower than the max_divers
         if ($request -> min_divers > $request -> max_divers) {
             $err = true;
-            $strErr .="- Le nombe minimum de nageurs ne peut être supérieur au nombre maximum.<br>";
+            $strErr .="- Le nombe minimum de nageurs ne peut être supérieur au nombre maximum.;";
         }
 
         //Checks if the leader, the pilot and the surface security are different person.
         if (!is_null($request -> lead) && !is_null($request -> pilot) && ($request -> lead == $request -> pilot) ) {
             $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
+            $strErr .= "- Le directeur de plongée et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").;";
         }
         if (!is_null($request -> lead) && !is_null($request -> security) && ($request -> lead == $request -> security) ) {
             $member = AcnMember::getMember($request -> lead);
             $err = true;
-            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
+            $strErr .= "- Le directeur de plongée et la sécurié de surface ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").;";
         }
         if (!is_null($request -> pilot) && !is_null($request -> security) && ($request -> pilot == $request -> security) ) {
             $member = AcnMember::getMember($request -> pilot);
             $err = true;
-            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").<br>";
+            $strErr .= "- La sécurié de surface et le pilote ne peuvent être la même personne (".$member->MEM_NAME." ".$member->MEM_SURNAME.").;";
         }
         if(Carbon::createFromFormat('Y-m-d' , $request -> date)->dayOfWeekIso == 7 &&  $request -> period != 1 ){
             $err = true;
@@ -115,11 +115,13 @@ class AcnDiveCreationController extends Controller
         }
 
         if ($err) {
-            echo $strErr;
+            $arrayErr = explode(";",$strErr);
+            return view('diveException',['error_msg'=>$arrayErr]);
         }
         else {
             AcnDives::create($request -> date, $request -> period, $request -> site, $request -> boat, $request -> lvl_required,
             $request -> lead, $request -> pilot, $request -> security, $request -> min_divers, $request -> max_divers);
+            return redirect ('dives');
         }
 
     }
